@@ -59,8 +59,8 @@
     },
     {
       "n": 8,
-      "name": "The full graders in CI",
-      "description": "The full graders check every run, and the eval suite runs in CI",
+      "name": "The full graders",
+      "description": "The full graders check every run, and /cad-verify runs the whole eval suite locally",
       "status": "unplanned",
       "plans": []
     }

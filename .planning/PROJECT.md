@@ -39,7 +39,7 @@ Each of these is a hypothesis until it ships and proves itself.
 - [ ] The `.planning/seldon/` document format is fixed, with sample files Cadence's reader can be built against.
 - [ ] `claude plugin eval` cases give Seldon a full project description up front, so it takes the fast path with nothing to ask, and graders check that every document is present, PRD requirement IDs trace into epics, every epic is within the size limit and the readiness check passes.
 - [ ] Single interview turns are covered by replaying saved conversations through `context.history_file`.
-- [ ] Every eval runs in CI, with nothing for a person to check by hand.
+- [ ] Every eval runs locally under `/cad-verify`, with nothing for a person to check by hand.
 - [ ] The README credits the method as "inspired by BMad".
 
 ### Out of Scope
@@ -81,7 +81,7 @@ Each of these is a hypothesis until it ships and proves itself.
 - **License**: MIT, copyright John Crenshaw.
 - **Naming**: "BMad" can't appear in Seldon's name or branding - the README credits it as "inspired by BMad".
 - **File ownership**: Seldon writes only `.planning/seldon/` - Cadence stays the only writer of its own files, and an existing design folder is read-only input.
-- **Testing**: everything runs in CI through `claude plugin eval` - nothing for a person to check by hand.
+- **Testing**: unit tests and coverage run in CI, and evals run locally under `/cad-verify` through `claude plugin eval` - nothing for a person to check by hand, and no model key in CI.
 - **Dependency**: the handoff needs a Cadence phase after 4.4.0 ships - the Cadence side isn't built here.
 
 ## Key Decisions
@@ -102,7 +102,7 @@ Each of these is a hypothesis until it ships and proves itself.
 | Everything Seldon writes goes in `.planning/seldon/` | Cadence stays the only writer of its own files, and an existing design folder is never touched | - pending |
 | A built phase is never rewritten; a change to one becomes a new phase | Shipped work stays as built | - pending |
 | Eval cases take the fast path, and interview turns are tested by replaying saved conversations | `claude plugin eval` can't play a simulated user | - pending |
-| The eval job uses a model API key stored as a repository secret, runs only on pull requests to main and on release tags, and is skipped for forks and Dependabot | Every eval run spends model tokens, and the secret is a security boundary, so both stay narrow; John sets the secret, and `eval` joins the required jobs once it exists | - pending |
+| No model key in CI; evals run locally under `/cad-verify` | Reverses the earlier decision (98fce03) to store a model API key as a repository secret and run an eval job in CI. Evals run on the user's normal login, and Cadence's own CI carries no model key either | - pending |
 | No UX step and no PRFAQ path in the first version | Kept out of the first version's scope | - pending |
 
 ---

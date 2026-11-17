@@ -2,7 +2,7 @@
 
 ## Overview
 
-Seldon gets built the way it tells others to build, in small phases with one capability each. Phase 1 fixes the `.planning/seldon/` document format with sample files, because every later step writes that format and Cadence's reader is built against it. It also stands up the eval harness, so every later phase proves its interactive behavior with eval cases it adds rather than with checks done by hand. Phases 2 to 5 then build the walk one document at a time: the brief, the PRD (along with resume and rerun), the spine, and finally the epics, which close the full walk. Phase 6 covers projects already under Cadence and changes to the PRD after the fact. Phase 7 adds the readiness check and the handoff command. Phase 8 adds the full graders and runs the suite in CI. One dependency sits outside this repository: the Cadence side (`--brief` taking the Seldon folder, `/cad-milestone` and `/cad-phase` reading epics, `/cad-context` locking spine decisions) is a Cadence phase after 4.4.0, built in the Cadence repository against phase 1's sample files.
+Seldon gets built the way it tells others to build, in small phases with one capability each. Phase 1 fixes the `.planning/seldon/` document format with sample files, because every later step writes that format and Cadence's reader is built against it. It also stands up the eval harness, so every later phase proves its interactive behavior with eval cases it adds rather than with checks done by hand. Phases 2 to 5 then build the walk one document at a time: the brief, the PRD (along with resume and rerun), the spine, and finally the epics, which close the full walk. Phase 6 covers projects already under Cadence and changes to the PRD after the fact. Phase 7 adds the readiness check and the handoff command. Phase 8 adds the full graders, and `/cad-verify` runs the whole suite locally. One dependency sits outside this repository: the Cadence side (`--brief` taking the Seldon folder, `/cad-milestone` and `/cad-phase` reading epics, `/cad-context` locking spine decisions) is a Cadence phase after 4.4.0, built in the Cadence repository against phase 1's sample files.
 
 ## Phases
 
@@ -13,7 +13,7 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 - [ ] **Phase 5: Epics and the full walk** - Small epics in build order, and /seldon walks all four steps end to end
 - [ ] **Phase 6: Existing projects and PRD changes** - Design the next body of work under Cadence, and carry PRD changes through spine and epics
 - [ ] **Phase 7: Readiness check and handoff** - An independent check before the handoff, then the exact Cadence command to run
-- [ ] **Phase 8: The full graders in CI** - The full graders check every run, and the eval suite runs in CI
+- [ ] **Phase 8: The full graders** - The full graders check every run, and /cad-verify runs the whole eval suite locally
 
 ## Phase Details
 
@@ -88,13 +88,12 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 3. Replayed conversations show choosing fix rerunning the step a finding names, and choosing hand off going ahead with the documents unchanged.
 4. Eval cases show Seldon ending with `/cad-new-project` reading `.planning/seldon/` on a project with no Cadence roadmap, and with the `/cad-phase` or `/cad-milestone` command that adds the epics on a project that has one.
 
-### Phase 8: The full graders in CI
-**Goal:** The full graders check every run, and the eval suite runs in CI with nothing for a person to check by hand.
+### Phase 8: The full graders
+**Goal:** The full graders check every run, and `/cad-verify` runs the whole eval suite locally with nothing for a person to check by hand.
 **Depends on:** Phase 7
-**Precondition:** John stores a model API key as a repository secret. That's his step, not a task in this phase. How `claude plugin eval` authenticates in CI isn't checked yet, and this phase's research settles it. Once the secret exists, `eval` joins the required jobs through `/cad-config --testing`, since a plan never changes the required jobs itself.
 **Requirements:** EVAL-02, EVAL-04
 **Success Criteria:**
 1. The graders fail a run when a document is missing, a PRD requirement ID traces into no epic, an epic carries more than 5 requirement IDs, or the readiness check reports a finding.
 2. A fast-path case with a full project description runs the whole walk to the end and passes every grader.
-3. The `eval` job in GitHub Actions runs the suite, holding every case phases 1 to 7 added, with no manual step.
-4. The `eval` job runs only on pull requests to main and on release tags, and forks and Dependabot skip it, the same way Cadence's SonarCloud scan does (`/code/cadence/.github/workflows/test.yml:113`).
+3. `/cad-verify` runs the full eval suite locally on the user's normal login, holding every case phases 1 to 7 added, with nothing for a person to check by hand.
+4. No workflow under `.github/workflows/` runs the eval suite or references a model key.
