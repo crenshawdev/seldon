@@ -66,6 +66,7 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `existing-brief` gives `/seldon` a new dump where a brief is already there and checks that it writes and edits nothing and asks whether to rerun the brief with that dump or go on.
 - `resume` runs a bare `/seldon` in a fresh session with a confirmed brief already there, and checks that Seldon names that brief first, writes the PRD and asks neither for a dump nor who the project is for.
 - `prd-from-brief` resumes from a brief whose quotes name a framework, a database and a host, and checks that the PRD passes the check, carries every refusal into Non-goals with its quote, quotes or tags every line and names none of that technology.
+- `prd-no-stakes` resumes from a brief that never says who depends on the project or what breaks if it's wrong, and checks that the PRD's MVP scope carries one line, tagged `[ASSUMPTION]`, saying what size Seldon drafted it for.
 - `confirm-clear` confirms a brief Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
 - `spine-later` runs `/seldon spine` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
 - `resume-later` runs a bare `/seldon` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
