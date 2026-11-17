@@ -169,9 +169,23 @@ Each epic carries six fields, each once and in this order. A field starts on a l
 5. `**Requirements:**`
 6. `**Spine decisions:**`
 
-- A field's value is the rest of its label line plus every line below it, up to the next label line or the next `## ` heading. So `**Done when:**` can hold a list on the lines below it.
+- A field's value is the rest of its label line plus every line below it, up to the next label line or the next `## ` heading.
 - No value is empty.
 - The epic body is the six fields and nothing else, so the first non-blank line under the heading is the `**Outcome:**` line.
+
+`**Done when:**` is always a `- ` list on the lines below its label, one item per bullet:
+
+- An item is a line in the field's value that starts with `- ` at column 0. An indented line continues the bullet above it and isn't an item.
+- Text on the label line is no item, so done-when never sits on its label line: one line can't hold the 2 items it needs.
+- It holds 2 to 5 items, the same 2 to 5 success criteria Cadence's `/cad-new-project` gives a phase.
+- Every epic is shippable on its own, so one item is the integrated item, in exactly these words:
+
+```
+- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.
+```
+
+- At least one more item is the epic's own. The integrated item can sit anywhere in the list.
+- Items are free text, so the tag is allowed in them and not required (see "The [ASSUMPTION] tag").
 
 Three fields hold IDs, written plainly (not bolded) and separated by commas:
 
@@ -461,6 +475,7 @@ Balances are computed from payments and never stored.
 **Boundaries:** Members only; no payments.
 **Done when:**
 - A member can be added and archived.
+- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.
 **Depends on:** None
 **Requirements:** MEMB-01
 **Spine decisions:** None
@@ -468,7 +483,9 @@ Balances are computed from payments and never stored.
 ## E-02: Ledger
 **Outcome:** A treasurer records payments and sees balances.
 **Boundaries:** Payments and computed balances.
-**Done when:** A balance always equals the sum of its payments.
+**Done when:**
+- A balance always equals the sum of its payments.
+- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.
 **Depends on:** E-01
 **Requirements:** LEDG-01, NFR-01
 **Spine decisions:** S-01
