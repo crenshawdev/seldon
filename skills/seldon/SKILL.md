@@ -28,8 +28,8 @@ from the files in `.planning/seldon/`, so the walk survives a `/clear`.
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
-- The only command you run is the check in "The check", exactly as written
-  there.
+- The only commands you run are the two checks, the brief's in "The check"
+  and the PRD's in "The PRD check", each exactly as written there.
 - No persona and no role-play. Speak as Seldon, plainly.
 </rules>
 
@@ -426,5 +426,23 @@ even when the brief names one: those belong to the spine. A technical word the
 user said stays in the brief and isn't carried into the PRD.
 
 Once the PRD is written, run "The PRD check".
+
+## 14. The PRD check
+
+Once the PRD is written, run exactly this from the project root, with the path
+unquoted:
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --prd .planning/seldon
+```
+
+That's the plugin's own installed check, never a `lib/check.mjs` in the
+user's project, which has none.
+
+If it exits 1, fix each problem it names in `prd.md` with Edit, inside
+`.planning/seldon/`, and run it again until it passes.
+
+Then end with your final message: name the file you wrote, and repeat the
+check's result line word for word on a line of its own.
 
 </process>
