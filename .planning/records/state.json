@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 1,
-    "status": "executed",
-    "next": "/cad-verify 1",
+    "status": "phase complete",
+    "next": "/cad-context 2",
     "updated": "2026-11-17"
   },
   "phases": [
@@ -12,7 +12,7 @@
       "n": 1,
       "name": "The document format and eval harness",
       "description": "Fix the .planning/seldon/ format with sample files, make the plugin install, and run the eval harness locally",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -78,22 +78,22 @@
     {
       "id": "DOCS-04",
       "phase": 1,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "EVAL-01",
       "phase": 1,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "EVAL-03",
       "phase": 1,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "REL-01",
       "phase": 1,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }

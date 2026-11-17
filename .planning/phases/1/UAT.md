@@ -4,6 +4,7 @@ phase: 1
 fields_version: 1
 started: 2026-11-17
 updated: 2026-11-17
+ci: 7606164774bd9268703666ca3362af167c2d4ab4
 ---
 
 ## Items
@@ -43,11 +44,12 @@ evidence: `claude plugin validate --strict .` printed 'skills: seldon:seldon' an
 ### 5. Plugin installs from its own marketplace in CI
 expected: The plugin-validate job installs seldon from the repository's own marketplace and passes on the pushed commit. (ci: plugin-validate)
 criterion: AC5
-status: pending_ci
+status: pass
 job: plugin-validate
-commit: 565a5fd6e28279fa7354cbf6646bae76f44ec160
+commit: 7606164774bd9268703666ca3362af167c2d4ab4
+first_pass: pass
 source: model
-evidence: The install from the repository's own marketplace runs only in the plugin-validate CI job; a local install is held for John, and the commit has not been pushed yet.
+evidence: plugin-validate concluded success at 7606164774bd9268703666ca3362af167c2d4ab4 (test-policy ci-status: node-test, coverage and plugin-validate all pass, CI run 44016094890 on cadence/v0.1.0)
 
 ### 6. README credits BMad and no name carries it
 expected: README.md contains "inspired by BMad", and BMad appears in no plugin name, command name or manifest field.
@@ -68,10 +70,9 @@ evidence: `planning.mjs test-policy check --root .` returned {"ok":true,"problem
 ## Summary
 
 total: 7
-passed: 6
+passed: 7
 failed: 0
 pending: 0
-pending_ci: 1
 skipped: 0
 blocked: 0
 reworked: 0
