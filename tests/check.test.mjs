@@ -147,6 +147,16 @@ for (const [name, breakIt, expected] of cases) {
   });
 }
 
+// FORMAT.md promises Cadence's reader this line, so the bullet reader has to keep calling it prose.
+test('a Retired line under Requirements passes the full check and --prd', (t) => {
+  const dir = copy(t);
+  edit(dir, 'prd.md', (s) => s.replace('## Requirements\n', '## Requirements\nRetired: CAT-03, LOAN-04\n'));
+  assert.deepEqual(checkDir(dir), []);
+  const r = run('--prd', dir);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), PRD_OK_LINE);
+});
+
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);

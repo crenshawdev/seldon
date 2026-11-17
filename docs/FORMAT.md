@@ -91,6 +91,7 @@ A requirement ID is a prefix, a dash and a number:
 - The prefix is 2 to 8 characters, uppercase letters or digits, and has at least one letter. That's Cadence's admission test (`REQ_ID_EXACT` in Cadence's `planning-files.mjs`), so Cadence's audit counts every Seldon requirement.
 - The number is two or more digits (`01`, `12`, `104`).
 - An ID appears once in `prd.md`, across both sections.
+- A dropped requirement's ID is retired and never reused (see "IDs are stable").
 
 Examples: `**CAT-01**`, `**SYNC-03**`, `**NFR-01**`, `**2FA-01**`.
 
@@ -159,6 +160,17 @@ An epic depends only on epics before it, and the requirements and spine decision
 ## IDs are stable
 
 An ID is never renumbered or reused. When a requirement, decision or epic is removed, its ID stays retired, and the next new one takes the next unused number. Everything downstream, Cadence's `REQUIREMENTS.md` and the phases built from the epics, refers to these IDs.
+
+When a rerun drops a requirement, `prd.md` keeps its ID on one prose line directly under `## Requirements`, before the first `### ` category, so it belongs to no category and a reader finds it in one place:
+
+```
+Retired: CAT-03, LOAN-02
+```
+
+- The IDs are plain, not bold, separated by commas and listed in the order they were retired.
+- The line is absent until an ID is retired. A later retirement extends the same line.
+- A retired ID is never reused, by a requirement or a non-functional requirement, because IDs carry into Cadence's `REQUIREMENTS.md` unchanged.
+- The check reads only `- ` bullets in the requirement sections, so to it this line is prose.
 
 Spine decisions and epics use a one-letter prefix on purpose. Cadence's audit admits only a prefix of 2 to 8 characters before the dash as a requirement ID, so it never counts `S-01` or `E-01` as a requirement.
 
