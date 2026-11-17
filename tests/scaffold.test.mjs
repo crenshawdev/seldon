@@ -39,15 +39,18 @@ function scan(file) {
   return hits;
 }
 
-// Any scaffold_script the block-style match can't read is an odd form, and an odd form fails rather than going unscanned.
+// One plain form names a scaffold; anything else that says scaffold fails rather than going unscanned.
+const NAMED = /^ *scaffold_script:[ \t]+([A-Za-z0-9._-]+)(?:[ \t]+#.*)?[ \t]*\r?$/;
+// YAML decodes escapes in double quotes, so a key can spell scaffold_script without the letters on the line.
+const ESCAPED = /"[^"]*\\/;
+
 function scaffoldNames(source) {
   const scripts = [];
   const odd = [];
   source.split('\n').forEach((text, i) => {
-    if (!text.includes('scaffold_script')) return;
-    const m = text.match(/^\s*scaffold_script:\s*["']?([^"'#\s]+)/);
+    const m = text.match(NAMED);
     if (m) scripts.push(m[1]);
-    else odd.push(i + 1);
+    else if (/scaffold/i.test(text) || ESCAPED.test(text)) odd.push(i + 1);
   });
   return { scripts, odd };
 }
@@ -63,7 +66,7 @@ function scaffolds() {
     if (name !== 'case.yaml' && name !== 'prompt.md') continue;
     const names = scaffoldNames(readFileSync(join(evals, path), 'utf8'));
     for (const script of names.scripts) found.push({ caseDir: dirname(join(evals, path)), script });
-    for (const line of names.odd) odd.push(`evals/${path.split(sep).join('/')}:${line}: scaffold_script in a form this test can't read`);
+    for (const line of names.odd) odd.push(`evals/${path.split(sep).join('/')}:${line}: a scaffold or an escape in a form this test can't read`);
   }
   return { found, odd };
 }
@@ -163,8 +166,24 @@ test('any other line fails, named by its line', (t) => {
   assert.deepEqual(scan(join(dir, 'seed.sh')), [{ line: 1, text: '#!/usr/bin/env node' }]);
 });
 
-test('a scaffold_script the block-style match misses is flagged, not skipped', () => {
+test('a case names its scaffold only as scaffold_script: <name>, and any other form is flagged, not skipped', () => {
   assert.deepEqual(scaffoldNames('context:\n  scaffold_script: seed.sh\n'), { scripts: ['seed.sh'], odd: [] });
-  assert.deepEqual(scaffoldNames('context: { scaffold_script: evil.sh }\n'), { scripts: [], odd: [1] });
-  assert.deepEqual(scaffoldNames('context:\n  "scaffold_script": evil.sh\n'), { scripts: [], odd: [2] });
+  assert.deepEqual(scaffoldNames('context:\n  scaffold_script: seed.sh  # copies samples/\n'), { scripts: ['seed.sh'], odd: [] });
+  const flagged = [
+    'context: { scaffold_script: evil.sh }\n',
+    'context:\n  "scaffold_script": evil.sh\n',
+    'context:\n  Scaffold_Script: evil.sh\n',
+    // A YAML parser reads each of these as a name other than seed.sh.
+    'context:\n  scaffold_script: seed.sh#x\n',
+    'context:\n  scaffold_script: seed.sh x.sh\n',
+    'context:\n  scaffold_script: "seed.sh\'x"\n',
+    // Each of these decodes to scaffold_script.
+    'context:\n  "scaffold\\x5fscript": evil.sh\n',
+    'context:\n  "scaffold_\\\n  script": evil.sh\n',
+    'context:\n  "\\x73caffold_script": evil.sh\n',
+  ];
+  for (const source of flagged) {
+    const line = source.startsWith('context: {') ? 1 : 2;
+    assert.deepEqual(scaffoldNames(source), { scripts: [], odd: [line] }, JSON.stringify(source));
+  }
 });
