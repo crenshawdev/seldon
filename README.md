@@ -78,8 +78,8 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `prd-from-brief` resumes from a brief whose quotes name a framework, a database and a host, and checks that the PRD passes the check, carries every refusal into Non-goals with its quote, quotes or tags every line and names none of that technology.
 - `prd-no-stakes` resumes from a brief that never says who depends on the project or what breaks if it's wrong, and checks that the PRD's MVP scope carries one line, tagged `[ASSUMPTION]`, saying what size Seldon drafted it for.
 - `confirm-clear` confirms a brief Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
-- `epics-later` runs `/seldon epics` where a brief, a PRD and a spine are all there, and checks that Seldon writes and edits nothing and says the epics step comes in a later release.
-- `resume-later` runs a bare `/seldon` where a brief, a PRD and a spine are all there, and checks that Seldon writes and edits nothing and ends on the line saying only the epics step comes in a later release.
+- `epics-from-spine` runs `/seldon epics` where a brief, a PRD and a spine are all there, and checks that Seldon writes epics that pass the check, every one with the six fields and the integrated item, each requirement on exactly one epic, citing only the spine's IDs and every stack, hosting and design-approach decision.
+- `resume-later` runs a bare `/seldon` where all four documents are there, and checks that Seldon writes and edits nothing and ends on the line naming the readiness check and the handoff to Cadence as coming in a later release.
 - `prd-reads-brief` runs `/seldon prd` in a conversation that says one thing while the brief, edited by hand since, says another, and checks that the PRD carries the brief's fact and leaves the conversation's out.
 - `prd-rerun` runs `/seldon prd` on a PRD whose brief has since dropped one requirement's source, and checks that every other requirement line stays byte-identical and the dropped ID goes on a `Retired:` line and never comes back.
 - `brief-rerun` answers the question a `/seldon brief` rerun asks with a change, and checks that the brief takes the new words on a quoted line, an untouched item stays byte-identical and the PRD beside it is neither written nor edited.
@@ -90,6 +90,12 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `spine-outside-input` resumes a session that confirmed a PRD whose design takes reports from the public and runs nothing unattended, and checks that a bare `/seldon` asks the trust question but neither the unattended-work nor the failure question, and writes and edits nothing.
 - `spine-answers` answers the unattended-work and failure questions, and checks that the answers land word for word in the decision about the job they describe, in a spine that passes the check.
 - `architecture-on-request` runs `/seldon architecture` where a brief, a PRD and a spine are all there, and checks that Seldon writes `.planning/seldon/architecture.md`.
+- `epics-split` runs `/seldon epics` on a PRD whose one category has eight requirements, cut in two by a boundary in the spine, and checks that Seldon splits it along that boundary, never puts both sides on one epic, keeps every epic to 5 requirement IDs and 5 done-when items, and cites the boundary on both sides.
+- `epics-no-boundary` runs `/seldon epics` on that same PRD with a spine that has no boundary to cut the category, and checks that Seldon writes and edits nothing, names the category and points to `/seldon spine`.
+- `epics-rerun` runs `/seldon epics` on epics whose PRD and spine have since dropped what one epic builds, and checks that an untouched epic stays byte-identical, a changed one keeps its ID, and the dropped ID goes on a `Retired:` line and never comes back.
+- `full-walk` resumes a session that confirmed the brief, the PRD and the spine, and checks that a bare `/seldon` names the spine first, writes epics that pass the check, ends on the epics confirm question and writes or edits no other file.
+- `epics-confirm` confirms epics Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
+- `epics-no-spine` runs `/seldon epics` where a brief and a PRD are there and no spine, and checks that Seldon writes and edits nothing and points to `/seldon spine`.
 
 Results go to `evals/results/`, which git ignores.
 
