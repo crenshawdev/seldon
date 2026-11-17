@@ -128,6 +128,12 @@ these in order:
   `prd.md` that's there, go to "The PRD rerun" in "The PRD draft" and carry
   the rerun on with those answers, changing `prd.md` with Edit, never a fresh
   Write. Otherwise go to "The PRD draft" and draft with those answers.
+- **Spine questions answered:** your last turn asked the spine step's
+  questions, and the user answered. When that turn was a `/seldon spine` rerun
+  over a `spine.md` that's there, go to "The spine rerun" in "The spine draft"
+  and carry the rerun on with those answers, changing `spine.md` with Edit,
+  never a fresh Write. Otherwise go to "The spine draft" and draft with those
+  answers.
 - **Brief change answered:** your last turn was changing a `brief.md` that's
   there, stopped to ask and wrote nothing, and the user answered. It stopped
   one of two ways:
@@ -721,7 +727,9 @@ inside one part, stays out. A spine doesn't need all six kinds.
 **The spine's questions.** Draft the spine in this same turn, as "The spine
 draft" says, unless something only the user can decide is still open. Then ask
 every such question in one plain-prose message that ends your turn, and write
-nothing in that turn. Use no AskUserQuestion and no menu. Only these are open:
+nothing in that turn. Use no AskUserQuestion and no menu. Once the user
+answers, "Spine questions answered" in "Where the conversation stands" carries
+the step on with those answers. Only these are open:
 
 - **Stack and hosting:** a `stack` or `hosting` decision the brief's `> `
   quotes never name. The PRD leaves those words out, so the brief's quotes are
@@ -775,6 +783,9 @@ these routes:
 
 - A `/seldon spine` rerun, as "The spine rerun" below says. It's the only
   route into the spine step that updates a spine that's there.
+- "Spine questions answered" in "Where the conversation stands", when the turn
+  that asked those questions was a `/seldon spine` rerun. It carries that rerun
+  on with the user's answers, as "The spine rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
   the spine's own confirm question with changes. Make those changes in
   `spine.md` with Edit, quote the user's new words as "The user's own words"
@@ -841,11 +852,24 @@ A spine quote comes from one of two sources, and nowhere else:
   unbroken run of that line's exact words. Where the brief's quote had a
   `(docs/design/...)` line under it, keep that line under the spine's quote
   too.
-- The user's replies to this step's own question.
+- The user's replies to this step's own questions.
 
 The brief's item text and the PRD's text are Seldon's wording, not the user's,
 so neither is ever quoted. Never paraphrase a quote and never tidy it. A
 decision with no source words is a guess and carries the tag.
+
+**The answers to the spine's questions.** Each answer goes into its part's
+own decision, word for word, on a `> ` line under that decision's text:
+
+- The trust-boundary answer goes into the decision for the part that takes
+  the outside input.
+- The unattended-work and failure answers, who is told when it breaks and how
+  included, go into that job's own decision, the one that says what the job
+  does.
+- A stack or hosting answer goes into the `stack` or `hosting` decision.
+
+Never put an answer into a decision of a new kind, one outside the six, or
+into a decision that holds only the answer.
 
 ```
 # Gristmill - architecture spine
