@@ -3,9 +3,14 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 5,
-    "status": "context gathered",
-    "next": "/cad-plan 5",
-    "updated": "2026-11-17"
+    "status": "planned",
+    "next": "/cad-execute 5",
+    "updated": "2026-11-17",
+    "plan": {
+      "k": 1,
+      "j": 7,
+      "name": "The epics format and its check"
+    }
   },
   "phases": [
     {
@@ -120,8 +125,37 @@
       "n": 5,
       "name": "Epics and the full walk",
       "description": "Small epics in build order, and /seldon walks all four steps end to end",
-      "status": "unplanned",
-      "plans": []
+      "status": "planned",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-7.md",
+          "finished": false
+        }
+      ]
     },
     {
       "n": 6,
@@ -220,6 +254,21 @@
       "id": "ARCH-02",
       "phase": 4,
       "status": "Complete"
+    },
+    {
+      "id": "EPIC-01",
+      "phase": 5,
+      "status": "Pending"
+    },
+    {
+      "id": "EPIC-02",
+      "phase": 5,
+      "status": "Pending"
+    },
+    {
+      "id": "FLOW-01",
+      "phase": 5,
+      "status": "Pending"
     }
   ]
 }
