@@ -942,7 +942,9 @@ stands" first, like any step name.
 The epics are built from `.planning/seldon/prd.md` and
 `.planning/seldon/spine.md` and nothing else. Read those two files and nothing
 more for it: never the brief, never `docs/design/` or any other design folder,
-never the dump, and never the earlier conversation, whatever it holds.
+never the dump, and never the earlier conversation, whatever it holds. The one
+other file an epics step reads is the `epics.md` a `/seldon epics` rerun
+updates, as "The epics rerun" says.
 
 The PRD and the spine on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -985,9 +987,41 @@ create an `epics.md` that isn't there yet. Never Write over an `epics.md`
 that's there: one that's there changes only with Edit, never a fresh Write,
 through these routes:
 
+- A `/seldon epics` rerun, as "The epics rerun" below says. It's the only
+  route into the epics step that updates an `epics.md` that's there.
 - "Names changes" in "Where the conversation stands", when the user answers
   the epics confirm question with changes. Make those changes in `epics.md`
   with Edit, with no quote, then run "The epics check" again.
+
+**The epics rerun.** A `/seldon epics` that finds `epics.md` there brings it
+in line with the PRD and the spine as they stand now. Read `epics.md` first,
+the previous version of this document, then `prd.md` and `spine.md`, and
+nothing else. It asks no question. Change the epics with Edit only, never a
+fresh Write over them, so a line the change doesn't touch is never typed
+again:
+
+- An epic the change doesn't touch keeps its heading and all six fields
+  byte-identical.
+- An epic the change alters keeps its ID and takes the new text. A retired S-
+  ID leaving its `**Spine decisions:**` is one such change.
+- An epic with nothing left to build is removed, its heading and its whole
+  body. Its ID goes on the `Retired:` line, one prose line directly under the
+  `# ` title, before the first epic:
+
+  ```
+  Retired: E-03
+  ```
+
+  Make the line when the first ID retires, and add each later one to its end,
+  plain and comma-separated.
+- A new epic, a split-off one included, takes the next unused number wherever
+  it sits in build order, so E- numbers need not ascend through the file.
+  Never give it an ID that's in use or on the `Retired:` line: Cadence's
+  phases are built from the epics by ID, so a retired ID stays retired.
+
+The sizing in "The epics step", its stop when no boundary cuts a capability
+included, and the build order and citations below hold on a rerun too. Then
+run "The epics check" and end the step the way it says.
 
 The epics file has this shape, as `docs/FORMAT.md` fixes it, and the check
 holds it to it:
