@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: epics-no-boundary
+description: A /seldon epics in a fresh session where .planning/seldon/ holds the confirmed brief and PRD from samples/epics-split/ and a spine from samples/epics-no-boundary/ that drops the S-02 boundary, and no epics. The PRD's one category, Lettings, has eight requirements and no Kind boundaries decision cuts it, so Seldon has to write and edit nothing, name Lettings, and point to /seldon spine to add a boundary first.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
