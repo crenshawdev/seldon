@@ -104,17 +104,27 @@ these in order:
 - **Path chosen:** your last turn gave your recommendation, and the user
   answered it. Go to "After the answer" with the path the user chose. Never
   recommend again.
-- **Interview under way:** your last turn asked the fast-path questions or a
-  coaching question, and the user answered. Carry on from there.
+- **Interview under way:** your last turn asked the fast-path questions, asked
+  again about What it refuses after their answers, or asked a coaching
+  question, and the user answered. Carry on from there.
 - **PRD questions answered:** your last turn asked the PRD step's questions,
   and the user answered. When that turn was a `/seldon prd` rerun over a
   `prd.md` that's there, go to "The PRD rerun" in "The PRD draft" and carry
   the rerun on with those answers, changing `prd.md` with Edit, never a fresh
   Write. Otherwise go to "The PRD draft" and draft with those answers.
-- **Brief change answered:** your last turn reopened the brief on a
-  `/seldon brief` rerun and asked what should change, and the user answered.
-  That answer is the change: update `brief.md` with it, as "The brief rerun"
-  in "The draft" says.
+- **Brief change answered:** your last turn was changing a `brief.md` that's
+  there, stopped to ask and wrote nothing, and the user answered. It stopped
+  one of two ways:
+  - It reopened the brief on a `/seldon brief` rerun and asked what should
+    change. That answer is the change.
+  - It already held a change and asked about What it refuses, because the
+    change left it unsettled. The change came from the reopen question's
+    answer, from the text the documents question asked about, or from changes
+    named at the brief's confirm question. That change together with the
+    user's answer is the change.
+
+  Either way, carry the change on: update `brief.md` with it, as "The brief
+  rerun" in "The draft" says, changing it with Edit, never a fresh Write.
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
   - **Rerun the brief:** the user chose the rerun in their own words. The text
@@ -408,7 +418,9 @@ it, so a line the change doesn't touch is never typed again:
   on its quoted line, as "The user's own words" above says, or a tag when it's
   a guess.
 - What it refuses keeps its rules above. A refusal the change leaves
-  unsettled is asked about before you write anything, never guessed.
+  unsettled is asked about before you write anything, never guessed. Once the
+  user answers, "Brief change answered" in "Where the conversation stands"
+  carries this rerun on with the change and that answer.
 - Never write or edit `.planning/seldon/prd.md` on a brief rerun, even when
   the change leaves the PRD out of date.
 
