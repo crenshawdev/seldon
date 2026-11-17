@@ -35,22 +35,25 @@ path, write the project's brief to `.planning/seldon/brief.md`.
 
 ## 1. Where the conversation stands
 
-Before anything else, find your place in this conversation. Read only the
-conversation to find it, never a file: rebuilding a run after `/clear` comes
-in a later release. Then pick up at the step your place names, checking them
-in this order:
+Before anything else, find your place. The conversation decides it only inside
+a step that's already under way, which the message that ended your last turn
+shows. Check these in order:
 
-- **Run finished:** you've already repeated the check's result line in a
-  final message in this conversation. That run is over, whatever the user
-  says now. Go to "A brief already there".
-- **New run:** you haven't asked for the dump or given a recommendation in
-  this conversation. Start at "A brief already there".
-- **Dump given:** you asked for the dump, and the user's message gives it.
-  That message is the dump. Go to "The design folder".
-- **Path chosen:** you gave your recommendation, and the user answered it. Go
-  to "After the answer" with the path the user chose. Never recommend again.
-- **Interview under way:** you asked the fast-path questions or a coaching
-  question, and the user answered. Carry on from there.
+- **Run finished:** the message that ended your last turn repeated a check's
+  result line. That run is over, whatever the user says now. Start a new run
+  at "Where a run starts".
+- **Dump given:** your last turn asked for the dump, and the user's message
+  gives it. That message is the dump. Go to "The design folder".
+- **Path chosen:** your last turn gave your recommendation, and the user
+  answered it. Go to "After the answer" with the path the user chose. Never
+  recommend again.
+- **Interview under way:** your last turn asked the fast-path questions or a
+  coaching question, and the user answered. Carry on from there.
+
+Anything else is a new run: start at "Where a run starts". The files in
+`.planning/seldon/` decide where a new run goes, even when this conversation
+still holds an earlier run. Suggesting a `/clear` is fine, but never ask for
+one: a new run builds from the files alone, whatever the conversation holds.
 
 This skill can be loaded again on a later turn with a summary of the
 conversation as its arguments. On a later turn `$ARGUMENTS` is that summary,
@@ -60,23 +63,34 @@ not a new dump, so never read it as one. Only a new run takes its dump from
 The recommendation turn writes nothing. Drafting starts only on a later turn,
 after the user confirms a path.
 
-## 2. A brief already there
+## 2. Where a run starts
 
-When a run starts or a run has finished, before you ask for or read a dump,
-look for `.planning/seldon/brief.md` in the project with Read or Glob. An
-error or no match means there isn't one, so go on to "The dump".
+Before you ask for or read any dump, look for `.planning/seldon/brief.md` and
+`.planning/seldon/prd.md` in the project with Read or Glob. An error or no
+match means that file isn't there. A brief on disk counts as confirmed, so
+there's no record of a confirmation to look for. `$ARGUMENTS` counts as empty
+when it holds nothing but blanks. Then:
 
-If it's there, write nothing, and don't edit or replace it. End your message
-with exactly these words, on a line of their own, with nothing after them:
+- **No brief:** go on to "The dump".
+- **A brief, no PRD and empty `$ARGUMENTS`:** this is a resume. Before you
+  draft or write anything, start your message with exactly these words, on a
+  line of their own:
 
-```
-A brief is already there at .planning/seldon/brief.md, and I've left it as it is. Rerunning a step comes in a later release.
-```
+  ```
+  I'm building the PRD from .planning/seldon/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.
+  ```
 
-That ends the run.
+  Then go to "The PRD step".
+- **A brief and a PRD, and empty `$ARGUMENTS`:** write nothing. End your
+  message with exactly these words, on a line of their own, with nothing after
+  them. This is the later-release line:
 
-This check runs when a run starts and on every turn after a run has finished.
-While a run is still under way, the brief you just wrote is expected.
+  ```
+  The spine and epics steps come in a later release, so I've written nothing this time.
+  ```
+
+- **A brief, and `$ARGUMENTS` isn't empty:** write nothing, and go to "A dump
+  when documents are there".
 
 ## 3. The dump
 
