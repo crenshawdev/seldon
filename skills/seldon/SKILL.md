@@ -1,7 +1,7 @@
 ---
 name: seldon
-description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and the architecture spine from the brief and the PRD at .planning/seldon/spine.md, and after a /clear it picks up from those files."
-argument-hint: "[what you have: the idea, notes or spec, pasted or described] | brief | prd | spine | epics"
+description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and the architecture spine from the brief and the PRD at .planning/seldon/spine.md, and after a /clear it picks up from those files. On request, /seldon architecture writes a full architecture document from those three at .planning/seldon/architecture.md."
+argument-hint: "[what you have: the idea, notes or spec, pasted or described] | brief | prd | spine | epics | architecture"
 allowed-tools:
   - Read
   - Glob
@@ -26,8 +26,11 @@ built separately, from the brief and the PRD alone, at
   it ends your turn. Never use AskUserQuestion, a numbered menu or a list of
   options to pick from. The user answers in their own words in the next turn.
 - The only files you write are `.planning/seldon/brief.md`,
-  `.planning/seldon/prd.md` and `.planning/seldon/spine.md`. Never write, edit or create anything else, in the
-  project or outside it. A design folder is input only.
+  `.planning/seldon/prd.md` and `.planning/seldon/spine.md`, plus
+  `.planning/seldon/architecture.md`, the one file written only on
+  `/seldon architecture`, as "The architecture document" says. Never write,
+  edit or create anything else, in the project or outside it. A design folder
+  is input only.
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
@@ -42,10 +45,21 @@ built separately, from the brief and the PRD alone, at
 ## 1. Where the conversation stands
 
 Before anything else, look at `$ARGUMENTS`, trimmed of blanks at both ends.
-When the whole trimmed argument is exactly one of the four step names,
-`brief`, `prd`, `spine` or `epics`, and nothing more, it's a rerun of that
-step. That holds wherever the conversation stands and whatever files exist,
-so don't look at the conversation for it:
+When the whole trimmed argument is exactly one of five names and nothing
+more, follow that name's route below. Four are step names, `brief`, `prd`,
+`spine` and `epics`, and each is a rerun of that step. The fifth,
+`architecture`, isn't a step: it asks for the full architecture document. That
+holds wherever the conversation stands and whatever files exist, so don't look
+at the conversation for it:
+
+- **`architecture`:** the full architecture document, built from the brief,
+  the PRD and the spine. Look for `.planning/seldon/spine.md` with Read or
+  Glob.
+  - No spine there: the document has nothing to expand on. Write nothing, and
+    say the spine comes first: `/seldon spine` builds it once there's a PRD,
+    and a bare `/seldon` takes the steps in order from wherever the files
+    stand.
+  - A spine there: go to "The architecture document".
 
 - **`spine`:** the spine step, built from `.planning/seldon/brief.md` and
   `.planning/seldon/prd.md` alone, as "The spine step" says. Look for
@@ -82,7 +96,7 @@ so don't look at the conversation for it:
   - No brief there: a new brief run with no dump, since the step name isn't
     one. Ask for the dump as "The dump" says for an empty `$ARGUMENTS`.
 
-Any other argument isn't a step name and keeps its usual meaning: the dump on
+Any other argument isn't one of those names and keeps its usual meaning: the dump on
 a new run, the text the documents question asks about when documents are
 there, or a summary or answer on a later turn.
 
@@ -905,5 +919,45 @@ Then end the step the way "The check" says: name the file you wrote, repeat
 the check's result line word for word on a line of its own, and end your turn
 on one plain-prose question asking whether the user confirms the spine or
 wants changes.
+
+## 18. The architecture document
+
+`/seldon architecture` over a `spine.md` that's there writes the full
+architecture document, `.planning/seldon/architecture.md`. It's not a step and
+it has no confirm. The exact name in "Where the conversation stands" is the
+only route that writes it. A reply that asks for the document in other words,
+at the spine's confirm question or anywhere else, isn't that name and never
+writes `architecture.md`.
+
+Read `.planning/seldon/brief.md`, `.planning/seldon/prd.md` and
+`.planning/seldon/spine.md`, and nothing else: not a design folder, not the
+dump, and not the conversation.
+
+**What it holds.** Open it with a `# <Project> - architecture` title. Then
+take every decision in `spine.md`, in the spine's order, and expand on each
+one under its S- ID: what it means for the parts the PRD describes, what in
+the brief and the PRD leads to it, and what it rules out. Name every decision
+in the spine, and draw on those three files only.
+
+**No decision of its own.** Every decision in the document is the spine's,
+cited by its S- ID. Add no decision, give nothing an ID of its own, and cite
+no S- ID that isn't a decision in `spine.md`. `/cad-context` locks only S-
+IDs, so a decision made here would be a second, unlocked source a planner
+could follow against the spine. Where expanding on a decision seems to need a
+new one, leave it out: a new decision goes in the spine, through
+`/seldon spine`.
+
+**What it leaves alone.** Never write or edit `spine.md`, `brief.md` or
+`prd.md` here, even where the expansion shows one of them out of date.
+
+**No check.** No check runs on it, so this route runs no command.
+
+**A second request.** When `architecture.md` is already there, Read it, then
+replace it whole with Write, from the brief, the PRD and the spine as they
+stand now. It holds nothing of its own to keep.
+
+**The ending.** Name the file you wrote, and say that every decision in it is
+the spine's and that a change to one goes in the spine. End there, without a
+question: this route never ends a turn on one.
 
 </process>
