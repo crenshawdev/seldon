@@ -227,7 +227,7 @@ The check neither requires nor rejects a quoted line. To the check it's body tex
   > no reservations, whoever's at the counter gets the drill
 ```
 
-This rule covers `brief.md` and `prd.md` (see "In the PRD" below). The spine takes it when its step is built.
+This rule covers `brief.md`, `prd.md` and `spine.md` (see "In the PRD" and "In the spine" below).
 
 ### Words from a design folder
 
@@ -261,6 +261,27 @@ The brief's item text is Seldon's wording, not the user's, so it's never a quote
 - **LEDG-01**: A treasurer records a payment against a member.
   > one place to record each payment
 - **NFR-01**: The ledger loads in under a second for 200 members. [ASSUMPTION]
+```
+
+### In the spine
+
+In `spine.md` the rule holds every decision. Its body carries one of two things:
+
+- A `> ` quote directly under the decision's text.
+- An inline `[ASSUMPTION]` tag, never on the `## ` heading and never on the `Kind:` line.
+
+A spine quote comes from one of two sources, and nowhere else:
+
+- The brief's `> ` lines, word for word. A quote is a whole `> ` line or one unbroken run of that line's exact words. Where the brief's quote had a design-file source line under it, the spine's quote keeps that source line under it too, as the PRD's does.
+- The user's replies to the spine step's own questions.
+
+The brief's item text and the PRD's text are Seldon's wording, not the user's, so neither is ever a quote source. In the spine, as in the brief and the PRD, the check neither requires nor rejects a quoted line or a tag.
+
+```
+## S-01: Payments are the only stored truth
+Kind: how state changes
+Balances are computed from payments and never stored.
+> one place to record each payment
 ```
 
 ## The check
@@ -381,6 +402,7 @@ LEDG-01 and MEMB-01.
 ## S-01: Payments are the only stored truth
 Kind: how state changes
 Balances are computed from payments and never stored.
+> one place to record each payment
 ```
 
 ### epics.md
