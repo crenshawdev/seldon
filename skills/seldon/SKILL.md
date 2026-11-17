@@ -41,9 +41,27 @@ Before anything else, find your place. The conversation decides it only inside
 a step that's already under way, which the message that ended your last turn
 shows. Check these in order:
 
-- **Run finished:** the message that ended your last turn repeated a check's
-  result line. That run is over, whatever the user says now. Start a new run
-  at "Where a run starts".
+- **Step confirm answered:** the message that ended your last turn repeated a
+  check's result line and asked whether the user confirms the document or
+  wants changes, and the user answered that question.
+  - **Confirms:** the step is done. Write nothing, edit nothing and run
+    nothing, and don't offer to start the next step. End your message with
+    exactly these words, on a line of their own, with nothing after them.
+    These are the `/clear` words:
+
+    ```
+    This step is confirmed. Run /clear if you want a fresh start, then /seldon for the next step.
+    ```
+
+  - **Names changes:** make them in that step's document with Edit, inside
+    `.planning/seldon/`. Leave every line the change doesn't touch as it is,
+    and quote the user's new words as "The draft" says, or for the PRD as
+    "The PRD draft" says. Then run that step's
+    check again and end the step the way "The check" says.
+
+  After the `/clear` words the step is confirmed. A later `/seldon` in this
+  same conversation is a new run, and it starts from the files at "Where a
+  run starts".
 - **Dump given:** your last turn asked for the dump, and the user's message
   gives it. That message is the dump. Go to "The design folder".
 - **Path chosen:** your last turn gave your recommendation, and the user
@@ -344,8 +362,12 @@ user's project, which has none.
 If it exits 1, fix each problem it names in `brief.md` with Edit, inside
 `.planning/seldon/`, and run it again until it passes.
 
-Then end with your final message: name the file you wrote, and repeat the
-check's result line word for word on a line of its own.
+Then end the step. Every step ends the same way, in your final message:
+
+1. Name the file you wrote.
+2. Repeat the check's result line word for word, on a line of its own.
+3. Ask, in one plain-prose question, whether the user confirms the document
+   or wants changes. That question ends your message and your turn.
 
 ## 12. The PRD step
 
@@ -483,7 +505,9 @@ user's project, which has none.
 If it exits 1, fix each problem it names in `prd.md` with Edit, inside
 `.planning/seldon/`, and run it again until it passes.
 
-Then end with your final message: name the file you wrote, and repeat the
-check's result line word for word on a line of its own.
+Then end the step the way "The check" says: name the file you wrote, repeat
+the check's result line word for word on a line of its own, and end your turn
+on one plain-prose question asking whether the user confirms the PRD or wants
+changes.
 
 </process>
