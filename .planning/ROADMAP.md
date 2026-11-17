@@ -8,7 +8,7 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 
 - [x] **Phase 1: The document format and eval harness** - Fix the .planning/seldon/ format with sample files, make the plugin install, and run the eval harness locally
 - [x] **Phase 2: The brief** - /seldon takes the user's dump, confirms fast path or coaching, and writes the brief
-- [ ] **Phase 3: The PRD, resume and rerun** - The PRD builds from the brief alone, the walk survives a /clear, and any step can be rerun
+- [x] **Phase 3: The PRD, resume and rerun** - The PRD builds from the brief alone, the walk survives a /clear, and any step can be rerun
 - [ ] **Phase 4: The architecture spine** - Record only the decisions that would clash if built separately, each with a stable ID
 - [ ] **Phase 5: Epics and the full walk** - Small epics in build order, and /seldon walks all four steps end to end
 - [ ] **Phase 6: Existing projects and PRD changes** - Design the next body of work under Cadence, and carry PRD changes through spine and epics

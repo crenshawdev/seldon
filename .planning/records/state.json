@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 3,
-    "status": "executed",
-    "next": "/cad-verify 3",
+    "status": "phase complete",
+    "next": "/cad-context 4",
     "updated": "2026-11-17"
   },
   "phases": [
@@ -52,7 +52,7 @@
       "n": 3,
       "name": "The PRD, resume and rerun",
       "description": "The PRD builds from the brief alone, the walk survives a /clear, and any step can be rerun",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -160,22 +160,22 @@
     {
       "id": "DOCS-02",
       "phase": 3,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-02",
       "phase": 3,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-04",
       "phase": 3,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-03",
       "phase": 3,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }
