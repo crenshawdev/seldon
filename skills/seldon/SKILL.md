@@ -56,7 +56,9 @@ shows. Check these in order:
   - **Names changes:** make them in that step's document with Edit, inside
     `.planning/seldon/`. Leave every line the change doesn't touch as it is,
     and quote the user's new words as "The draft" says, or for the PRD as
-    "The PRD draft" says. Then run that step's
+    "The PRD draft" says. For the PRD this is one of the two routes "The PRD
+    draft" lets change a `prd.md` that's there, so its later-release guard
+    doesn't stop it. Then run that step's
     check again and end the step the way "The check" says.
 
   After the `/clear` words the step is confirmed. A later `/seldon` in this
@@ -397,10 +399,20 @@ tagged `[ASSUMPTION]`. Never ask a question about the stakes.
 Write `.planning/seldon/prd.md` with the Write tool, and use Write only to
 create a `prd.md` that isn't there yet. Right before that Write, whatever route
 brought you here, look for `.planning/seldon/prd.md` with Read or Glob. If it's
-there and this run isn't a `/seldon prd` rerun, write nothing, and end your
-message on the later-release line from "Where a run starts", on a line of its
-own, with nothing after it. Only a `/seldon prd` rerun changes a PRD that's
-there, and it does that with Edit, never a fresh Write.
+there, write nothing, and end your message on the later-release line from
+"Where a run starts", on a line of its own, with nothing after it.
+
+That guard is about creating a PRD with Write. Two routes change a PRD that's
+there, and both do it with Edit, never a fresh Write:
+
+- A `/seldon prd` rerun.
+- "Names changes" in "Where the conversation stands", when the user answers
+  the PRD's own confirm question with changes. Make those changes with Edit,
+  quote the user's new words as "The user's own words" below says, then run
+  "The PRD check" again.
+
+Every other route that reaches this step and finds `prd.md` writes nothing and
+ends on the later-release line.
 
 The PRD has this shape, and the check holds it to it:
 
