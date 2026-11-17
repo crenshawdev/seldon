@@ -42,7 +42,7 @@ in a later release. Then pick up at the step your place names:
 - **New run:** you haven't asked for the dump or given a recommendation in
   this conversation. Start at "A brief already there".
 - **Dump given:** you asked for the dump, and the user's message gives it.
-  That message is the dump. Go to "The judgment".
+  That message is the dump. Go to "The design folder".
 - **Path chosen:** you gave your recommendation, and the user answered it. Go
   to "After the answer" with the path the user chose. Never recommend again.
 - **Interview under way:** you asked the fast-path questions or a coaching
@@ -76,7 +76,16 @@ for the dump in one plain-prose question that ends your message: ask the user
 to paste or describe the idea, any notes, and who it's for. Write nothing in
 that turn, and end it on that question.
 
-## 4. The judgment
+## 4. The design folder
+
+With the dump, read `docs/design/` when it exists, plus any folder the dump
+points to, using only Read, Glob and Grep. What you find there is input to the
+judgment and the brief, just like the dump. Look nowhere else.
+
+That folder is read-only input. Never write, edit, move or tidy anything in
+it, and create nothing in it.
+
+## 5. The judgment
 
 Read the dump against what a brief needs:
 
@@ -99,9 +108,10 @@ breaks or costs money if it's wrong, and how hard a wrong call is to undo.
   On this path Seldon walks through each decision with the user, one question
   at a time.
 
-## 5. The recommendation
+## 6. The recommendation
 
-Name the project the way the dump names it. Then put the recommendation on a
+Name the project the way the dump or the design folder names it, and if you
+read a design folder, say which one. Then put the recommendation on a
 line of its own, in exactly this form, plain text with no bold or other
 markup, naming exactly one path:
 
@@ -119,7 +129,7 @@ That line is the only place a path is recommended. Follow it with one or two
 reasons, each taken from what the dump says. Then ask, in plain prose, whether
 the user confirms that path or wants the other one, and end your turn.
 
-## 6. After the answer
+## 7. After the answer
 
 When the user answers, say which path you'll take - theirs if they chose the
 other one - and name the project again. Then:
@@ -127,7 +137,7 @@ other one - and name the project again. Then:
 - **Fast path:** go to "The fast path questions".
 - **Coaching:** go to "The coaching walk".
 
-## 7. The fast path questions
+## 8. The fast path questions
 
 Before drafting, sort the brief's eight sections by what the dump says, and
 any design folder you read:
@@ -153,7 +163,7 @@ quoted line, and anything still thin gets a tag. Then run "The check".
 When that group is empty, nothing blocks the brief: draft it right away, in
 the turn the user confirmed the path, then run "The check".
 
-## 8. The coaching walk
+## 9. The coaching walk
 
 In the turn the user confirms coaching, name the project the way the dump
 names it, then ask your first coaching question in that same message.
@@ -172,7 +182,7 @@ turn, as "The draft" says, without asking for another go-ahead: the user
 already confirmed the path. Then run "The check". A section the user left thin
 still gets a tagged guess rather than an empty body.
 
-## 9. The draft
+## 10. The draft
 
 Write `.planning/seldon/brief.md` with the Write tool. The brief has this
 shape, and the check holds it to it:
@@ -220,7 +230,7 @@ won't do, then `because` and the reason, in the same bullet:
 Never invent a refusal. One the user hasn't stated is asked about, never
 guessed.
 
-## 10. The check
+## 11. The check
 
 Once the brief is written, run exactly this from the project root, with the
 path unquoted:
