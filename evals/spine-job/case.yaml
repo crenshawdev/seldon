@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: spine-job
+description: Resumes a /seldon session that confirmed the Sowlist PRD and ended on the /clear words, with a confirmed brief and PRD in .planning/seldon/ whose design runs a daily job off a file the gardener keeps herself, and no spine. A bare /seldon has to reach the spine step and ask the fixed unattended-work and failure questions, not the trust-boundary question, and write and edit nothing in that turn.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
