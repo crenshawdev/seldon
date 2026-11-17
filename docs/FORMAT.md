@@ -183,7 +183,7 @@ The check neither requires nor rejects a quoted line. To the check it's body tex
   > no reservations, whoever's at the counter gets the drill
 ```
 
-This covers `brief.md` only. The PRD and spine take the same rule when their steps are built.
+This rule covers `brief.md` and `prd.md` (see "In the PRD" below). The spine takes it when its step is built.
 
 ### Words from a design folder
 
@@ -196,6 +196,28 @@ Seldon also reads a design folder, such as `docs/design/`, and an item it drafts
 ```
 
 A multi-line quote takes the source line after its last line. A quote with no source line under it is the user's own words. To the check the source line is body text too. The user sees these items before Seldon drafts, when they confirm the path.
+
+### In the PRD
+
+In `prd.md` the rule holds every requirement bullet, in both `## Requirements` and `## Non-functional requirements`, and every non-goal in `## Non-goals`. Each one carries one of two things:
+
+- A `> ` quote directly under it. Under a `- ` bullet the quote is indented two spaces, `  > `, as in the brief.
+- An inline `[ASSUMPTION]` tag.
+
+A PRD quote comes from one of two sources:
+
+- The brief's `> ` lines, word for word. A quote is a whole `> ` line or one unbroken run of that line's exact words. Where the brief's quote had a design-file source line under it, the PRD's quote keeps that source line under it too.
+- The user's own replies during the PRD step.
+
+The brief's item text is Seldon's wording, not the user's, so it's never a quote source. A requirement with no source words is a guess and carries the tag, never inside the bold ID span (see "The [ASSUMPTION] tag").
+
+`## User journeys` and `## MVP scope` aren't held to this rule. In the PRD, as in the brief, the check neither requires nor rejects a quoted line.
+
+```
+- **LEDG-01**: A treasurer records a payment against a member.
+  > one place to record each payment
+- **NFR-01**: The ledger loads in under a second for 200 members. [ASSUMPTION]
+```
 
 ## The check
 
@@ -287,12 +309,14 @@ Every small club's books are right without anyone checking them. [ASSUMPTION]
 
 ### Ledger
 - **LEDG-01**: A treasurer records a payment against a member.
+  > one place to record each payment
 
 ### Members
 - **MEMB-01**: A treasurer adds and archives members.
+  > members, dues, payments
 
 ## Non-functional requirements
-- **NFR-01**: The ledger loads in under a second for 200 members.
+- **NFR-01**: The ledger loads in under a second for 200 members. [ASSUMPTION]
 
 ## User journeys
 The treasurer opens the ledger, records three payments and checks who still owes.
