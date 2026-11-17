@@ -10,12 +10,16 @@ The method is inspired by BMad: the planning half of an analyst, a product manag
 
 ## What it writes
 
-Everything goes in `.planning/seldon/`, in four files:
+Everything goes in `.planning/seldon/`. The design lives in four documents:
 
 - `brief.md`: the problem, the solution, who it serves, what's different, success criteria, scope, what it refuses and vision
 - `prd.md`: capabilities with stable requirement IDs, non-functional requirements, user journeys, non-goals and MVP scope
 - `spine.md`: only the architecture decisions that would clash if two parts were built separately, each with a stable ID
 - `epics.md`: epics in build order, each sized so one Cadence planner can hold it
+
+One more file is written only when you ask for it with `/seldon architecture`:
+
+- `architecture.md`: a full architecture document that expands on the spine's decisions by their IDs and adds none of its own
 
 [docs/FORMAT.md](docs/FORMAT.md) fixes the format of each file, and `samples/` holds a set that follows it. Seldon writes nowhere else. A design folder your project already has is input it reads, never a place it writes.
 
