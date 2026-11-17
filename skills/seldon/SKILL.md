@@ -84,7 +84,7 @@ these in order:
   - **Names changes:** make them in that step's document with Edit, inside
     `.planning/seldon/`. Leave every line the change doesn't touch as it is,
     and quote the user's new words as "The draft" says, or for the PRD as
-    "The PRD draft" says. For the PRD this is one of the two routes "The PRD
+    "The PRD draft" says. For the PRD this is one of the three routes "The PRD
     draft" lets change a `prd.md` that's there, so its later-release guard
     doesn't stop it. Then run that step's
     check again and end the step the way "The check" says.
@@ -100,7 +100,10 @@ these in order:
 - **Interview under way:** your last turn asked the fast-path questions or a
   coaching question, and the user answered. Carry on from there.
 - **PRD questions answered:** your last turn asked the PRD step's questions,
-  and the user answered. Go to "The PRD draft" and draft with those answers.
+  and the user answered. When that turn was a `/seldon prd` rerun over a
+  `prd.md` that's there, go to "The PRD rerun" in "The PRD draft" and carry
+  the rerun on with those answers, changing `prd.md` with Edit, never a fresh
+  Write. Otherwise go to "The PRD draft" and draft with those answers.
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
   Look for the files again, as "Where a run starts" says. Going on from the
@@ -437,11 +440,14 @@ brought you here, look for `.planning/seldon/prd.md` with Read or Glob. If it's
 there, write nothing, and end your message on the later-release line from
 "Where a run starts", on a line of its own, with nothing after it.
 
-That guard is about creating a PRD with Write. Two routes change a PRD that's
-there, and both do it with Edit, never a fresh Write:
+That guard is about creating a PRD with Write. Three routes change a PRD
+that's there, and all three do it with Edit, never a fresh Write:
 
 - A `/seldon prd` rerun, as "The PRD rerun" below says. It's the only route
   into the PRD step that updates a PRD that's there.
+- "PRD questions answered" in "Where the conversation stands", when the turn
+  that asked those questions was a `/seldon prd` rerun. It carries that rerun
+  on with the user's answers, as "The PRD rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
   the PRD's own confirm question with changes. Make those changes with Edit,
   quote the user's new words as "The user's own words" below says, then run
@@ -452,9 +458,11 @@ ends on the later-release line.
 
 **The PRD rerun.** A `/seldon prd` that finds `prd.md` there brings it in line
 with the brief as it stands now. Read `prd.md` first, the previous version of
-this document, then `brief.md`, and nothing else: not the conversation and not
-a design folder. Change the PRD with Edit only, never a fresh Write over it, so
-a line the change doesn't touch is never typed again:
+this document, then `brief.md`, and nothing else: not a design folder, and
+not the conversation. The one thing it takes from the conversation is the
+user's answers to its own questions, when the rerun stopped to ask them as
+"The PRD step" says. Change the PRD with Edit only, never a fresh Write over
+it, so a line the change doesn't touch is never typed again:
 
 - A requirement the brief's change doesn't touch keeps its bullet line and its
   quote or tag lines byte-identical: the same ID, the same text, the same
