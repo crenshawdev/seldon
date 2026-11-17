@@ -76,9 +76,14 @@ While a run is still under way, the brief you just wrote is expected.
 ## 3. The dump
 
 On a new run the text in `$ARGUMENTS` is the user's dump. If it is empty, ask
-for the dump in one plain-prose question that ends your message: ask the user
-to paste or describe the idea, any notes, and who it's for. Write nothing in
-that turn, and end it on that question.
+for the dump and write nothing in that turn. End your message with exactly
+these words, on a line of their own, with nothing after them:
+
+```
+Paste or describe what you have so far - the idea, any notes, who it's for. What have you got?
+```
+
+That question ends your turn.
 
 ## 4. The design folder
 
