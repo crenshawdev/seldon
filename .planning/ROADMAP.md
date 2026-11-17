@@ -34,7 +34,7 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 **Requirements:** FLOW-06, FLOW-07, DOCS-01, DOCS-03
 **Success Criteria:**
 1. A replayed conversation shows `/seldon` on a project with no `.planning/seldon/` asking for the user's dump, recommending the fast path or coaching, and writing nothing until the user confirms the choice.
-2. A fast-path eval case shows the brief in `.planning/seldon/` carrying every section the format names (problem, solution, who it serves, what's different, success criteria, scope, vision), with every guess tagged `[ASSUMPTION]`.
+2. A fast-path eval case shows the brief in `.planning/seldon/` carrying every section the format names (problem, solution, who it serves, what's different, success criteria, scope, what it refuses, vision), with every guess tagged `[ASSUMPTION]`.
 3. A replayed conversation whose dump never says who the project is for shows Seldon asking about it before writing the brief.
 4. An eval case with a `docs/design/` folder shows Seldon reading it, the folder byte-identical afterward, and nothing written outside `.planning/seldon/`.
 

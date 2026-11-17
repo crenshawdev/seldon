@@ -20,7 +20,7 @@ Committed scope. Each maps to exactly one roadmap phase.
 
 ### Documents
 
-- [ ] **DOCS-01**: The brief step writes a brief covering the problem, the solution, who it serves, what's different, success criteria, scope and vision.
+- [ ] **DOCS-01**: The brief step writes a brief covering the problem, the solution, who it serves, what's different, success criteria, scope, what it refuses (each refusal with its reason) and vision.
 - [ ] **DOCS-02**: The PRD step writes a PRD of capabilities, not implementation: requirements with stable IDs, non-functional requirements, user journeys, non-goals and MVP scope, sized to the stakes.
 - [ ] **DOCS-03**: Seldon writes only inside `.planning/seldon/`, and reads a design folder the project already has, such as `docs/design/`, as input without writing to it.
 - [ ] **DOCS-04**: The `.planning/seldon/` document format is fixed and documented, with sample files Cadence's reader can be built and tested against.
