@@ -78,12 +78,18 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `prd-from-brief` resumes from a brief whose quotes name a framework, a database and a host, and checks that the PRD passes the check, carries every refusal into Non-goals with its quote, quotes or tags every line and names none of that technology.
 - `prd-no-stakes` resumes from a brief that never says who depends on the project or what breaks if it's wrong, and checks that the PRD's MVP scope carries one line, tagged `[ASSUMPTION]`, saying what size Seldon drafted it for.
 - `confirm-clear` confirms a brief Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
-- `spine-later` runs `/seldon spine` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
-- `resume-later` runs a bare `/seldon` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
+- `epics-later` runs `/seldon epics` where a brief, a PRD and a spine are all there, and checks that Seldon writes and edits nothing and says the epics step comes in a later release.
+- `resume-later` runs a bare `/seldon` where a brief, a PRD and a spine are all there, and checks that Seldon writes and edits nothing and ends on the line saying only the epics step comes in a later release.
 - `prd-reads-brief` runs `/seldon prd` in a conversation that says one thing while the brief, edited by hand since, says another, and checks that the PRD carries the brief's fact and leaves the conversation's out.
 - `prd-rerun` runs `/seldon prd` on a PRD whose brief has since dropped one requirement's source, and checks that every other requirement line stays byte-identical and the dropped ID goes on a `Retired:` line and never comes back.
 - `brief-rerun` answers the question a `/seldon brief` rerun asks with a change, and checks that the brief takes the new words on a quoted line, an untouched item stays byte-identical and the PRD beside it is neither written nor edited.
 - `brief-rerun-dump` answers the documents question with `/seldon brief`, and checks that the new words from the dump in that question's turn land on a quoted line in the brief in that same turn.
+- `spine-from-prd` runs a bare `/seldon` where a brief and a PRD are there and no spine, and checks that Seldon names the PRD first, writes a spine that passes the check with one `Kind:` line and a quote or a tag on every decision, and writes or edits no other file.
+- `spine-rerun` runs `/seldon spine` on a spine whose brief and PRD have since dropped what one decision rests on, and checks that every other decision stays byte-identical and the dropped ID goes on a `Retired:` line and never comes back.
+- `spine-job` resumes a session that confirmed a PRD whose design runs a daily job with nobody there, and checks that a bare `/seldon` asks the unattended-work and failure questions but not the trust question, and writes and edits nothing.
+- `spine-outside-input` resumes a session that confirmed a PRD whose design takes reports from the public and runs nothing unattended, and checks that a bare `/seldon` asks the trust question but neither the unattended-work nor the failure question, and writes and edits nothing.
+- `spine-answers` answers the unattended-work and failure questions, and checks that the answers land word for word in the decision about the job they describe, in a spine that passes the check.
+- `architecture-on-request` runs `/seldon architecture` where a brief, a PRD and a spine are all there, and checks that Seldon writes `.planning/seldon/architecture.md`.
 
 Results go to `evals/results/`, which git ignores.
 
