@@ -689,8 +689,9 @@ and never the earlier conversation, whatever it holds. A fact from a design
 folder reaches the spine only through a quote the brief already carries. A
 stack or hosting word the user said reaches it only through the brief's `> `
 quotes, since the PRD leaves those words out. The one thing it takes from the
-conversation is the user's answers to this step's own question, the confirm
-question "The spine check" ends on. The one other file a spine step reads is
+conversation is the user's answers to this step's own questions: the ones "The
+spine's questions" below asks, and the confirm question "The spine check" ends
+on. The one other file a spine step reads is
 the `spine.md` a `/seldon spine` rerun updates, as "The spine rerun" says.
 
 The brief and the PRD on disk are the confirmed ones, even where they differ
@@ -717,7 +718,53 @@ spelled the way `docs/FORMAT.md` spells them:
 A choice one part can make alone, such as a page layout or a library used
 inside one part, stays out. A spine doesn't need all six kinds.
 
-Draft the spine in this same turn, as "The spine draft" says.
+**The spine's questions.** Draft the spine in this same turn, as "The spine
+draft" says, unless something only the user can decide is still open. Then ask
+every such question in one plain-prose message that ends your turn, and write
+nothing in that turn. Use no AskUserQuestion and no menu. Only these are open:
+
+- **Stack and hosting:** a `stack` or `hosting` decision the brief's `> `
+  quotes never name. The PRD leaves those words out, so the brief's quotes are
+  the only place the user settled them, and one they never name is asked
+  about, never guessed.
+- **The parts' questions:** the questions below, for the parts the design has.
+
+Read the brief and the PRD for two kinds of part:
+
+- **Outside input:** anything typed or sent in by people or systems the
+  project doesn't control: users, members, the public, another service. The
+  operator's own data, such as a file or list the owner keeps themselves,
+  isn't outside input.
+- **Unattended work:** anything the system does with no person present, such
+  as a scheduled job.
+
+A design with outside input gets the trust-boundary question. Ask it with
+exactly these words, on a line of their own:
+
+```
+What can people outside the project send in, and what must they never see or change?
+```
+
+A design with unattended work gets the unattended-work question and the
+failure question, each with exactly these words, on a line of its own:
+
+```
+When should it run with nobody there?
+```
+
+```
+If it breaks with nobody there, who is told, and how?
+```
+
+Prose before those lines can name the part they're about. The failure question
+goes with unattended work only: never ask it about an outside dependency the
+system leans on, such as an email provider. A design without one of these
+parts gets none of that part's questions.
+
+**On a rerun.** A `/seldon spine` rerun reads a `spine.md` that's there, and
+every decision in it counts as answered, its `[ASSUMPTION]` guesses included.
+The rerun asks only about what that spine doesn't decide yet and only the user
+can decide, under the same rules, and otherwise carries on in the same turn.
 
 ## 16. The spine draft
 
@@ -737,8 +784,12 @@ these routes:
 in line with the brief and the PRD as they stand now. Read `spine.md` first,
 the previous version of this document, then `brief.md` and `prd.md`, and
 nothing else: not a design folder, not the dump, and not the conversation.
-Change the spine with Edit only, never a fresh Write over it, so a line the
-change doesn't touch is never typed again:
+The one thing it takes from the conversation is the user's answers to its own
+questions, when the rerun stopped to ask them as "The spine step" says. Every
+decision in that `spine.md` counts as answered, its `[ASSUMPTION]` guesses
+included, so the rerun asks only about what it doesn't decide yet. Change the
+spine with Edit only, never a fresh Write over it, so a line the change doesn't
+touch is never typed again:
 
 - A decision the change doesn't touch keeps its heading, its `Kind:` line,
   its text and its quote or tag lines byte-identical: the same ID, the same
