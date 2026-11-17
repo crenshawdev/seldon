@@ -1,0 +1,20 @@
+PLAN CHECKPOINT: decision
+Plan: .planning/phases/3/PLAN-2.md
+Tasks: 5 of 7
+| Task | Commit | Note |
+|---|---|---|
+| 1 - Start a new run from the files in .planning/seldon/ | f009bd2 | §1 positions now read off the message that ended the last turn, so an earlier run left in the conversation doesn't hold a new one; anything else is a new run. §2 "Where a run starts" replaces the brief-exists stop: no brief / resume line / later-release line / non-empty argument routes. Verify 1-3 as predicted (0, 0, prd.md 1, both fixed lines on their own line, 2/2 pass, validate exit 0 with only the ICON_MISSING directory warning). No lint/typecheck command detected. |
+| 2 - Ask before setting a new dump aside when documents exist | 30a3330 | "A dump when documents are there" subsection under §2 with the fixed documents question; §1 "Documents question answered" position re-looks at the files and follows the resume / later-release routes. A rerun reply gets a one-line placeholder (write nothing, say it comes later) until Plan 5 Task 1. Verify 1-3 as predicted. |
+| 3 - Build the PRD step from the brief alone | 5891111 | "## 12. The PRD step": brief.md the only input (never docs/design/, the dump or the conversation), running it is the go-ahead, one prose turn only for user-only questions, stakes sizing with an [ASSUMPTION] MVP-scope line when the brief doesn't show them. §1 gains "PRD questions answered". Recommended path count 2 before and after; 2/2 pass. |
+| 4 - Draft prd.md as capabilities, naming no technology | 8f85e54 | "## 13. The PRD draft": create-only Write with a Read/Glob look right before it, later-release line when a PRD is there outside a `/seldon prd` rerun; title, five sections in FORMAT order, bullet/ID rules, journeys, Non-goals, MVP scope, no-technology rule. `<rules>` write rule names brief.md and prd.md; description and objective updated. Frontmatter diff is the description line only; allowed-tools block byte-identical; 2/2 pass; validate exit 0. Non-goals is one line here: Plan 3 Tasks 1-2 add quotes and the brief's refusals. |
+| 5 - Check the PRD with the plugin's own --prd mode | 7e1abdb | "## 14. The PRD check" runs `node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --prd .planning/seldon`, Edit-fix loop, final message repeats the result line; `--brief` kept; `<rules>` command line names both checks. grep 1; 2/2 pass; `--prd samples` prints `seldon check: prd.md conforms`. |
+| 6 - Add the resume case | uncommitted | In the tree, untracked, not committed: evals/resume/case.yaml, prompt.md (`/seldon`), seed.sh (mode 755, same shape as existing-brief's), graders/writes-prd.md, graders/no-dump-ask.md, graders/no-who-for.md. Not yet written: graders/names-brief-first.md, which needs a kept trace's record shape. Done so far: Verify (1) scaffold test 4/4 pass, and a planted `curl` line in evals/resume/seed.sh failed it at `evals/resume/seed.sh:10` (restored, 4/4 again). Verify (3) offline parts: no-dump-ask finds SKILL.md's fixed dump ask in a planted last message, no-who-for finds `Who is it for?`, writes-prd path is exactly `.planning/seldon/prd.md` with no `exists:` key. Stopped at Verify (2), the eval run. |
+
+Checkpoint (decision), Task 6 Verify (2): the eval command calls the network (claude child runs on the user's credential), runs evals/resume/seed.sh as the user outside the sandbox through --scaffold, and writes /tmp/claude-eval-* and evals/results/. The contract holds network-calling and outside-the-repository Verify commands for a decision. Runs this plan still needs, all from /code/seldon:
+- `claude plugin eval . --case resume --trust-plugin --no-publish --ablation none --scaffold --keep-temp --allow-tools "Edit(.planning/seldon/**)" "Bash(node $PWD/lib/check.mjs:*)"` twice: first to read the trace shape for names-brief-first, then the scored run with all four graders.
+- The same with `--case existing-brief` (Task 7 Verify 2).
+- The README's command with `--keep-temp` before `--allow-tools`, all eleven cases (Task 7 Verify 3).
+- `rm -rf` of each kept /tmp/claude-eval-* folder afterwards (Task 7 Verify 4).
+
+Deviations: none
+Open items: none

@@ -1,0 +1,20 @@
+{
+  "phase": "3",
+  "trigger": "diff",
+  "discriminator": "860e338-791f218",
+  "round": 1,
+  "base": "860e338",
+  "head": "791f218",
+  "base_id": "860e338cf1338a58af164e188b6952869c2e0973",
+  "head_id": "791f2189f42fccff6e00c8b295734015fa063bcd",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": []
+}
