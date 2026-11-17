@@ -27,6 +27,7 @@ files:
   - evals/spine-rerun/graders/keeps-untouched-decisions.md
   - evals/spine-rerun/graders/retires-dropped-id.md
   - evals/spine-rerun/graders/no-reused-id.md
+  - samples/spine.md
 ---
 
 # Phase 4: The architecture spine - Plan 3: The spine step's cases

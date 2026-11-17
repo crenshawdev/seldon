@@ -3,14 +3,9 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 4,
-    "status": "paused",
-    "next": "/cad-execute 4 - plan 3 of 7 is stopped before its first eval run: spine-from-prd and spine-rerun need the owner's SECURITY approval (both seeds vetted), and a ruling on whether spine-rerun pins S-04 and S-05, which mention S-03's daily job",
-    "updated": "2026-11-17",
-    "plan": {
-      "k": 3,
-      "j": 7,
-      "name": "The spine step's cases"
-    }
+    "status": "executed",
+    "next": "/cad-verify 4",
+    "updated": "2026-11-17"
   },
   "phases": [
     {
@@ -89,7 +84,7 @@
       "n": 4,
       "name": "The architecture spine",
       "description": "Record only the decisions that would clash if built separately, each with a stable ID",
-      "status": "planned",
+      "status": "executed",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -101,23 +96,23 @@
         },
         {
           "file": "PLAN-3.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-4.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-5.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-6.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-7.md",
-          "finished": false
+          "finished": true
         }
       ]
     },
