@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# The case lives in evals/epics-later/, so the repo is two levels up.
+# The case lives in evals/epics-from-spine/, so the repo is two levels up.
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-# All three documents on disk, which is exactly when drafting epics is tempting.
+# A confirmed brief, PRD and spine, and no epics yet, so /seldon epics drafts them.
 mkdir -p .planning/seldon
 cp "$repo/samples/brief.md" .planning/seldon/brief.md
 cp "$repo/samples/prd.md" .planning/seldon/prd.md
