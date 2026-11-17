@@ -104,7 +104,7 @@ const cases = [
   ['a one-digit spine heading', (dir) => edit(dir, 'spine.md', (s) => s.replace('## S-02:', '## S-2:')),
     ['spine.md: "## S-2: One server-rendered web app": not a "## S-01: decision" heading']],
   ['a repeated spine ID', (dir) => edit(dir, 'spine.md', (s) => s.replace('## S-03:', '## S-02:')), ['spine.md: S-02: heading: ID appears more than once']],
-  ['an empty decision', (dir) => edit(dir, 'spine.md', (s) => s.replace(/(## S-03: .*\n)[^#]*$/, '$1')), ['spine.md: S-03: decision: empty section']],
+  ['an empty decision', (dir) => edit(dir, 'spine.md', (s) => s.replace(/(## S-03: .*\n)[^#]*/, '$1')), ['spine.md: S-03: decision: empty section']],
   ['a spine with no decisions', (dir) => writeFileSync(join(dir, 'spine.md'), '# Toolshed - architecture spine\n'), ['spine.md: no decisions']],
   ['a one-digit epic heading', (dir) => edit(dir, 'epics.md', (s) => s.replace('## E-03:', '## E-3:')),
     ['epics.md: "## E-3: Reminders": not a "## E-01: name" heading']],
