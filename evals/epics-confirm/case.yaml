@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: epics-confirm
+description: Resumes a /seldon session whose last turn said the epics resume line, wrote the Toolshed epics, repeated the epics check's pass line and asked the user to confirm them, with the brief, PRD, spine and epics at .planning/seldon/, copied from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md. The user's plain confirmation has to end on the fixed words suggesting /clear and then /seldon, with nothing written or edited.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
