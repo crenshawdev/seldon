@@ -165,6 +165,16 @@ test('a Retired line under Requirements passes the full check and --prd', (t) =>
   assert.equal(r.stdout.trim(), PRD_OK_LINE);
 });
 
+// The spine's Retired line sits above the first decision, where no rule reads.
+test('a Retired line under the spine title passes the full check and --spine', (t) => {
+  const dir = copy(t);
+  edit(dir, 'spine.md', (s) => s.replace(/^(# .*\n)/, '$1\nRetired: S-07, S-08\n'));
+  assert.deepEqual(checkDir(dir), []);
+  const r = run('--spine', dir);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), SPINE_OK_LINE);
+});
+
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);

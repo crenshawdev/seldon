@@ -190,6 +190,16 @@ Retired: CAT-03, LOAN-02
 - A retired ID is never reused, by a requirement or a non-functional requirement, because IDs carry into Cadence's `REQUIREMENTS.md` unchanged.
 - The check reads only `- ` bullets in the requirement sections, so to it this line is prose.
 
+When a spine rerun drops a decision, `spine.md` keeps its ID on one prose line directly under the `# ` title, before the first `## ` decision:
+
+```
+Retired: S-03
+```
+
+- The rules are the PRD line's: the IDs are plain and separated by commas, in the order they were retired. The line is absent until the first retirement, and a later one extends it.
+- A retired ID is never reused, because the epics and the phases built from them cite decisions by ID.
+- To the check this is text before the first decision, which no rule reads.
+
 Spine decisions and epics use a one-letter prefix on purpose. Cadence's audit admits only a prefix of 2 to 8 characters before the dash as a requirement ID, so it never counts `S-01` or `E-01` as a requirement.
 
 ## The [ASSUMPTION] tag
