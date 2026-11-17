@@ -409,6 +409,11 @@ never the dump, and never the earlier conversation, whatever it holds. A fact
 from a design folder reaches the PRD only through a quote the brief already
 carries.
 
+The brief on disk is the confirmed one, even where it differs from something
+said earlier in this conversation: the user may have edited the file by hand
+since. Build from the file as it stands. Don't point out the difference, don't
+ask which is right, and carry nothing from the conversation into the PRD.
+
 Running this step is the go-ahead. Recommend no path and ask for no
 confirmation first. Every section of the brief counts as answered, its
 `[ASSUMPTION]` guesses included, so never ask the brief's questions again.
