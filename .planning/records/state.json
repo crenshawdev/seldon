@@ -8,7 +8,7 @@
     "updated": "2026-11-17",
     "plan": {
       "k": 1,
-      "j": 5,
+      "j": 6,
       "name": "The PRD check and its format"
     }
   },
@@ -77,6 +77,10 @@
         },
         {
           "file": "PLAN-5.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-6.md",
           "finished": false
         }
       ]

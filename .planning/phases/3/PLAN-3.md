@@ -20,7 +20,6 @@ files:
   - evals/confirm-clear/case.yaml
   - evals/confirm-clear/prompt.md
   - evals/confirm-clear/history.jsonl
-  - evals/confirm-clear/seed.sh
   - evals/confirm-clear/graders/suggests-clear.md
   - evals/confirm-clear/graders/no-write.md
   - evals/confirm-clear/graders/no-edit.md
@@ -33,7 +32,7 @@ files:
 The PRD step builds from the brief alone, the walk survives a `/clear`, and any one step can be rerun, proven by eval cases this phase adds. This plan does two things:
 
 - makes the PRD carry the user's own words and the brief's refusals, proven by AC1's case
-- ends every step on a confirm and fixed words suggesting `/clear`, proven by AC5's case, the first case to put a history and a scaffold together
+- ends every step on a confirm and fixed words suggesting `/clear`, proven by AC5's case
 
 ## Must be true when done
 
@@ -44,7 +43,6 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
   - gives every requirement and non-goal line a `> ` quote under it or an `[ASSUMPTION]` tag
 - Each step ends the same way: write, check, repeat the check's result line, then ask the user to confirm or name changes. phase 2's fast-path-brief, coaching-brief and write-scope cases still score 1.00 with that ending.
 - The confirm-clear case scores 1.00. When the user confirms a written step, Seldon writes and edits nothing and ends on the fixed words suggesting `/clear` and then `/seldon`.
-- This plan's report records whether one case can combine `context.history_file` and `context.scaffold_script`, and whether the history's recorded `cwd` gets in the way. A yes needs a Read of the seeded `.planning/seldon/brief.md` inside the run's own workspace, made under the history. `evals/confirm-clear/case.yaml` shows the answer.
 
 ## Context
 
@@ -175,10 +173,10 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
   - (2) Run `fast-path-brief`, `coaching-brief`, `write-scope` and `prd-from-brief`, one per run, each with the run command. Each scores 1.00. Each kept trace's last assistant message repeats the check's line and ends on a question. The Bash audit is reported.
   - (3) `node --test tests/skill.test.mjs` passes and `claude plugin validate --strict .` exits 0.
 
-### Task 5: Add the confirm-clear case, the first to combine history and scaffold
+### Task 5: Add the confirm-clear case
 
-- **Files:** evals/confirm-clear/case.yaml, evals/confirm-clear/prompt.md, evals/confirm-clear/history.jsonl, evals/confirm-clear/seed.sh, evals/confirm-clear/graders/suggests-clear.md, evals/confirm-clear/graders/no-write.md, evals/confirm-clear/graders/no-edit.md
-- **Reads:** evals/fast-path-brief/history.jsonl, evals/fast-path-brief/case.yaml, evals/resume/seed.sh, samples/brief.md
+- **Files:** evals/confirm-clear/case.yaml, evals/confirm-clear/prompt.md, evals/confirm-clear/history.jsonl, evals/confirm-clear/graders/suggests-clear.md, evals/confirm-clear/graders/no-write.md, evals/confirm-clear/graders/no-edit.md
+- **Reads:** evals/fast-path-brief/history.jsonl, evals/fast-path-brief/case.yaml, samples/brief.md
 - **Decisions:** D-07, D-16, D-20, D-21
 - **Pins:** tests/scaffold.test.mjs
 - **Action:** AC5's case: a replay where the user confirms a written step.
@@ -187,24 +185,15 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - The user's `/seldon` dump, built from that brief's `> ` phrases.
     - Seldon's fast-path recommendation, then the user's `/seldon` confirmation of it.
     - Seldon's step end in Task 4's shape: it names `.planning/seldon/brief.md`, gives the brief check's pass line, and ends on the confirm question.
-  - **`seed.sh`:** copies `samples/brief.md` to `.planning/seldon/brief.md`, the brief that conversation wrote.
   - **`prompt.md`:** `/seldon` and a plain confirmation that doesn't ask to go on to the next step, for example `/seldon Yes, that's right.`
-  - **`case.yaml`:** `context.history_file: history.jsonl` and `context.scaffold_script: seed.sh`, `max_turns: 10`, `timeout_seconds: 300` and the read-only tools.
+  - **`case.yaml`:** `context.history_file: history.jsonl` only, `max_turns: 10`, `timeout_seconds: 300` and the read-only tools. The confirm happens inside a step already under way and needs no document on disk, so the case names no `scaffold_script` and has no `seed.sh`.
   - **Graders:**
     - **`suggests-clear.md`:** `regex` on `last_message`, matching Task 4's fixed words only as they end the message. After the words, only whitespace or a closing fence may come before the end of the message, the way Plan 2's `asks-rerun-or-go-on` matches its question as it ends the message.
     - **`no-write.md`:** `tool_used` Write, with `min: 0` and `max: 0`.
     - **`no-edit.md`:** `tool_used` Edit, with `min: 0` and `max: 0`.
-  - **The flagged assumptions this case settles:** it's the phase's first case that combines `history_file` and `scaffold_script`. Two things are unclear: whether the two combine, and whether the history's recorded `cwd` gets in the way of the scaffolded workspace. The answer lives in this run. The combination works only if all four of these hold:
-    1. The case loads and runs.
-    2. The kept trace shows the history's messages before the prompt.
-    3. After the prompt, under the history, the trace holds at least one Read whose `file_path` is `.planning/seldon/brief.md` inside the run's own workspace, and its result is the seeded brief's text, not an error. Every other file-tool call in the trace resolves inside the workspace too. With zero file-tool calls this condition fails, because a run that touches no file shows nothing about where the tools resolve.
-    4. The workspace still holds the seeded brief afterwards.
-
-    If any of them fails, the combined form isn't shown to work, and Plan 4 treats it as not working. Then drop `scaffold_script` from `case.yaml` and don't create `seed.sh`, so the case is history-only. Rerun it, and record which condition failed.
-  - **What follows from a no:** Plan 4's AC3 case takes CONTEXT's fallback split. Plan 4's brief-rerun cases stop at a checkpoint for John, with no fallback made up for them (the user's decision at the plan review). Plan 4 reads the answer from whether this `case.yaml` names a `scaffold_script`.
-  - **Don't steer the Read:** the confirm position gives Seldon no reason to open a file. Don't change SKILL.md or the prompt to make it read one. A run with no Read is a failed condition 3, recorded as such.
+  - **The combined form isn't tested here:** whether a history and a scaffold combine is settled by Plan 4 Task 3's prd-reads-brief case, whose `/seldon prd` step has to read the seeded brief.
 - **Verify:**
-  - **Testing scope:** the outcome is AC5 plus the answer to the combined form. Nothing covers either today. Three graders, the run and the trace reading are the evidence, and testing stops there.
+  - **Testing scope:** the outcome is AC5. Nothing covers it today. Three graders and the run are the evidence, and testing stops there.
   - (1) D-21, checked with a `node -e` script that reads the pattern from its file. `suggests-clear` matches the fixed words as SKILL.md holds them, both alone at the end of a message and followed by a closing fence. It doesn't match:
     - the brief check's pass line
     - a confirm question
@@ -213,11 +202,10 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - the fixed words followed by one extra sentence, such as an offer to start the PRD now
 
     `no-write` and `no-edit` read `min: 0` and `max: 0` with no `input_match`, so any call of the tool fails them.
-  - (2) `node --test tests/scaffold.test.mjs` passes, with `seed.sh` scanned when the combined form stays.
-  - (3) The run command with `--case confirm-clear` exits 0 at 1.00, with no `not granted` and no `scaffold failed`. The trace shows no Write, Edit or Bash call. The Bash audit is reported.
-  - (4) The report states the combined form's answer and the trace evidence behind each of the four conditions. For condition 3, it gives the Read's `file_path` next to the kept workspace's path. With no such Read, it says condition 3 failed and that the case went history-only.
-  - (5) `git status --porcelain evals/` lists only this plan's case files. No session file appears, because `evals/.gitignore` ignores it.
-  - (6) `ls -d /tmp/claude-eval-*` matches nothing.
+  - (2) `evals/confirm-clear/case.yaml` names `history_file` and no `scaffold_script`, and `evals/confirm-clear/seed.sh` doesn't exist. `node --test tests/scaffold.test.mjs` passes.
+  - (3) The run command with `--case confirm-clear` exits 0 at 1.00, with no `not granted`. The trace shows no Write, Edit or Bash call. The Bash audit is reported.
+  - (4) `git status --porcelain evals/` lists only this plan's case files. No session file appears, because `evals/.gitignore` ignores it.
+  - (5) `ls -d /tmp/claude-eval-*` matches nothing.
 
 ## Notes
 
@@ -226,5 +214,4 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
   - D-07 (ending a step), from phases/3/CONTEXT.md, phase 3. It informs Task 4.
   - D-12 and D-13 (refusals and quotes in the PRD), from phases/3/CONTEXT.md, phase 3. They inform Tasks 1 to 3.
   - Phase 2 UAT items 6 and 9 (phases/2/UAT.md, phase 2) are why every grader here gets a D-21 check against known-bad text.
-- **Why Task 5 settles the combined form:** it comes here, ahead of Plan 4's cases, so the cases that need it (AC3 and the brief reruns) start from a known answer.
-- **The Read condition can fail by absence:** confirming needs no file, so condition 3 fails unless Seldon happens to read the brief. The user chose that at the plan review: a no sends AC3 to CONTEXT's fallback split and stops the brief-rerun cases at a checkpoint for John.
+- **Why confirm-clear is history-only:** confirming gives Seldon no reason to read a file, so a Read check there would fail for that reason and not because the harness can't combine a history and a scaffold. The user moved the combined-form check to Plan 4 Task 3's prd-reads-brief case, the first case whose step has to read the seeded brief under a history, and confirm-clear keeps only the `history_file` it needs.

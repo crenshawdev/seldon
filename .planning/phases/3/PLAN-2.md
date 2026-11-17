@@ -100,7 +100,7 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - **Only a brief there:** the fixed resume line, then the PRD step.
     - **A brief and a PRD there:** write nothing and end on the fixed later-release line (D-17). Going on never runs the PRD step over a PRD that's already there.
     - The text from the question's turn isn't input to the PRD (D-15).
-    - A rerun answer, `/seldon brief` typed as the reply included, gets its path in Plan 4 Task 6, where the brief rerun is built.
+    - A rerun answer, `/seldon brief` typed as the reply included, gets its path in Plan 5 Task 1, where the brief rerun is built.
 - **Verify:**
   - **Testing scope:** Task 7 proves the question by eval. Here, text checks that fail today plus the pinned test are enough, and testing stops there.
   - (1) SKILL.md holds the fixed question on a line of its own that names `/seldon brief` and ends in `?`. No such line exists today.
@@ -236,8 +236,8 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
 
 ## Notes
 
-- **Order:** this plan runs after Plan 1, because Task 5's command and Task 6's run need the `--prd` mode. Plans 3 and 4 share SKILL.md and run after it.
-- **Between Plans 2 and 4:** a user who answers the documents question by choosing the rerun has no path yet. Plan 4 Task 6 wires it into the brief rerun. No case before then reaches that answer.
+- **Order:** this plan runs after Plan 1, because Task 5's command and Task 6's run need the `--prd` mode. Plans 3, 4 and 5 share SKILL.md and run after it.
+- **Between Plans 2 and 5:** a user who answers the documents question by choosing the rerun has no path yet. Plan 5 Task 1 wires it into the brief rerun. No case before then reaches that answer.
 - **The go-on answer with both documents there:** Task 2 sends it to the later-release line, and Task 4's guard backs that up for any route into the PRD step. Plan 4 Task 4 makes the `/seldon prd` rerun the guard's one exception. No eval case reaches this state; text checks pin it.
 - **Prior art:**
   - D-07 (ending a step), from phases/3/CONTEXT.md, phase 3. It's why Task 1 points "Run finished" at the file-based start and leaves the confirm to Plan 3.

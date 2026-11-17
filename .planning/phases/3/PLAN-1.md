@@ -31,7 +31,7 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
 ## Context
 
 - **Locked:** D-03, D-10, D-11, D-12, D-13 and D-20. `lib/check.mjs` mirrors `docs/FORMAT.md` and nothing past it (its header comment). Phase 2's `--brief` mode (phase 2 D-05) is the pattern `--prd` follows.
-- **Fixed here for Plans 2 to 4:** the mode token is `--prd` and its pass line is `seldon check: prd.md conforms`. SKILL.md and the eval graders depend on both, so neither changes after this plan.
+- **Fixed here for Plans 2 to 5:** the mode token is `--prd` and its pass line is `seldon check: prd.md conforms`. SKILL.md and the eval graders depend on both, so neither changes after this plan.
 - **Tests:** `node:test` and `node:` builtins only, on Node 22 as well, because the CI matrix runs 22 and 24 and coverage runs on 26. The coverage gate is the coverage job's command in `.github/workflows/test.yml` plus both lcov guards, with thresholds as they stand.
 - **Out of this plan:** no SKILL.md change, no eval run, and no change to `samples/brief.md`, `samples/spine.md` or `samples/epics.md`.
 

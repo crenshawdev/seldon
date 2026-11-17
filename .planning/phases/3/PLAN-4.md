@@ -33,48 +33,33 @@ files:
   - evals/prd-rerun/graders/keeps-unchanged-lines.md
   - evals/prd-rerun/graders/retires-dropped-id.md
   - evals/prd-rerun/graders/no-reused-id.md
-  - evals/brief-rerun/case.yaml
-  - evals/brief-rerun/prompt.md
-  - evals/brief-rerun/history.jsonl
-  - evals/brief-rerun/seed.sh
-  - evals/brief-rerun/graders/keeps-untouched-item.md
-  - evals/brief-rerun/graders/carries-change.md
-  - evals/brief-rerun/graders/prd-not-written.md
-  - evals/brief-rerun/graders/prd-not-edited.md
-  - evals/brief-rerun-dump/case.yaml
-  - evals/brief-rerun-dump/prompt.md
-  - evals/brief-rerun-dump/history.jsonl
-  - evals/brief-rerun-dump/seed.sh
-  - evals/brief-rerun-dump/graders/carries-dump.md
 ---
 
-# Phase 3: The PRD, resume and rerun - Plan 4: Rerunning one step
+# Phase 3: The PRD, resume and rerun - Plan 4: Step names and the PRD rerun
 
 ## Goal
 
-The PRD step builds from the brief alone, the walk survives a `/clear`, and any one step can be rerun, proven by eval cases this phase adds. This plan does four things:
+The PRD step builds from the brief alone, the walk survives a `/clear`, and any one step can be rerun, proven by eval cases this phase adds. This plan does three things:
 
 - makes `/seldon brief`, `/seldon prd`, `/seldon spine` and `/seldon epics` reruns of that one step
 - keeps every untouched requirement ID and line when the PRD reruns
-- updates the brief in place when it reruns
-- proves that the PRD comes from the brief file, not the earlier conversation
+- proves that the PRD comes from the brief file, not the earlier conversation, in the case that settles whether a history and a scaffold combine
 
 ## Must be true when done
 
 - `/seldon spine` writes and edits nothing and ends on the fixed later-release line, even with a brief and a PRD on disk. The spine-later case scores 1.00.
 - A brief file and an earlier conversation can disagree on one fact. In that case `/seldon prd` puts the brief's fact in `prd.md` and leaves the conversation's fact out. The prd-reads-brief case scores 1.00, or so do both halves of the split.
+- This plan's report records whether one case can combine `context.history_file` and `context.scaffold_script`, and whether the history's recorded `cwd` gets in the way. A yes needs a Read of the seeded `.planning/seldon/brief.md` inside the run's own workspace, made under the history. `evals/prd-reads-brief/case.yaml` shows the answer: it names a `history_file` only on a yes.
 - After the brief drops reminders, `/seldon prd` does three things, and the prd-rerun case scores 1.00:
   - it keeps every other requirement's line and quote byte-identical
   - it lists LOAN-03 on a `Retired:` line under `## Requirements`
   - it doesn't bring LOAN-03 back as a bullet
-- `/seldon brief` followed by a change updates `brief.md` in place, keeps an untouched item and its quote byte-identical, and never writes or edits `prd.md`. The brief-rerun case scores 1.00.
-- `/seldon brief` typed as the reply to Plan 2's documents question takes the dump from that question's turn as the change. It puts the dump's new words in `brief.md` in that same turn, without asking what should change. The brief-rerun-dump case scores 1.00.
 - Only `/seldon prd` updates an existing `prd.md`. Every other route into the PRD step that finds one still ends on the later-release line, as Plan 2's guard says.
 - SKILL.md's `allowed-tools` still holds exactly phase 2 D-02's five entries.
 
 ## Context
 
-- **Locked:** D-02, D-03, D-04, D-08, D-09, D-15, D-16, D-17, D-20 and D-21.
+- **Locked:** D-03, D-08, D-09, D-15, D-16, D-17, D-20 and D-21.
 - **SECURITY (phase 2 D-02):** `allowed-tools` stays exactly its five entries, pinned by `tests/skill.test.mjs`.
 - **Fixed lines in use:** Plan 2's later-release line and Plan 3's `/clear` words.
 - **Runs and the Bash audit:** as in Plan 2's Context.
@@ -89,9 +74,9 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
   - No line of a `case.yaml` or `prompt.md` says "scaffold" except `scaffold_script: seed.sh`, and none holds a double-quoted backslash.
   - Every new grader passes D-21 before commit.
   - A scaffolded file is invisible to `file_exists`, so a document the scaffold placed is graded by its contents or by `tool_used`.
-- **The combined form:** Plan 3 Task 5 settled whether a case can combine a history and a scaffold. `evals/confirm-clear/case.yaml` naming a `scaffold_script` means it can. It names one only when that run showed a Read of the seeded brief inside its own workspace, made under the history.
+- **The combined form:** Task 3's run settles whether a case can combine a history and a scaffold. prd-reads-brief is the first case whose step has to read the seeded brief under a history.
   - Without it, Task 3 takes CONTEXT's fallback split.
-  - Without it, Tasks 7 and 8 stop at a checkpoint for John, with no fallback made up for them (the user's decision at the plan review).
+  - Without it, Plan 5's brief-rerun cases stop at a checkpoint for John, with no fallback made up for them (the user's decision at the plan review). Plan 5 reads the answer from whether `evals/prd-reads-brief/case.yaml` names a `history_file`.
 - **Held:** no push, tag, PR or GitHub change, and no install.
 
 ## Tasks
@@ -109,13 +94,13 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - With no `brief.md`, the PRD has nothing to build from. Write nothing and say there's no brief yet, and that a bare `/seldon` starts it.
     - With a `prd.md` already there, it's a rerun, which Task 4 adds.
   - **`brief`:**
-    - With a `brief.md` there, it's the brief rerun, which Task 6 adds.
-    - When the turn before was Plan 2's documents question, the brief rerun takes that question's dump as the change and skips Reopening's ask. Task 6 says how. The step-name test still decides that this is a brief rerun; the turn before decides only where the rerun gets its change.
+    - With a `brief.md` there, it's the brief rerun, which Plan 5 Task 1 adds.
+    - When the turn before was Plan 2's documents question, the brief rerun takes that question's dump as the change and skips Reopening's ask. Plan 5 Task 1 says how. The step-name test still decides that this is a brief rerun; the turn before decides only where the rerun gets its change.
     - With none, it's a new brief run with no dump, which is the fixed dump ask in §3.
   - **`argument-hint`:** in the frontmatter, it names the step names alongside the dump.
 - **Verify:**
-  - **Testing scope:** Task 2 proves the spine route by eval, Task 3 the `prd` route, and Tasks 7 and 8 the `brief` route. A text check that fails today plus the pinned test are enough here, and testing stops there.
-  - (1) SKILL.md's §1 names all four step names and says the whole trimmed argument must be exactly one of them. `argument-hint` names them. The `brief` route points to Task 6 for a `/seldon brief` that follows the documents question. None of this is true today.
+  - **Testing scope:** Task 2 proves the spine route by eval, Task 3 the `prd` route, and Plan 5 Tasks 2 and 3 the `brief` route. A text check that fails today plus the pinned test are enough here, and testing stops there.
+  - (1) SKILL.md's §1 names all four step names and says the whole trimmed argument must be exactly one of them. `argument-hint` names them. The `brief` route points to the brief rerun (Plan 5 Task 1) for a `/seldon brief` that follows the documents question. None of this is true today.
   - (2) `node --test tests/skill.test.mjs` passes and `claude plugin validate --strict .` exits 0.
 
 ### Task 2: Add the spine-later case
@@ -129,15 +114,16 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
   - **`prompt.md`:** exactly `/seldon spine`.
   - **`case.yaml`:** `context.scaffold_script: seed.sh`, `max_turns: 10`, `timeout_seconds: 300` and the read-only tools.
   - **Graders:**
-    - **`says-later-release.md`:** `regex` on `last_message`, matching the fixed later-release line.
+    - **`says-later-release.md`:** `regex` on `last_message`, matching the fixed later-release words only as they end the message. After the words, only whitespace or a closing fence may come before the end of the message, the way Plan 3's `suggests-clear` matches its words.
     - **`no-write.md`:** `tool_used` Write, with `min: 0` and `max: 0`.
     - **`no-edit.md`:** `tool_used` Edit, with `min: 0` and `max: 0`.
 - **Verify:**
   - **Testing scope:** the outcome is the second half of AC6. Nothing covers it today. Three graders and one run are the evidence, and testing stops there.
-  - (1) D-21, checked with a `node -e` script that reads the pattern from its file. `says-later-release` matches the fixed line as SKILL.md holds it. It doesn't match:
+  - (1) D-21, checked with a `node -e` script that reads the pattern from its file. `says-later-release` matches the fixed line as SKILL.md holds it, both alone at the end of a message and followed by a closing fence. It doesn't match:
     - phase 2's removed line `Rerunning a step comes in a later release.`
     - the fixed resume line
     - a reply announcing a drafted spine
+    - the fixed words followed by one extra sentence, such as an offer to rerun the PRD instead
 
     The two `tool_used` graders read `min: 0` and `max: 0`.
   - (2) `node --test tests/scaffold.test.mjs` passes.
@@ -146,10 +132,10 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
 ### Task 3: Add the prd-reads-brief case
 
 - **Files:** samples/prd-reads-brief/brief.md, evals/prd-reads-brief/case.yaml, evals/prd-reads-brief/prompt.md, evals/prd-reads-brief/history.jsonl, evals/prd-reads-brief/seed.sh, evals/prd-reads-brief/graders/writes-prd.md, evals/prd-reads-brief/graders/carries-brief-fact.md, evals/prd-reads-brief/graders/drops-talk-fact.md, evals/prd-ignores-talk/case.yaml, evals/prd-ignores-talk/prompt.md, evals/prd-ignores-talk/history.jsonl, evals/prd-ignores-talk/graders/no-prd.md, evals/prd-ignores-talk/graders/no-write.md
-- **Reads:** evals/confirm-clear/case.yaml, evals/confirm-clear/history.jsonl, samples/brief.md
+- **Reads:** evals/confirm-clear/case.yaml, evals/confirm-clear/history.jsonl, evals/prd-from-brief/seed.sh, samples/brief.md
 - **Decisions:** D-15, D-16, D-20, D-21
 - **Pins:** tests/scaffold.test.mjs
-- **Action:** AC3's case. It proves the PRD step reads the brief file, never the earlier conversation.
+- **Action:** AC3's case. It proves the PRD step reads the brief file, never the earlier conversation. It's also the phase's first case that combines `history_file` and `scaffold_script`, and its run settles whether the two combine.
   - **Fixture `samples/prd-reads-brief/brief.md`:**
     - A confirmed brief for a coined project. It passes `--brief`, and every item carries a quote or a tag.
     - One fact the PRD has to carry sits in an item and its `> ` quote. It's a capability-level value, such as a number of days or a limit, not a technology.
@@ -166,14 +152,22 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - **`writes-prd.md`:** `file_exists` on `.planning/seldon/prd.md`. No PRD is seeded, so the run's own write is visible.
     - **`carries-brief-fact.md`:** `regex` on the file `.planning/seldon/prd.md`, finding the brief's value.
     - **`drops-talk-fact.md`:** `regex` on the same file, with `match: not_contains`. It matches the history's value in any spelling the PRD could use, in digits and in words.
-  - **Fallback (CONTEXT's flagged assumption):** applies if `evals/confirm-clear/case.yaml` names no `scaffold_script`. That means one case can't combine a history and a scaffold, so the case splits.
+  - **The combined-form check (CONTEXT's flagged assumptions):** two things are unclear: whether the two combine, and whether the history's recorded `cwd` gets in the way of the scaffolded workspace. The answer lives in this case's combined run, so build and run the combined form first. Its `/seldon prd` step has to read `brief.md`, which is why the check sits here. The combination works only if all four of these hold:
+    1. The case loads and runs.
+    2. The kept trace shows the history's messages before the prompt.
+    3. After the prompt, under the history, the trace holds at least one Read whose `file_path` is `.planning/seldon/brief.md` inside the run's own workspace, and its result is the seeded brief's text, not an error. Every other file-tool call in the trace resolves inside the workspace too. With zero file-tool calls this condition fails, because a run that touches no file shows nothing about where the tools resolve.
+    4. The workspace still holds the seeded brief afterwards.
+
+    If any of them fails, the combined form isn't shown to work. Record which condition failed and take the fallback below.
+  - **Fallback (CONTEXT's flagged assumption):** applies when the combined-form check fails. That means one case can't combine a history and a scaffold, so the case splits.
     - `prd-reads-brief` drops `history_file`, `history.jsonl` and `drops-talk-fact`, and proves only the brief's fact.
     - A new history-only case, `prd-ignores-talk`, takes this history and the prompt `/seldon prd`, with no brief on disk. It proves the PRD step doesn't build from the conversation (D-15, Task 1's no-brief route). Its graders:
       - **`no-prd.md`:** `file_exists` on `.planning/seldon/prd.md`, with `exists: false`.
       - **`no-write.md`:** `tool_used` Write, with `min: 0` and `max: 0`.
-    - Don't create files for the form that isn't used.
+    - Leave no files of the form that isn't used.
+  - **What follows from a no:** Plan 5's brief-rerun cases stop at a checkpoint for John, with no fallback made up for them (the user's decision at the plan review). Plan 5 reads the answer from whether this `case.yaml` names a `history_file`, which it does only when all four conditions held.
 - **Verify:**
-  - **Testing scope:** the outcome is AC3, the brief's fact in and the conversation's fact out. Nothing covers it today. The graders, the run or runs and the D-21 checks are the evidence, and testing stops there.
+  - **Testing scope:** the outcome is AC3, the brief's fact in and the conversation's fact out, plus the answer to the combined form. Nothing covers either today. The graders, the run or runs, the trace reading and the D-21 checks are the evidence, and testing stops there.
   - (1) `node lib/check.mjs --brief samples/prd-reads-brief` passes. `grep` finds the brief's value nowhere in the history and the history's value nowhere in the fixture.
   - (2) D-21, checked with a `node -e` script that reads each pattern from its file:
     - `carries-brief-fact` doesn't match a PRD holding only the history's value.
@@ -182,6 +176,7 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - Under the fallback, `no-prd` reads `exists: false`, so a run that creates `prd.md` fails it.
   - (3) `node --test tests/scaffold.test.mjs` passes.
   - (4) The run command for each case this task kept exits 0 at 1.00, with no `not granted` and no `scaffold failed`. The Bash audit is reported. The report says which form was used.
+  - (5) The report states the combined form's answer and the trace evidence from the combined run behind each of the four conditions. For condition 3, it gives the Read's `file_path` next to the kept workspace's path. With no such Read, it says condition 3 failed and that the case split. `evals/prd-reads-brief/case.yaml` names `history_file` exactly when all four held.
 
 ### Task 4: Keep requirement IDs when the PRD reruns
 
@@ -239,86 +234,6 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
     - **`no-reused-id`:** it matches `samples/prd.md`, which still lists LOAN-03, and doesn't match a copy without that bullet.
   - (3) `node --test tests/scaffold.test.mjs` passes.
   - (4) The run command with `--case prd-rerun` exits 0 at 1.00, with no `not granted` and no `scaffold failed`. The Bash audit is reported.
-
-### Task 6: Rerun the brief in place
-
-- **Files:** skills/seldon/SKILL.md
-- **Reads:** skills/seldon/SKILL.md#1. Where the conversation stands, skills/seldon/SKILL.md#10. The draft
-- **Decisions:** D-04, D-02
-- **Pins:** tests/skill.test.mjs
-- **Action:**
-  - **Reopening (D-04):** with `brief.md` there, `/seldon brief` reopens the brief step on it.
-    - Read `brief.md`, name it, and ask in one prose question what should change. Write nothing in that turn.
-    - There's no path recommendation, because the user chose a path when the brief was first written. That's my choice, recorded here.
-  - **§1's new position:** the brief has been reopened, the change asked about, and the user has answered. Update `brief.md` in place with Edit:
-    - Every item the change doesn't touch keeps its line and quote byte-identical.
-    - A changed or new item quotes the user's new words, as "The draft" says, or carries a tag.
-    - What it refuses keeps its rules: a refusal is never guessed.
-    - Then the brief check and the step's end (Plan 3 Task 4).
-  - **The documents question (D-02):** when the turn before was Plan 2's documents question and the user answers it by choosing the rerun, the dump from that question's turn is the change. That holds whether the answer is `/seldon brief`, the command the question names, or the rerun in other words.
-    - This comes before Reopening. The rerun skips Reopening's ask and goes straight to the update in the same turn, so the user never has to type the dump again.
-    - The update is the one in §1's new position above, with the dump as the user's answer: its new words are the quotes.
-  - **`prd.md`:** the brief rerun never writes or edits it. Marking it stale is phase 6's CHECK-04.
-- **Verify:**
-  - **Testing scope:** Tasks 7 and 8 prove this behavior by eval. A text check that fails today plus the pinned test are enough here, and testing stops there.
-  - (1) SKILL.md says three things, none of which it says today:
-    - `/seldon brief` reopens the existing brief and updates it with Edit, keeping untouched items and quotes byte-identical.
-    - It leaves `prd.md` alone.
-    - `/seldon brief`, or another rerun answer, right after the documents question takes that question's dump as the change and skips Reopening's ask.
-  - (2) `node --test tests/skill.test.mjs` passes and `claude plugin validate --strict .` exits 0.
-
-### Task 7: Add the brief-rerun case
-
-- **Files:** evals/brief-rerun/case.yaml, evals/brief-rerun/prompt.md, evals/brief-rerun/history.jsonl, evals/brief-rerun/seed.sh, evals/brief-rerun/graders/keeps-untouched-item.md, evals/brief-rerun/graders/carries-change.md, evals/brief-rerun/graders/prd-not-written.md, evals/brief-rerun/graders/prd-not-edited.md
-- **Reads:** evals/confirm-clear/case.yaml, evals/confirm-clear/history.jsonl, samples/brief.md, evals/write-scope/graders/no-write-outside.md
-- **Decisions:** D-04, D-20, D-21
-- **Pins:** tests/scaffold.test.mjs
-- **Action:** The second half of AC4. It needs the combined form.
-  - **Without the combined form:** if `evals/confirm-clear/case.yaml` names no `scaffold_script`, stop at a checkpoint for John. This case needs a history and a seeded brief together, and it has no fallback. Don't make one up.
-  - **`seed.sh`:** copies `samples/brief.md` to `.planning/seldon/brief.md` and `samples/prd.md` to `.planning/seldon/prd.md`.
-  - **`history.jsonl`:** the user's `/seldon brief`, then Seldon naming `.planning/seldon/brief.md` and asking what should change, as Task 6 shapes that turn.
-  - **`prompt.md`:** `/seldon` and a change that touches one item of `samples/brief.md`, in new words found nowhere in it. A tighter checkout time is one example.
-  - **`case.yaml`:** `context.history_file: history.jsonl` and `context.scaffold_script: seed.sh`, `max_turns: 20`, `timeout_seconds: 600` and the read-only tools.
-  - **Graders:**
-    - **`keeps-untouched-item.md`:** `regex` on the file `.planning/seldon/brief.md`. It requires one item the change doesn't touch, its text line and its quote line, exactly as `samples/brief.md` has them, as one block. Who it serves is one example.
-    - **`carries-change.md`:** `regex` on the same file, finding the user's new words on a `> ` line.
-    - **`prd-not-written.md`:** `tool_used` Write, with `min: 0`, `max: 0` and an `input_match` matching a `file_path` that ends in `.planning/seldon/prd.md`.
-    - **`prd-not-edited.md`:** the same, for Edit.
-- **Verify:**
-  - **Testing scope:** the outcome is the second half of AC4. Nothing covers it today. Four graders, one run, the D-21 checks and a byte comparison of the seeded PRD are the evidence, and testing stops there.
-  - (1) D-21, checked with a `node -e` script that reads each pattern from its file:
-    - `keeps-untouched-item` doesn't match a copy of `samples/brief.md` with one word of that item's quote changed.
-    - `carries-change` doesn't match `samples/brief.md`.
-    - The two `input_match` patterns match the JSON-encoded input of a Write or Edit to `<workspace>/.planning/seldon/prd.md`, and don't match one to `brief.md`.
-  - (2) `node --test tests/scaffold.test.mjs` passes.
-  - (3) The run command with `--case brief-rerun` exits 0 at 1.00, with no `not granted` and no `scaffold failed`. The Bash audit is reported.
-  - (4) Before the kept folder is removed, `cmp` shows the workspace's `.planning/seldon/prd.md` is byte-identical to `samples/prd.md`.
-
-### Task 8: Add the brief-rerun-dump case
-
-- **Files:** evals/brief-rerun-dump/case.yaml, evals/brief-rerun-dump/prompt.md, evals/brief-rerun-dump/history.jsonl, evals/brief-rerun-dump/seed.sh, evals/brief-rerun-dump/graders/carries-dump.md
-- **Reads:** evals/brief-rerun/case.yaml, evals/brief-rerun/history.jsonl, evals/brief-rerun/graders/carries-change.md, evals/existing-brief/prompt.md, samples/brief.md, skills/seldon/SKILL.md
-- **Decisions:** D-02, D-04, D-20, D-21
-- **Pins:** tests/scaffold.test.mjs
-- **Action:** A case where the user answers Plan 2's documents question with `/seldon brief`. It proves the dump they just gave becomes the change and isn't set aside (D-02). A case holds one history, so this is a case of its own rather than a second history in brief-rerun.
-  - **Without the combined form:** if `evals/confirm-clear/case.yaml` names no `scaffold_script`, stop at a checkpoint for John, as Task 7 does. This case also needs a history and a seeded brief together.
-  - **`seed.sh`:** copies `samples/brief.md` to `.planning/seldon/brief.md` after making the folder, and does nothing else.
-  - **`history.jsonl`:** in the record shape of confirm-clear's history, with a UUID-shaped `sessionId`, two records:
-    - The user's `/seldon` and a new dump for the Toolshed project that changes one item of `samples/brief.md`, in new words found nowhere in it. A change to who borrows, such as the counter opening to a second group, is one example. Pick words that also differ from brief-rerun's change.
-    - Seldon's reply, which ends on SKILL.md's fixed documents question, copied character for character from SKILL.md.
-  - **`prompt.md`:** exactly `/seldon brief`.
-  - **`case.yaml`:** `context.history_file: history.jsonl` and `context.scaffold_script: seed.sh`, `max_turns: 20`, `timeout_seconds: 600` and the read-only tools. The description never uses the word scaffold.
-  - **Grader `carries-dump.md`:** `regex` on the file `.planning/seldon/brief.md`, finding the dump's new words on a `> ` line, in the same form as brief-rerun's `carries-change`. The run has one user turn, so a rerun that asks what should change and stops leaves the seeded brief as it was, and this grader fails it.
-- **Verify:**
-  - **Testing scope:** the outcome is the D-02 promise for the reply the documents question names: the dump reaches `brief.md` without a second ask. Nothing covers it today: brief-rerun's history starts from `/seldon brief` itself. One grader, one run and the D-21 checks are the evidence, and testing stops there.
-  - (1) The history's last record is an assistant message whose text ends with SKILL.md's fixed documents question, character for character. `grep` finds the dump's new words nowhere in `samples/brief.md`.
-  - (2) D-21, checked with a `node -e` script that reads the pattern from its file. `carries-dump` doesn't match:
-    - `samples/brief.md`, which is what a run that asks what should change leaves on disk
-    - a copy of `samples/brief.md` holding the dump's new words only in an item's text line and on no `> ` line
-
-    It matches a copy whose changed item carries the new words on a `> ` line.
-  - (3) `node --test tests/scaffold.test.mjs` passes, with the new `seed.sh` scanned.
-  - (4) The run command with `--case brief-rerun-dump` exits 0 at 1.00, with no `not granted` and no `scaffold failed`. The Bash audit is reported.
   - (5) `ls -d /tmp/claude-eval-*` matches nothing, and `git status --porcelain` lists only this plan's files.
 
 ## Notes
@@ -326,9 +241,10 @@ The PRD step builds from the brief alone, the walk survives a `/clear`, and any 
 - **Choices derived, not decided:** two routes in Task 1 follow from D-15, D-08 and D-06 rather than from a decision of their own. Both were accepted at the plan review.
   - `/seldon prd` with no brief writes nothing and says the brief comes first.
   - `/seldon brief` with no brief is a new brief run that asks for the dump.
-- **The documents question's rerun answer:** Task 6 wires it in, `/seldon brief` typed as the reply included, and Task 8 proves that reply by eval. Plan 2 left it without a path until this plan.
 - **Task 4's premise:** `/seldon prd` isn't the only route that reaches the PRD step with `prd.md` there. Plan 2's guard covers the others, and Task 4 makes the rerun its one exception.
+- **Why the combined-form check sits in Task 3:** prd-reads-brief is the first case whose step has to read the seeded brief under a history, so a missing Read there speaks to the harness rather than to a step with no reason to read. The user moved the check here from Plan 3's confirm-clear case after the last revision. It runs before Plan 5's brief-rerun cases, which need its answer.
 - **Prior art:** each is from phases/3/CONTEXT.md, phase 3.
   - D-09 (keeping IDs) and D-03 (retired IDs) inform Tasks 4 and 5.
   - D-07 (ending a step) is the end every rerun uses.
 - **Byte-identical lines:** an Edit update, not a full rewrite, is how D-09's lines stay byte-identical. It's Task 4's chosen method. Its Verify accepts any method the eval passes.
+- **Split from one plan:** Plans 4 and 5 were one eight-task plan whose composed brief passed Cadence's 32,768-byte ceiling. The brief rerun's three tasks moved to Plan 5, which runs after this one.
