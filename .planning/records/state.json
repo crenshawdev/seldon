@@ -3,17 +3,31 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 1,
-    "status": "context gathered",
-    "next": "/cad-plan 1",
-    "updated": "2026-11-17"
+    "status": "planned",
+    "next": "/cad-execute 1",
+    "updated": "2026-11-17",
+    "plan": {
+      "k": 1,
+      "j": 2,
+      "name": "The format, its check and the CI gate"
+    }
   },
   "phases": [
     {
       "n": 1,
       "name": "The document format and eval harness",
       "description": "Fix the .planning/seldon/ format with sample files, make the plugin install, and run the eval harness locally",
-      "status": "unplanned",
-      "plans": []
+      "status": "planned",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": false
+        }
+      ]
     },
     {
       "n": 2,
@@ -65,5 +79,26 @@
       "plans": []
     }
   ],
-  "requirements": []
+  "requirements": [
+    {
+      "id": "DOCS-04",
+      "phase": 1,
+      "status": "Pending"
+    },
+    {
+      "id": "EVAL-01",
+      "phase": 1,
+      "status": "Pending"
+    },
+    {
+      "id": "EVAL-03",
+      "phase": 1,
+      "status": "Pending"
+    },
+    {
+      "id": "REL-01",
+      "phase": 1,
+      "status": "Pending"
+    }
+  ]
 }
