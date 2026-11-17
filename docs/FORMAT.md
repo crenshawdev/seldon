@@ -129,6 +129,23 @@ An ID is never renumbered or reused. When a requirement, decision or epic is rem
 
 Spine decisions and epics use a one-letter prefix on purpose. Cadence's audit admits only a prefix of 2 to 8 characters before the dash as a requirement ID, so it never counts `S-01` or `E-01` as a requirement.
 
+## The [ASSUMPTION] tag
+
+On the fast path Seldon drafts with guesses, and it tags each one so a reader can tell a guess from what the user said.
+
+- The tag is spelled exactly `[ASSUMPTION]`, uppercase, in square brackets. No other spelling counts.
+- It goes inline, right after the guessed text it marks.
+- It goes only in free text: prose or a bullet's text in a section body, or the value of a free-text epic field (`**Outcome:**`, `**Boundaries:**`, `**Done when:**`).
+- It never goes inside an ID-list field (`**Depends on:**`, `**Requirements:**`, `**Spine decisions:**`), on a `## ` heading line, inside a bold field label or inside a requirement's bold ID span. The check reads all of those exactly, so a tag there fails it. `**Depends on:** None [ASSUMPTION]` is reported as not an epic ID, for example. A guessed ID is noted in free text instead.
+
+Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own.
+
+In the free-text places above, `lib/check.mjs` neither requires nor rejects the tag, so text there checks the same with or without it.
+
+```
+A treasurer closes the month in under ten minutes. [ASSUMPTION]
+```
+
 ## The check
 
 ```
