@@ -2,6 +2,12 @@
 name: seldon
 description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, and recommends the fast path or coaching."
 argument-hint: "[what you have: the idea, notes or spec, pasted or described]"
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - Edit(.planning/seldon/**)
+  - Bash(node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs:*)
 ---
 
 <objective>
