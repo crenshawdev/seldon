@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: spine-rerun
+description: A /seldon spine in a fresh session where .planning/seldon/ holds samples/spine.md next to a brief and PRD that have since dropped reminders, the one thing S-03 rests on. Seldon has to update spine.md in place, keeping every other decision byte-identical, list S-03 on a Retired line under the title and never bring S-03 back as a decision.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
