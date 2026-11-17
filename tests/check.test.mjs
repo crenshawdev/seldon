@@ -86,6 +86,8 @@ const epicLimits = {
   oneItem: [inEpic('E-03', (s) => s.replace(INTEGRATED, '')), 'epics.md: E-03: Done when: 1 item, expected 2 to 5'],
   sixItems: [inEpic('E-02', (s) => s.replace('**Done when:**\n', '**Done when:**\n- A volunteer sees every open loan.\n- A member sees their own loans.\n')),
     'epics.md: E-02: Done when: 6 items, expected 2 to 5'],
+  laterEpic: [inEpic('E-01', (s) => s.replace('**Depends on:** None', '**Depends on:** E-02')),
+    'epics.md: E-01: Depends on: "E-02" is not an epic earlier in the file'],
 };
 
 const cases = [
@@ -162,6 +164,9 @@ const cases = [
   // The one-line form: label-line text is no item, so this done-when has none.
   ['a done-when only on its label line', (dir) => edit(dir, 'epics.md', inEpic('E-03', (s) => s.replace(/\*\*Done when:\*\*\n- (.*)\n- .*\n/, '**Done when:** $1\n'))),
     ['epics.md: E-03: Done when: 0 items, expected 2 to 5']],
+  ['an epic depending on a later one', (dir) => edit(dir, 'epics.md', epicLimits.laterEpic[0]), [epicLimits.laterEpic[1]]],
+  ['an epic depending on an ID no epic has', (dir) => edit(dir, 'epics.md', inEpic('E-02', (s) => s.replace('**Depends on:** E-01', '**Depends on:** E-09'))),
+    ['epics.md: E-02: Depends on: "E-09" is not an epic earlier in the file']],
 ];
 
 for (const [name, breakIt, expected] of cases) {
@@ -190,6 +195,15 @@ test('a Retired line under the spine title passes the full check and --spine', (
   const r = run('--spine', dir);
   assert.equal(r.status, 0);
   assert.equal(r.stdout.trim(), SPINE_OK_LINE);
+});
+
+// A split-off epic takes the next unused number wherever it sits, so position decides, not the number.
+test('an epic may depend on a higher-numbered epic placed before it', (t) => {
+  const dir = copy(t);
+  const e04 = `## E-04: Categories\n**Outcome:** Volunteers group tools into categories.\n**Boundaries:** Categories only.\n**Done when:**\n`
+    + `- A volunteer can add a category.\n${INTEGRATED}**Depends on:** E-01\n**Requirements:** CAT-02\n**Spine decisions:** S-02, S-04, S-05\n\n`;
+  edit(dir, 'epics.md', (s) => s.replace('## E-02: Lending', `${e04}## E-02: Lending`).replace('**Depends on:** E-01\n**Requirements:** LOAN-01', '**Depends on:** E-04\n**Requirements:** LOAN-01'));
+  assert.deepEqual(checkDir(dir), []);
 });
 
 test('a missing or non-directory argument exits 2', () => {
