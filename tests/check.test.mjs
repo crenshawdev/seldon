@@ -5,7 +5,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BRIEF_OK_LINE, checkDir, OK_LINE } from '../lib/check.mjs';
+import { BRIEF_OK_LINE, checkDir, OK_LINE, PRD_OK_LINE } from '../lib/check.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const samples = join(root, 'samples');
@@ -26,10 +26,10 @@ function copy(t) {
   return dir;
 }
 
-// What the brief step leaves behind: the brief and nothing else.
-function briefOnly(t) {
+// One sample file and nothing else, like the folder a single step leaves behind.
+function only(t, file) {
   const dir = temp(t);
-  cpSync(join(samples, 'brief.md'), join(dir, 'brief.md'));
+  cpSync(join(samples, file), join(dir, file));
   return dir;
 }
 
@@ -137,7 +137,7 @@ for (const [name, breakIt, expected] of cases) {
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -150,13 +150,13 @@ test('--brief on the samples exits 0 with the brief line', () => {
 });
 
 test('--brief passes a folder holding only the brief', (t) => {
-  const r = run('--brief', briefOnly(t));
+  const r = run('--brief', only(t, 'brief.md'));
   assert.equal(r.status, 0);
   assert.equal(r.stdout.trim(), BRIEF_OK_LINE);
 });
 
 test('--brief on a brief missing a section exits 1, naming only that section', (t) => {
-  const dir = briefOnly(t);
+  const dir = only(t, 'brief.md');
   edit(dir, 'brief.md', (s) => s.replace(/## Vision\n[^#]*/, ''));
   const r = run('--brief', dir);
   assert.equal(r.status, 1);
@@ -170,13 +170,45 @@ test('--brief on a folder with no brief exits 1 with a missing file', (t) => {
 });
 
 test('the full check still wants all four files when only the brief is there', (t) => {
-  const r = run(briefOnly(t));
+  const r = run(only(t, 'brief.md'));
   assert.equal(r.status, 1);
   assert.deepEqual(r.stdout.trim().split('\n'), ['prd.md: missing file', 'spine.md: missing file', 'epics.md: missing file']);
 });
 
 test('--brief with no directory exits 2', () => {
   const r = run('--brief');
+  assert.equal(r.status, 2);
+  assert.match(r.stderr, /usage:/);
+});
+
+test('--prd on the samples exits 0 with the PRD line', () => {
+  const r = run('--prd', samples);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), PRD_OK_LINE);
+});
+
+test('--prd passes a folder holding only the PRD', (t) => {
+  const r = run('--prd', only(t, 'prd.md'));
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), PRD_OK_LINE);
+});
+
+test('--prd on a PRD missing a section exits 1, naming only that section', (t) => {
+  const dir = only(t, 'prd.md');
+  edit(dir, 'prd.md', (s) => s.replace(/## Non-goals\n[^#]*/, ''));
+  const r = run('--prd', dir);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'prd.md: Non-goals: missing section');
+});
+
+test('--prd on a folder with no PRD exits 1 with a missing file', (t) => {
+  const r = run('--prd', temp(t));
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'prd.md: missing file');
+});
+
+test('--prd with no directory exits 2', () => {
+  const r = run('--prd');
   assert.equal(r.status, 2);
   assert.match(r.stderr, /usage:/);
 });

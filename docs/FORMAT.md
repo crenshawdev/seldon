@@ -223,6 +223,20 @@ This is for a step that has written only the brief and needs to check what it wr
 
 The full check above still needs all four files, so a folder holding only the brief fails it.
 
+### The PRD alone
+
+```
+node lib/check.mjs --prd <dir>
+```
+
+This is for the PRD step, which has written the PRD and needs to check what it wrote before the spine and epics exist.
+
+- It reads only `<dir>/prd.md` and holds it to the PRD rules above. Whether the other three files exist doesn't matter.
+- It exits 0 when the PRD conforms, and prints one line: `seldon check: prd.md conforms`.
+- Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `prd.md: missing file` when there's no PRD. It exits 2 when the directory argument is missing or isn't a directory.
+
+The full check above still needs all four files, so a folder holding only the brief and the PRD fails it.
+
 ## Examples
 
 These are minimal. `samples/` has a complete set.
