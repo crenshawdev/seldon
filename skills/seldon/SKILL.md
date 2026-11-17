@@ -37,8 +37,12 @@ path, write the project's brief to `.planning/seldon/brief.md`.
 
 Before anything else, find your place in this conversation. Read only the
 conversation to find it, never a file: rebuilding a run after `/clear` comes
-in a later release. Then pick up at the step your place names:
+in a later release. Then pick up at the step your place names, checking them
+in this order:
 
+- **Run finished:** you've already repeated the check's result line in a
+  final message in this conversation. That run is over, whatever the user
+  says now. Go to "A brief already there".
 - **New run:** you haven't asked for the dump or given a recommendation in
   this conversation. Start at "A brief already there".
 - **Dump given:** you asked for the dump, and the user's message gives it.
@@ -58,16 +62,16 @@ after the user confirms a path.
 
 ## 2. A brief already there
 
-When a run starts, before you ask for or read the dump, look for
-`.planning/seldon/brief.md` in the project with Read or Glob. An error or no
-match means there isn't one, so go on to "The dump".
+When a run starts or a run has finished, before you ask for or read a dump,
+look for `.planning/seldon/brief.md` in the project with Read or Glob. An
+error or no match means there isn't one, so go on to "The dump".
 
 If it's there, write nothing, and don't edit or replace it. Say that a brief
 is already there, and that a rerun of a step comes in a later release. Then
 end.
 
-This check runs only when a run starts. On later turns of the same run, the
-brief you just wrote is expected.
+This check runs when a run starts and on every turn after a run has finished.
+While a run is still under way, the brief you just wrote is expected.
 
 ## 3. The dump
 
@@ -80,7 +84,9 @@ that turn, and end it on that question.
 
 With the dump, read `docs/design/` when it exists, plus any folder the dump
 points to, using only Read, Glob and Grep. What you find there is input to the
-judgment and the brief, just like the dump. Look nowhere else.
+judgment and the brief, just like the dump. Look nowhere else. Words you take
+from it go into the brief word for word, each quote followed by a line naming
+the file it came from, as "The draft" says.
 
 That folder is read-only input. Never write, edit, move or tidy anything in
 it, and create nothing in it.
@@ -110,8 +116,9 @@ breaks or costs money if it's wrong, and how hard a wrong call is to undo.
 
 ## 6. The recommendation
 
-Name the project the way the dump or the design folder names it, and if you
-read a design folder, say which one. Then put the recommendation on a
+Name the project the way the dump or the design folder names it. If you read
+a design folder, say which one and what from it you'll carry into the brief,
+so the user confirms that along with the path. Then put the recommendation on a
 line of its own, in exactly this form, plain text with no bold or other
 markup, naming exactly one path:
 
@@ -142,7 +149,7 @@ other one - and name the project again. Then:
 Before drafting, sort the brief's eight sections by what the dump says, and
 any design folder you read:
 
-- **Stated:** write it from the user's words.
+- **Stated:** write it from those words, quoted as "The draft" says.
 - **Touched but thin, or never mentioned but inferable** from the rest of the
   dump: draft it as a guess tagged `[ASSUMPTION]`.
 - **Never mentioned, and only the user can decide:** ask about it before
@@ -156,9 +163,12 @@ your questions cover what the user didn't write, not only what they did.
 When that group has anything in it, ask every one of those questions in one
 plain-prose message that ends your turn, and write nothing in that turn. Ask
 about who it serves plainly, as who the project is for. Ask about refusals as
-what the project won't do, and why. Once the user answers, draft with those
-answers: each item an answer settles carries that answer word for word on its
-quoted line, and anything still thin gets a tag. Then run "The check".
+what the project won't do, and why. Once the user answers, look at What it
+refuses first: if the answers leave it unsettled, ask again as "The draft"
+says under What it refuses, and write nothing in that turn. Once it's settled,
+draft with those answers: each item an answer settles carries that answer word
+for word on its quoted line, and any other section still thin gets a tag. What
+it refuses never gets one. Then run "The check".
 
 When that group is empty, nothing blocks the brief: draft it right away, in
 the turn the user confirmed the path, then run "The check".
@@ -172,7 +182,8 @@ Walk the decisions the dump left open that the brief needs, most consequential
 first. Ask one plain-prose question per turn, and end the turn on it. Write
 nothing while the walk is under way. What it refuses is one of those decisions
 whenever the dump doesn't state it: ask what the project won't do, and why,
-and never guess a refusal.
+and never guess a refusal. It counts as settled only as "The draft" says under
+What it refuses, and until then you ask it again.
 
 Carry each answer into the brief word for word, on the quoted line under the
 item the answer settles.
@@ -180,7 +191,8 @@ item the answer settles.
 Once all eight sections are settled, draft and write the brief in that same
 turn, as "The draft" says, without asking for another go-ahead: the user
 already confirmed the path. Then run "The check". A section the user left thin
-still gets a tagged guess rather than an empty body.
+still gets a tagged guess rather than an empty body, except What it refuses,
+which is never tagged.
 
 ## 10. The draft
 
@@ -211,13 +223,26 @@ from, word for word, on a quoted line directly under it. The quoted line starts
 with `> `, and under a `- ` bullet it's indented two spaces, `  > `. Quote
 only the phrase the item came from, never the whole dump. Don't paraphrase it
 and don't tidy it. A phrase that runs over several lines keeps its line breaks,
-each line starting the same way. Words from a design folder you read are quoted
-the same way.
+each line starting the same way.
+
+**Words from a design folder.** Words you take from a design folder you read
+are quoted the same way, word for word. The line right after the quote names
+the file they came from, in parentheses and indented like the quote, so nobody
+takes an old design note for something the user just said:
+
+```
+- Members pay their dues once a year.
+  > dues are collected annually, every January
+  (docs/design/ledger.md)
+```
+
+A quote with no file line under it is the user's own words.
 
 **Guesses.** An item with no source words is a guess. Tag it `[ASSUMPTION]`,
 spelled exactly that way, inline right after the guessed text, and never on a
 heading line. A guess has no quote. No section is left empty: one with nothing
-from the user gets a tagged guess, except What it refuses, which you ask about.
+from the user gets a tagged guess, except What it refuses, which you ask about
+and never tag.
 
 **What it refuses.** Each item is a `- ` bullet that says what the product
 won't do, then `because` and the reason, in the same bullet:
@@ -227,8 +252,22 @@ won't do, then `because` and the reason, in the same bullet:
   > no reservations, whoever's at the counter gets the drill
 ```
 
-Never invent a refusal. One the user hasn't stated is asked about, never
-guessed.
+Never invent a refusal, and never tag one `[ASSUMPTION]`. One the user hasn't
+stated is asked about, never guessed.
+
+A refusal is settled when the user names what the project won't do, or says it
+refuses nothing. When they say it refuses nothing, the section holds their own
+words on a `> ` line, with no bullet and no tag, so it isn't empty and nothing
+in it is invented:
+
+```
+> it doesn't refuse anything, it's a toy for my kids
+```
+
+When their answer leaves it unsettled - they declined it, skipped it or left it
+open - ask it again in your next message, before you write anything, and end
+your turn on that question. Say the brief needs this section, and that
+"nothing" is an answer too. Write nothing until it's settled.
 
 ## 11. The check
 

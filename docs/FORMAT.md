@@ -48,6 +48,12 @@ Each one is present and not empty. A reader finds a section by its name, not its
 
 One shape means a reader always finds the reason in the same place. The check requires the section present and not empty, like every brief section, and doesn't read its bullets.
 
+A refusal is never a guess, so this section never carries `[ASSUMPTION]`. When the user says the project refuses nothing, the section holds their own words on a quoted line instead, with no bullet:
+
+```
+> it doesn't refuse anything, it's a toy for my kids
+```
+
 ## prd.md
 
 The PRD has these five `## ` sections, written in this order:
@@ -149,7 +155,7 @@ On the fast path Seldon drafts with guesses, and it tags each one so a reader ca
 - It goes only in free text: prose or a bullet's text in a section body, or the value of a free-text epic field (`**Outcome:**`, `**Boundaries:**`, `**Done when:**`).
 - It never goes inside an ID-list field (`**Depends on:**`, `**Requirements:**`, `**Spine decisions:**`), on a `## ` heading line, inside a bold field label or inside a requirement's bold ID span. The check reads all of those exactly, so a tag there fails it. `**Depends on:** None [ASSUMPTION]` is reported as not an epic ID, for example. A guessed ID is noted in free text instead.
 
-Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own.
+Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own, or a design document's when its quote names a source file (see "The user's own words").
 
 In the free-text places above, `lib/check.mjs` neither requires nor rejects the tag, so text there checks the same with or without it. The tag on its own isn't text, so a section body or field holding only the tag is empty.
 
@@ -176,6 +182,18 @@ The check neither requires nor rejects a quoted line. To the check it's body tex
 ```
 
 This covers `brief.md` only. The PRD and spine take the same rule when their steps are built.
+
+### Words from a design folder
+
+Seldon also reads a design folder, such as `docs/design/`, and an item it drafts from words there is quoted the same way, word for word. The line right after the quote names the source file, relative to the project root, in parentheses and indented like the quote, so nobody mistakes an old design document for something the user just said:
+
+```
+- Members pay their dues once a year.
+  > dues are collected annually, every January
+  (docs/design/ledger.md)
+```
+
+A multi-line quote takes the source line after its last line. A quote with no source line under it is the user's own words. To the check the source line is body text too. The user sees these items before Seldon drafts, when they confirm the path.
 
 ## The check
 
