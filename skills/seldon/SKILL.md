@@ -164,15 +164,17 @@ there's no record of a confirmation to look for. `$ARGUMENTS` counts as empty
 when it holds nothing but blanks. Then:
 
 - **No brief:** go on to "The dump".
-- **A brief, no PRD and empty `$ARGUMENTS`:** this is a resume. Before you
-  draft or write anything, start your message with exactly these words, on a
-  line of their own:
+- **A brief, no PRD and empty `$ARGUMENTS`:** this is a resume. Before your
+  next tool call, and before you read the brief, draft or write anything, say
+  exactly these words, on a line of their own, as the first text of your
+  reply:
 
   ```
   I'm building the PRD from .planning/seldon/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.
   ```
 
-  Then go to "The PRD step".
+  Never Write `prd.md` on a resume until that line is in your reply. Then go
+  to "The PRD step".
 - **A brief and a PRD, and empty `$ARGUMENTS`:** write nothing. End your
   message with exactly these words, on a line of their own, with nothing after
   them. This is the later-release line:
