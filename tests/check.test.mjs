@@ -77,6 +77,17 @@ test('a missing field exits 1 and prints the field and the epic', (t) => {
 const proseRequirements = (s) => s.replace(/(## Requirements\n)([^]*?)(?=## Non-functional)/,
   (_, head, body) => `${head}Volunteers run the counter.\n${body.replace(/^(- |  ).*\n/gm, '')}`);
 
+const INTEGRATED = '- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.\n';
+
+// The epic limits, as edits to the epics file alone, so the full check and --epics can share them.
+const epicLimits = {
+  sixIds: [inEpic('E-02', (s) => s.replace('NFR-01, NFR-02\n', 'NFR-01, NFR-02, CAT-01, CAT-02\n')),
+    'epics.md: E-02: Requirements: 6 IDs, expected at most 5'],
+  oneItem: [inEpic('E-03', (s) => s.replace(INTEGRATED, '')), 'epics.md: E-03: Done when: 1 item, expected 2 to 5'],
+  sixItems: [inEpic('E-02', (s) => s.replace('**Done when:**\n', '**Done when:**\n- A volunteer sees every open loan.\n- A member sees their own loans.\n')),
+    'epics.md: E-02: Done when: 6 items, expected 2 to 5'],
+};
+
 const cases = [
   ['a missing file', (dir) => rmSync(join(dir, 'brief.md')), ['brief.md: missing file']],
   ['an unreadable file', (dir) => {
@@ -145,6 +156,12 @@ const cases = [
       'prd.md: Non-functional requirements: no "- **CAT-01**: text" requirement']],
   ['an epic field holding only the tag', (dir) => edit(dir, 'epics.md', inEpic('E-01', (s) => s.replace(/^\*\*Outcome:\*\*.*$/m, '**Outcome:** [ASSUMPTION]'))),
     ['epics.md: E-01: Outcome: empty field']],
+  ['an epic with 6 requirement IDs', (dir) => edit(dir, 'epics.md', epicLimits.sixIds[0]), [epicLimits.sixIds[1]]],
+  ['an epic with 1 done-when item', (dir) => edit(dir, 'epics.md', epicLimits.oneItem[0]), [epicLimits.oneItem[1]]],
+  ['an epic with 6 done-when items', (dir) => edit(dir, 'epics.md', epicLimits.sixItems[0]), [epicLimits.sixItems[1]]],
+  // The one-line form: label-line text is no item, so this done-when has none.
+  ['a done-when only on its label line', (dir) => edit(dir, 'epics.md', inEpic('E-03', (s) => s.replace(/\*\*Done when:\*\*\n- (.*)\n- .*\n/, '**Done when:** $1\n'))),
+    ['epics.md: E-03: Done when: 0 items, expected 2 to 5']],
 ];
 
 for (const [name, breakIt, expected] of cases) {
@@ -320,6 +337,17 @@ test('--epics on an epic missing Done when exits 1, naming the epic and the fiel
   assert.equal(r.status, 1);
   assert.equal(r.stdout.trim(), 'epics.md: E-02: Done when: missing field');
 });
+
+// The limits fail closed through the step's own mode, not just the full check.
+for (const [name, [change, expected]] of Object.entries(epicLimits)) {
+  test(`--epics on an epic over a limit (${name}) exits 1, naming the epic and the field`, (t) => {
+    const dir = only(t, 'epics.md');
+    edit(dir, 'epics.md', change);
+    const r = run('--epics', dir);
+    assert.equal(r.status, 1);
+    assert.equal(r.stdout.trim(), expected);
+  });
+}
 
 test('--epics on a folder with no epics exits 1 with a missing file', (t) => {
   const r = run('--epics', temp(t));
