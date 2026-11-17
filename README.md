@@ -41,10 +41,23 @@ Every question Seldon asks is plain prose that ends its turn, never a menu, so a
 The eval cases live in `evals/`. Run them locally from the repository root:
 
 ```
-claude plugin eval . --trust-plugin --no-publish --ablation none
+claude plugin eval . --trust-plugin --no-publish --ablation none --scaffold --allow-tools "Edit(.planning/seldon/**)" "Bash(node $PWD/lib/check.mjs:*)"
 ```
 
-`fast-path` gives Seldon a full project description and checks that it recommends the fast path without asking through a menu. `replay` resumes a saved `/seldon` session and checks that the reply uses a fact only that session holds. Results go to `evals/results/`, which git ignores.
+The two `--allow-tools` rules are the whole grant. Seldon can write only inside `.planning/seldon/` and run only its own check, and nothing broader. Run from the root, `$PWD` is this repository, so the rule names the same `lib/check.mjs` the skill runs. `--scaffold` runs only the case scripts that copy fixtures from `samples/` into the run, and `tests/scaffold.test.mjs` checks each one does nothing else.
+
+- `fast-path` gives Seldon a full project description and checks that it recommends the fast path without asking through a menu.
+- `replay` resumes a saved `/seldon` session and checks that the reply uses a fact only that session holds.
+- `fast-path-brief` confirms the fast path and checks that Seldon writes a brief that tags its guesses, says what the project refuses and passes the check.
+- `no-dump` runs a bare `/seldon` and checks that it asks for the dump in plain prose and writes nothing.
+- `asks-for-dump` answers that ask with a dump and checks that Seldon recommends a path and writes nothing.
+- `asks-who-for` confirms the fast path on a dump that never says who the project is for, and checks that Seldon asks that before writing anything.
+- `coaching-brief` answers the last coaching question and checks that the brief quotes the user's answers and passes the check.
+- `write-scope` asks for the brief in `docs/` with a README link, and checks that Seldon writes only inside `.planning/seldon/`.
+- `design-folder` points the dump at a design folder and checks that Seldon names the project only that folder names, with no edit, no write outside `.planning/seldon/` and no command but the check.
+- `existing-brief` runs `/seldon` where a brief is already there and checks that it writes and edits nothing and says a rerun comes later.
+
+Results go to `evals/results/`, which git ignores.
 
 ## License
 
