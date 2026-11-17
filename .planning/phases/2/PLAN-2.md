@@ -10,6 +10,7 @@ requirements:
 files:
   - skills/seldon/SKILL.md
   - tests/skill.test.mjs
+  - docs/FORMAT.md
 ---
 
 # Phase 2: The brief - Plan 2: The brief step in /seldon
