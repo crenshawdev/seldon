@@ -109,10 +109,39 @@ the user confirms that path or wants the other one, and end your turn.
 ## 5. After the answer
 
 When the user answers, say which path you'll take - theirs if they chose the
-other one - and name the project again. Then draft the brief, in this same
-turn, as "The draft" says, then run "The check".
+other one - and name the project again. Then:
 
-## 6. The draft
+- **Fast path:** go to "The fast path questions".
+- **Coaching:** draft the brief, in this same turn, as "The draft" says, then
+  run "The check".
+
+## 6. The fast path questions
+
+Before drafting, sort the brief's eight sections by what the dump says, and
+any design folder you read:
+
+- **Stated:** write it from the user's words.
+- **Touched but thin, or never mentioned but inferable** from the rest of the
+  dump: draft it as a guess tagged `[ASSUMPTION]`.
+- **Never mentioned, and only the user can decide:** ask about it before
+  drafting. Who it serves and What it refuses are always in this group when
+  the dump never states them. An unstated refusal is asked about, never
+  guessed.
+
+That last group is the decisions the dump left open that the brief needs, so
+your questions cover what the user didn't write, not only what they did.
+
+When that group has anything in it, ask every one of those questions in one
+plain-prose message that ends your turn, and write nothing in that turn. Ask
+about who it serves plainly, as who the project is for. Ask about refusals as
+what the project won't do, and why. Once the user answers, draft with those
+answers: each item an answer settles carries that answer word for word on its
+quoted line, and anything still thin gets a tag. Then run "The check".
+
+When that group is empty, nothing blocks the brief: draft it right away, in
+the turn the user confirmed the path, then run "The check".
+
+## 7. The draft
 
 Write `.planning/seldon/brief.md` with the Write tool. The brief has this
 shape, and the check holds it to it:
@@ -160,7 +189,7 @@ won't do, then `because` and the reason, in the same bullet:
 Never invent a refusal. One the user hasn't stated is asked about, never
 guessed.
 
-## 7. The check
+## 8. The check
 
 Once the brief is written, run exactly this from the project root, with the
 path unquoted:
