@@ -952,6 +952,29 @@ in this same turn, as "The epics draft" says. Its one stop point is the
 confirm question "The epics check" ends on, which "Step confirm answered" in
 "Where the conversation stands" already carries.
 
+**Cutting the epics.** Size every capability before you write anything:
+
+- A capability is one `### ` category in the PRD's Requirements. A tightly
+  coupled pair of categories counts as one. Non-functional requirements aren't
+  a capability.
+- Every requirement ID in the PRD, non-functional ones included, lands in
+  exactly one epic. A non-functional requirement rides with the epic whose
+  capability it constrains and counts toward that epic's limit. Never repeat
+  one across the epics it constrains.
+- An epic covers one capability, or a tightly coupled pair, and carries at
+  most 5 requirement IDs and 2 to 5 done-when items.
+- An epic over a limit, or covering more than one capability, is split along
+  the spine's `Kind: boundaries` decision that cuts it. Each requirement goes
+  to the side that decision puts it on, and every epic on either side cites
+  that decision's S- ID in `**Spine decisions:**`. Never split by count, such
+  as the first five requirements and then the rest.
+
+**No boundary to split on.** When a capability is over a limit and no
+`Kind: boundaries` decision cuts it, write nothing. Name the capability by its
+`### ` category name, and say a boundary has to be added to the spine first,
+with `/seldon spine`. Ask no question, and end the turn there. Never split
+anyway with an `[ASSUMPTION]` boundary.
+
 ## 21. The architecture document
 
 `/seldon architecture` over a `spine.md` that's there writes the full
