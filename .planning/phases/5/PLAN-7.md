@@ -42,11 +42,11 @@ The epics step writes small epics in build order, and `/seldon` walks all four s
 
 - **Locked:** D-17, D-18 and D-19. The README's eval command and its two `--allow-tools` rules don't change (D-18), and neither does the paragraph on the grant and the seeds.
 - **Why README.md is last:** it's the record each case-adding plan feeds, so it's edited once here, after Plans 1 to 6.
-- **Runs:** from `/code/seldon`, never a worktree.
+- **Runs:** the owner approved phase 5's eval runs on 2026-11-17, as a security item, on the terms below. Anything off them is a checkpoint marked SECURITY. Run from `/code/seldon`, never a worktree.
   - The full run is the README's command, with `--keep-temp` added before `--allow-tools` for the Bash audit only.
-  - Report every Bash command in every kept trace. Anything but `--brief`, `--prd`, `--spine` or `--epics` on `.planning/seldon` is a checkpoint.
-  - Remove every kept `/tmp/claude-eval-*` folder before the plan finishes.
-  - A failing case is a checkpoint, not a fix, because this plan leases only `README.md`.
+  - Report every Bash command in every trace the run kept. Anything but `node /code/seldon/lib/check.mjs` with `--brief`, `--prd`, `--spine` or `--epics` on `.planning/seldon` is a checkpoint marked SECURITY.
+  - **Cleanup:** before the plan finishes, remove only the folders the run printed as kept, by their exact paths. Never remove by a glob such as `/tmp/claude-eval-*`, since other sessions' kept runs can sit there too.
+  - **Retries:** at most three tries per case. A case whose miss the trace shows is model variance may be rerun alone with `--case <name>`. Any other failing case, or one still failing after its third try, is a checkpoint, not a fix, because this plan leases only `README.md`.
   - **This plan runs the whole suite, all 32 cases.**
 - **Owner's words:** committed files never carry the owner's own words. Keep the "inspired by BMad" credit.
 - **Held:** no push, tag, PR or GitHub change, and no install of any kind.
@@ -100,7 +100,7 @@ The epics step writes small epics in build order, and `/seldon` walks all four s
   - (2) The README's eval command, run verbatim from `/code/seldon` with `--keep-temp` added before `--allow-tools`, exits 0.
     - Every case scores 1.00, all 32 of them, with no `not granted` and no `scaffold failed`.
     - The Bash audit covers every trace.
-    - Afterwards, `ls -d /tmp/claude-eval-*` matches nothing.
+    - Afterwards, none of the folders the run printed as kept exists: `ls -d` fails on each of those exact paths.
   - (3) AC6's checks, each on a copy of `samples/`:
     - `node lib/check.mjs --epics samples` exits 0 and prints exactly `seldon check: epics.md conforms`.
     - Five copies each exit non-zero through `--epics` and through the full check, naming the epic and the problem: an epic with 6 requirement IDs, one with 1 done-when item, one with 6, one whose `**Depends on:**` names a later epic, and one missing a field.

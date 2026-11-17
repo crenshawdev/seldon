@@ -57,7 +57,7 @@ The epics step writes small epics in build order, and `/seldon` walks all four s
 
 - **Locked:** D-16, D-17, D-19 and D-20. From Plan 3: the epics resume line, the new later-release line, the `/seldon epics` route and the epics check's confirm question. From Plan 1: the updated `samples/epics.md`.
 - **Fixed words:** every line a grader matches is copied from SKILL.md, never from a plan. A hand-written history copies its fixed lines from SKILL.md too: the PRD and spine resume lines, each pass line, the epics confirm question and the `/clear` words.
-- **Eval runs, seed vetting, the Bash audit and the case rules:** exactly as Plan 4's Context sets them, the four checks included.
+- **Eval runs, seed vetting, the Bash audit, the cleanup and the case rules:** exactly as Plan 4's Context sets them, including the owner's approval terms, the four checks, the three-try retry limit, the exact-path cleanup and the SECURITY checkpoints.
   - **This plan runs four cases: `full-walk`, `epics-confirm`, `resume-later` and `epics-no-spine`.**
 - **Histories:** a `history.jsonl` follows the form of `evals/spine-job/history.jsonl`: the same keys, a fresh `sessionId`, `parentUuid` chained from `null`, ascending timestamps, a `cwd` under `/tmp/seldon-<case>` and text-only assistant turns with no `tool_use` blocks. `evals/.gitignore` already ignores the session file a replay writes beside it.
 - **The resume line's timing:** as Plan 3's Notes read D-16, the line comes after the look and before the next tool call. The resume grader allows only the look before it.

@@ -44,10 +44,11 @@ The epics step writes small epics in build order, and `/seldon` walks all four s
 
 - **Locked:** D-04, D-07, D-08, D-12 and D-21. From Plan 1: the `--epics` token and pass line and the integrated item. From Plans 2 and 3: the epics step, its draft and check, and the `/seldon epics` route.
 - **Fixed words:** every line a grader matches is copied from SKILL.md, never from a plan.
-- **Eval runs:** phase 4 recorded the owner's approval of eval runs per phase, as a security item. The first run in this phase is a checkpoint unless the coordinator confirms that approval for phase 5.
+- **Eval runs:** the owner approved phase 5's eval runs on 2026-11-17, as a security item, on the terms in this Context: the command and its two grants, seed vetting, the Bash audit, the retries and the cleanup. Anything off those terms is a checkpoint marked SECURITY.
   - Run from `/code/seldon`, the main tree, never a worktree.
   - Run one case at a time with `claude plugin eval . --case <name> --trust-plugin --no-publish --ablation none --scaffold --keep-temp --allow-tools "Edit(.planning/seldon/**)" "Bash(node $PWD/lib/check.mjs:*)"`. `--allow-tools` goes last, with exactly those two grants and nothing broader.
   - `--keep-temp` is for the Bash audit only and goes in no committed file.
+  - **Retries:** at most three tries per case. A retry comes only after a fix, or after a miss the trace shows is model variance. A case still failing after its third try is a checkpoint.
   - **This plan runs two cases: `epics-split` and `epics-no-boundary`.**
 - **Seed vetting:** a new or changed `seed.sh` holds nothing but these lines:
   - the shebang, `set -euo pipefail`, the repo line and comments
@@ -55,10 +56,10 @@ The epics step writes small epics in build order, and `/seldon` walks all four s
   - `cp` lines from `"$repo/samples/..."`
 
   The coordinator vets each one before its first run. The task stops at a checkpoint quoting the file, and runs the case only once the coordinator clears it.
-- **The Bash audit:** after every run, read each kept `/tmp/claude-eval-*/out/trace.jsonl` and report every Bash command in it.
+- **The Bash audit:** after every run, read `out/trace.jsonl` in each folder that run printed as kept, and report every Bash command in it.
   - Only four commands are allowed: `node /code/seldon/lib/check.mjs` with `--brief`, `--prd`, `--spine` or `--epics`, then `.planning/seldon`.
-  - Any other command is a checkpoint: stop.
-  - Remove every kept `/tmp/claude-eval-*` folder before the plan finishes.
+  - Any other command is a checkpoint marked SECURITY: stop.
+- **Cleanup:** before the plan finishes, remove only the folders each run printed as kept, by their exact paths. Never remove by a glob such as `/tmp/claude-eval-*`, since other sessions' kept runs can sit there too.
 - **Case rules:**
   - `allowed_tools` is `[Skill, Read, Glob, Grep]` and nothing else.
   - No line of a `case.yaml` or `prompt.md` may say "scaffold", in any letter case, except the plain `scaffold_script: seed.sh`, and none may hold a double-quoted backslash. `tests/scaffold.test.mjs` flags both.
