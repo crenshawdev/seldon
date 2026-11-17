@@ -3,7 +3,7 @@ description: A full project description, so Seldon recommends the fast path and 
 runs: 1
 max_turns: 10
 timeout_seconds: 300
-allowed_tools: [Skill, AskUserQuestion]
+allowed_tools: [Skill, AskUserQuestion, Read, Glob, Grep]
 ---
 
 /seldon I want to build Shelfmark, a small command-line tool that keeps track of the books I lend to friends.
