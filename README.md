@@ -12,7 +12,7 @@ The method is inspired by BMad: the planning half of an analyst, a product manag
 
 Everything goes in `.planning/seldon/`, in four files:
 
-- `brief.md`: the problem, the solution, who it serves, what's different, success criteria, scope and vision
+- `brief.md`: the problem, the solution, who it serves, what's different, success criteria, scope, what it refuses and vision
 - `prd.md`: capabilities with stable requirement IDs, non-functional requirements, user journeys, non-goals and MVP scope
 - `spine.md`: only the architecture decisions that would clash if two parts were built separately, each with a stable ID
 - `epics.md`: epics in build order, each sized so one Cadence planner can hold it
@@ -32,7 +32,7 @@ This repository is its own marketplace, so the plugin id is `seldon@seldon`. In 
 
 Run `/seldon` (`/seldon:seldon` also works) followed by whatever you have: the idea, notes, a half-written spec.
 
-In this release `/seldon` reads that dump and recommends one of two paths. On the fast path it would draft the documents itself and tag each guess for you to check, and it recommends that when the dump already answers most of what a brief needs and the stakes are modest. Coaching walks through each decision with you, and it recommends that when much is still open or the stakes are high. You confirm the path or pick the other one. It doesn't write anything yet. The brief step comes next.
+In this release `/seldon` writes the brief. It reads your dump, plus `docs/design/` or any folder the dump names, and it never writes to that folder. Then it recommends one of two paths and writes nothing until you confirm one or pick the other. It recommends the fast path when the dump already answers most of what a brief needs and the stakes are modest. Before drafting, the fast path asks only what the dump left open that only you can decide, which always includes who the project is for and what it refuses when the dump doesn't say. Then it drafts the brief and tags each guess `[ASSUMPTION]` for you to check. It recommends coaching when much is still open or the stakes are high, and coaching asks one question per turn until the brief is settled. Either way it writes `.planning/seldon/brief.md` and runs the format check on it. If a brief is already there, it stops and changes nothing, because rerunning a step comes in a later release.
 
 Every question Seldon asks is plain prose that ends its turn, never a menu, so a saved conversation can be replayed in a test.
 
