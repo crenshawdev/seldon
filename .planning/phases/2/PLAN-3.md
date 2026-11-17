@@ -44,6 +44,7 @@ files:
   - evals/no-dump/graders/no-write.md
   - evals/no-dump/graders/no-ask-user-question.md
   - evals/fast-path/prompt.md
+  - skills/seldon/SKILL.md
 ---
 
 # Phase 2: The brief - Plan 3: Eval cases for the brief step and the eval grant
