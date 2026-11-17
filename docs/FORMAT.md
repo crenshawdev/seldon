@@ -1,10 +1,10 @@
 # Seldon's document format
 
-This is the contract for the four documents Seldon writes. Cadence's reader is built against it, and `node lib/check.mjs <dir>` enforces it. `samples/` in this repository holds one complete set that conforms.
+This is the contract for the four documents Seldon writes. Cadence's reader is built against it, and `node lib/check.mjs <dir>` enforces it. `samples/` in this repository holds one complete set that conforms. Seldon also writes one more file, `architecture.md`, but only when the user asks for it, and this contract gives it no shape (see "Location and ownership").
 
 ## Location and ownership
 
-Seldon writes exactly four files, all in `.planning/seldon/`:
+Seldon writes the four documents of the contract, all in `.planning/seldon/`:
 
 - `.planning/seldon/brief.md`
 - `.planning/seldon/prd.md`
@@ -12,6 +12,14 @@ Seldon writes exactly four files, all in `.planning/seldon/`:
 - `.planning/seldon/epics.md`
 
 It writes nothing outside `.planning/seldon/`. A design folder the project already has, such as `docs/design/`, is read as input and never written to. Cadence stays the only writer of its own files.
+
+### The architecture document
+
+Seldon also writes one more file, `.planning/seldon/architecture.md`, and only when the user asks for it with `/seldon architecture`. It's the one file Seldon writes only on request.
+
+- It expands on the spine's decisions by their S- IDs, drawing on the brief, the PRD and the spine.
+- It adds no decision and no ID of its own, so the spine's S- IDs stay the only decisions a reader locks.
+- This document defines no shape for it, and no check reads it. The full check ignores it, as it ignores any other file in the folder.
 
 ## Rules for every file
 
