@@ -1,0 +1,47 @@
+{
+  "phase": "5",
+  "trigger": "diff",
+  "discriminator": "9c644c8-221dc97",
+  "round": 1,
+  "base": "9c644c8",
+  "head": "221dc97",
+  "base_id": "9c644c845a68fe4f11035a80ec81be442dfcd77b",
+  "head_id": "221dc97fd3d9f42f638a97b9570ebd3195eff1a4",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "lib/check.mjs",
+      "line": 207,
+      "severity": "low",
+      "claim": "checkEpics takes an epic's position from the first heading that declares its ID (declared.indexOf(id)), so when an earlier rejected heading (for example a tagged one) shares an ID with the accepted heading, the accepted epic's 'earlier' list is cut at the wrong place and Depends on is falsely reported. That contradicts FORMAT.md's rule that Depends on names 'epics whose headings come earlier in the file'.",
+      "failure_scenario": "In samples/epics.md, change '## E-01: Catalog' to '## E-01: [ASSUMPTION] Catalog' and rename '## E-03: Reminders' to '## E-01: Reminders'. The heading that is checked as E-01 now sits third, after E-02, and depends on E-02. `node lib/check.mjs --epics <dir>` prints the expected tagged-heading line plus a false 'epics.md: E-01: Depends on: \"E-02\" is not an epic earlier in the file', even though E-02's heading comes before it. I ran this and got exactly that output. The file already fails on its heading, so the only harm is a wrong extra diagnostic, which would send a fixing agent after the wrong problem.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "9c644c845a68fe4f11035a80ec81be442dfcd77b",
+      "head_id": "221dc97fd3d9f42f638a97b9570ebd3195eff1a4"
+    },
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "lib/check.mjs",
+      "line": 185,
+      "severity": "low",
+      "claim": "The Done when count skips label-line text but never rejects it. A done-when that keeps a criterion on its label line and adds bullets below therefore passes, although FORMAT.md says done-when 'is always a `- ` list on the lines below its label' and 'never sits on its label line', and D-03 says the one-line form goes.",
+      "failure_scenario": "In samples/epics.md, change E-03's done-when to '**Done when:** first\\n  - nested\\n- Each loan due tomorrow gets exactly one reminder email.\\n- Everything built so far, ...'. `node lib/check.mjs --epics <dir>` exits 0 with 'seldon check: epics.md conforms'. I ran this. The form is likely when an agent keeps the old inline item and adds the integrated bullet below. A Cadence reader that counts items by FORMAT.md's rule (column-0 `- ` lines) then silently drops the label-line success criterion and the orphan indented line, and the step's own check never flagged them.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "9c644c845a68fe4f11035a80ec81be442dfcd77b",
+      "head_id": "221dc97fd3d9f42f638a97b9570ebd3195eff1a4"
+    }
+  ]
+}
