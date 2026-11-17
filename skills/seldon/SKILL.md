@@ -66,9 +66,14 @@ When a run starts or a run has finished, before you ask for or read a dump,
 look for `.planning/seldon/brief.md` in the project with Read or Glob. An
 error or no match means there isn't one, so go on to "The dump".
 
-If it's there, write nothing, and don't edit or replace it. Say that a brief
-is already there, and that a rerun of a step comes in a later release. Then
-end.
+If it's there, write nothing, and don't edit or replace it. End your message
+with exactly these words, on a line of their own, with nothing after them:
+
+```
+A brief is already there at .planning/seldon/brief.md, and I've left it as it is. Rerunning a step comes in a later release.
+```
+
+That ends the run.
 
 This check runs when a run starts and on every turn after a run has finished.
 While a run is still under way, the brief you just wrote is expected.
@@ -166,9 +171,15 @@ That last group is the decisions the dump left open that the brief needs, so
 your questions cover what the user didn't write, not only what they did.
 
 When that group has anything in it, ask every one of those questions in one
-plain-prose message that ends your turn, and write nothing in that turn. Ask
-about who it serves plainly, as who the project is for. Ask about refusals as
-what the project won't do, and why. Once the user answers, look at What it
+plain-prose message that ends your turn, and write nothing in that turn. When
+who it serves is one of them, ask it with exactly these words, on a line of
+their own:
+
+```
+Who is it for?
+```
+
+Ask about refusals as what the project won't do, and why. Once the user answers, look at What it
 refuses first: if the answers leave it unsettled, ask again as "The draft"
 says under What it refuses, and write nothing in that turn. Once it's settled,
 draft with those answers: each item an answer settles carries that answer word
