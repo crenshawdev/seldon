@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: prd-from-brief
+description: A bare /seldon in a fresh session where a confirmed brief sits at .planning/seldon/brief.md, its quotes naming a web framework, a database and a host, so Seldon has to write a .planning/seldon/prd.md that passes the PRD check, carries every refusal into Non-goals with its quote, quotes or tags every requirement and non-goal, and names none of those technology words.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
