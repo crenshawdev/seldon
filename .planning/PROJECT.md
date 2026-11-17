@@ -21,6 +21,7 @@ Each of these is a hypothesis until it ships and proves itself.
 - [ ] One command, `/seldon` (`/seldon:seldon` always works), walks brief, PRD, spine, then epics, and stops after each step for the user to confirm.
 - [ ] `/seldon` picks up where it left off after a `/clear`.
 - [ ] `/seldon <step>`, such as `/seldon prd`, reruns one step to update its document.
+- [ ] Seldon runs on a project already under Cadence as well as on a new one. When `.planning/` exists, it designs the next body of work instead of refusing.
 - [ ] Each step reads only the documents before it, never the earlier conversation, and Seldon suggests a `/clear` between steps.
 - [ ] The user first dumps what they have. Seldon reads the stakes from it and recommends a fast path (a draft with guesses tagged `[ASSUMPTION]`) or coaching (walking each decision), and the user confirms which.
 - [ ] The interview asks the questions the user wouldn't think to ask.
@@ -32,6 +33,7 @@ Each of these is a hypothesis until it ships and proves itself.
 - [ ] Epics come in build order, each with its outcome, boundaries, done-when, dependencies and the spine decisions it relies on, by ID.
 - [ ] Each epic carries at most 5 PRD requirement IDs and at most 5 done-when items. An epic that breaks the size limit or the boundary rule (one source capability, or a tightly coupled pair) is split along the spine's boundaries.
 - [ ] Before the handoff, one readiness check runs: an independent agent reads the PRD, spine and epics together, looking for requirements no epic covers, epics that cross a boundary the spine didn't fix, and decisions left open. The user sees what it finds and chooses to fix it (rerunning the step it names) or hand off as is.
+- [ ] Once the epics are confirmed and the readiness findings are settled, Seldon ends by giving the exact Cadence command for the handoff: `/cad-new-project` reading `.planning/seldon/` on a new project, or the `/cad-phase` or `/cad-milestone` command that adds the epics on a project already under Cadence.
 - [ ] When `/seldon prd` changes the PRD, Seldon shows which earlier decisions the change conflicts with before applying anything, and the next `/seldon` resumes at the spine and walks spine and epics again.
 - [ ] Everything Seldon writes goes in `.planning/seldon/`. A design folder the project already has, such as `docs/design/`, is read as input and never written to.
 - [ ] The `.planning/seldon/` document format is fixed, with sample files Cadence's reader can be built against.
@@ -42,15 +44,15 @@ Each of these is a hypothesis until it ships and proves itself.
 
 ### Out of Scope
 
-- A UX step - not in the first version.
+- A UX step - it comes later, per the brief.
 - The PRFAQ path for the brief - the brief path only.
 - A full architecture document by default - a full document goes stale against the code, so it's written only on request.
 - Writing plans - Seldon stops at epics, and Cadence's planner writes the plans.
 - Writing Cadence's files - Cadence stays the only writer of its own files.
 - Rewriting a built phase - a change to one becomes a new phase.
-- BMAD's files, personas and installer - Seldon follows the method's planning half with prompts of its own.
 - "BMad" in Seldon's name or branding - BMAD's TRADEMARK.md permits the "inspired by BMad" credit, not the name.
-- Remembering a user across projects - ruled out in the brief, with no reason recorded.
+- Remembering a user across projects - John dropped it.
+- Listing Seldon in the Foundation marketplace - it's public and edits another repository, so it's John's step when he publishes.
 - Building the Cadence side in this repository - each repository keeps its own Cadence state, so that work is a Cadence phase in the Cadence repository.
 
 ## Context
@@ -73,6 +75,7 @@ Each of these is a hypothesis until it ships and proves itself.
 
 ## Constraints
 
+- **Method**: Seldon's own prompts - no personas, no copied BMAD files.
 - **Tech stack**: JavaScript on Node, like Cadence - no Python, no `uv`.
 - **Packaging**: a Claude Code plugin - no installer.
 - **License**: MIT, copyright John Crenshaw.
