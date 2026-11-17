@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: brief-rerun
+description: A /seldon brief rerun in a conversation where Seldon has just reopened the Toolshed brief at .planning/seldon/brief.md and asked what should change, with samples/prd.md already beside it. The user answers that checking a tool out now has to be done in thirty seconds. Seldon has to update brief.md in place, keep the Who it serves item and its quote byte-identical, carry the new words on a quoted line, and never write or edit prd.md.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
