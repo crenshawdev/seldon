@@ -1,6 +1,6 @@
 # State
 
-Phase: 1 of 8 (The document format and eval harness)
-Status: phase complete
-Next: /cad-context 2
+Phase: 2 of 8 (The brief)
+Status: context gathered
+Next: /cad-plan 2
 Updated: 2026-11-17
