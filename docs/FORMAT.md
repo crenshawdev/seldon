@@ -158,6 +158,12 @@ The epics file holds one `## ` section per epic, in build order, and no other `#
 - The ID is `E`, a dash, then two or more digits. The heading has text after `: `.
 - An ID appears once. The file has at least one epic.
 
+File order is build order, and Cadence's reader takes the epics in file order:
+
+- An epic depends only on epics before it in the file.
+- Epics carrying MVP-scope requirements come before the rest.
+- E- numbers need not ascend through the file. An epic split off on a rerun takes the next unused number, wherever it sits.
+
 ### Epic fields
 
 Each epic carries six fields, each once and in this order. A field starts on a line that begins with its bold label, with the colon inside the bold:
@@ -195,7 +201,11 @@ Three fields hold IDs, written plainly (not bolded) and separated by commas:
 | `**Requirements:**` | one or more requirement IDs (`CAT-01, SYNC-03`) |
 | `**Spine decisions:**` | `None`, or one or more spine IDs (`S-01, S-02`) |
 
-An epic depends only on epics before it, and the requirements and spine decisions it names are declared in `prd.md` and `spine.md`. The format check reads the spelling of these IDs only. Whether each one is declared is a cross-reference between files, which a later trace check covers.
+- `**Requirements:**` holds at most 5 requirement IDs, non-functional ones included, since they share the ID space.
+- `**Depends on:**` names only epics whose headings come earlier in the file, or `None`.
+- The requirements and spine decisions an epic names are declared in `prd.md` and `spine.md`.
+
+The check reads the spelling of all three ID fields, holds `**Requirements:**` to at most 5 IDs and holds `**Depends on:**` to earlier epics. Whether a requirement or spine ID is declared in `prd.md` or `spine.md` is a cross-reference between files, which a later trace check covers.
 
 ## IDs are stable
 
@@ -328,7 +338,7 @@ node lib/check.mjs <dir>
 - It exits 1 when anything doesn't conform, and prints one line per problem, every problem it finds rather than the first. Each line names the file, then the epic or decision ID when there is one, then the section or field, then what's wrong, for example `epics.md: E-02: Done when: missing field`.
 - It exits 2 when the directory argument is missing or isn't a directory.
 
-The check covers what this document defines and nothing more. It doesn't size epics or trace requirements into epics.
+The check covers what this document defines and nothing more. It holds each epic to the three epic limits: at most 5 requirement IDs, 2 to 5 done-when items, and `**Depends on:**` naming only earlier epics. It doesn't trace requirements into epics.
 
 ### The brief alone
 
