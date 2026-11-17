@@ -115,11 +115,29 @@ The spine holds one `## ` section per decision, and no other `## ` sections:
 
 ```
 ## S-01: <decision>
+Kind: <kind>
+<the decision>
 ```
 
 - The ID is `S`, a dash, then two or more digits. The heading has text after `: `.
 - The body states the decision, so it isn't empty.
 - An ID appears once. The file has at least one decision.
+
+### The Kind line
+
+Each decision's body holds exactly one line that starts at column 0 with `Kind: `. The rest of that line is exactly one of six kinds, and nothing else goes on it:
+
+- `design approach`
+- `boundaries`
+- `how state changes`
+- `who owns shared data`
+- `stack`
+- `hosting`
+
+These six are the decisions that would clash if two parts were built separately, and that's all a spine holds. A spine doesn't have to use all six.
+
+- The line can sit anywhere in the body. It names the kind and doesn't state the decision, so the body also holds the decision's text. A body holding nothing but its `Kind:` line, and perhaps the tag, is empty.
+- The line is read exactly, like section names: lowercase and spelled as above. A seventh kind, another spelling, a second `Kind:` line or a tag on the line fails the check, for example `spine.md: S-02: Kind: missing line`.
 
 ## epics.md
 
@@ -181,7 +199,7 @@ On the fast path Seldon drafts with guesses, and it tags each one so a reader ca
 - The tag is spelled exactly `[ASSUMPTION]`, uppercase, in square brackets. No other spelling counts.
 - It goes inline, right after the guessed text it marks.
 - It goes only in free text: prose or a bullet's text in a section body, or the value of a free-text epic field (`**Outcome:**`, `**Boundaries:**`, `**Done when:**`).
-- It never goes inside an ID-list field (`**Depends on:**`, `**Requirements:**`, `**Spine decisions:**`), on a `## ` heading line, inside a bold field label or inside a requirement's bold ID span. The check reads all of those exactly, so a tag there fails it. `**Depends on:** None [ASSUMPTION]` is reported as not an epic ID, for example. A guessed ID is noted in free text instead.
+- It never goes inside an ID-list field (`**Depends on:**`, `**Requirements:**`, `**Spine decisions:**`), on a `## ` heading line, on a spine decision's `Kind:` line, inside a bold field label or inside a requirement's bold ID span. The check reads all of those exactly, so a tag there fails it. `**Depends on:** None [ASSUMPTION]` is reported as not an epic ID, for example. A guessed ID is noted in free text instead.
 
 Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own, or a design document's when its quote names a source file (see "The user's own words").
 
@@ -361,6 +379,7 @@ LEDG-01 and MEMB-01.
 # Tally - architecture spine
 
 ## S-01: Payments are the only stored truth
+Kind: how state changes
 Balances are computed from payments and never stored.
 ```
 
