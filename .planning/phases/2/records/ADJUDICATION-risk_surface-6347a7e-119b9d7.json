@@ -1,0 +1,47 @@
+{
+  "phase": "2",
+  "trigger": "risk_surface",
+  "discriminator": "6347a7e-119b9d7",
+  "round": 1,
+  "base": "6347a7e",
+  "head": "119b9d7",
+  "base_id": "6347a7e2d0df71a697a049251388d8608a69d28e",
+  "head_id": "119b9d725ea264d40880aed361fd90e058b1c43f",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "tests/scaffold.test.mjs",
+      "line": 48,
+      "severity": "medium",
+      "claim": "scaffoldNames stops the scaffold_script capture at the first #, quote or blank instead of requiring the regex to consume the whole YAML value. When a value is longer than that, the test scans a shorter, different file from the one the harness runs, and the line still counts as readable.",
+      "failure_scenario": "case.yaml has `  scaffold_script: seed.sh#x`. In YAML, a # with no space before it is part of a plain scalar, so the harness runs the file `seed.sh#x`. The regex captures only `seed.sh` and the line is not marked odd. If the case folder holds a benign seed.sh and a `seed.sh#x` containing `rm -rf \"$HOME\"`, the test scans only seed.sh and passes. I confirmed with node that `seed.sh#x`, `seed.sh x.sh` and `\"seed.sh'x\"` all capture as `seed.sh`. This breaks the README's promise that a case.yaml naming its scaffold in a form the test can't read fails.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "6347a7e2d0df71a697a049251388d8608a69d28e",
+      "head_id": "119b9d725ea264d40880aed361fd90e058b1c43f"
+    },
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "tests/scaffold.test.mjs",
+      "line": 47,
+      "severity": "medium",
+      "claim": "The odd-form guard only looks at lines that contain the literal text `scaffold_script`, so a YAML key spelled with an escape sequence is neither scanned nor flagged.",
+      "failure_scenario": "case.yaml has `context:\\n  \"scaffold_script\": evil.sh`. A YAML parser decodes `_` to `_` in a double-quoted key, so the harness sees scaffold_script: evil.sh and runs evil.sh outside the sandbox with --scaffold. The line does not contain the substring `scaffold_script` (I checked with node: includes returns false), so line 47 returns early. evil.sh never reaches scan(), nothing lands in odd, and the test passes. The README's claim that such a case.yaml fails the test does not hold.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "6347a7e2d0df71a697a049251388d8608a69d28e",
+      "head_id": "119b9d725ea264d40880aed361fd90e058b1c43f"
+    }
+  ]
+}

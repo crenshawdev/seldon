@@ -3,14 +3,9 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 2,
-    "status": "planned",
-    "next": "/cad-execute 2",
-    "updated": "2026-11-17",
-    "plan": {
-      "k": 1,
-      "j": 4,
-      "name": "The brief's check and its format contract"
-    }
+    "status": "executed",
+    "next": "/cad-verify 2",
+    "updated": "2026-11-17"
   },
   "phases": [
     {
@@ -33,23 +28,23 @@
       "n": 2,
       "name": "The brief",
       "description": "/seldon takes the user's dump, confirms fast path or coaching, and writes the brief",
-      "status": "planned",
+      "status": "executed",
       "plans": [
         {
           "file": "PLAN-1.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-2.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-3.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-4.md",
-          "finished": false
+          "finished": true
         }
       ]
     },

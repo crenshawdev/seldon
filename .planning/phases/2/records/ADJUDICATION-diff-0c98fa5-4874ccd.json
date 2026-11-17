@@ -1,0 +1,34 @@
+{
+  "phase": "2",
+  "trigger": "diff",
+  "discriminator": "0c98fa5-4874ccd",
+  "round": 1,
+  "base": "0c98fa5",
+  "head": "4874ccd",
+  "base_id": "0c98fa55503afa21fa350e6baf5285eb0e664f48",
+  "head_id": "4874ccde1911c33fb376051d051584e72acfb2aa",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "evals/fast-path/prompt.md",
+      "line": 6,
+      "severity": "medium",
+      "claim": "Phase 1's fast-path case is still named (D-04, Task 7) as the \"recommends and writes nothing\" check, but now runs under D-16's grant with no Write grader. Its graders are only recommends-fast-path and no-ask-user-question. So nothing checks that a new run started with `/seldon <dump>` writes nothing before the user confirms a path.",
+      "failure_scenario": "Plan 3's run command passes `--allow-tools \"Edit(.planning/seldon/**)\" ...` to every case, and D-16 records that this grants Write inside .planning/seldon/. In phase 1 the fast-path case had no write tool, so \"writes nothing\" held because the model couldn't write. Now it can. Suppose SKILL.md regresses so the recommendation turn on a new run also drafts and writes .planning/seldon/brief.md, which FLOW-06 forbids. The fast-path case still scores 1.00, because its last message still has `Recommended path: fast path` and no grader counts Write. The only Write-max-0 recommendation case is asks-for-dump, and it enters through SKILL.md's \"Dump given\" branch. So the most common entry, a `/seldon` with the dump in $ARGUMENTS (the \"New run\" branch), has no proof that it writes nothing. The same gap leaves replay's coaching-confirm turn with Write available and ungraded.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "0c98fa55503afa21fa350e6baf5285eb0e664f48",
+      "head_id": "4874ccde1911c33fb376051d051584e72acfb2aa"
+    }
+  ]
+}
