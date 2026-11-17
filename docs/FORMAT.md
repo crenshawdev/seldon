@@ -135,13 +135,27 @@ Spine decisions and epics use a one-letter prefix on purpose. Cadence's audit ad
 node lib/check.mjs <dir>
 ```
 
-`<dir>` holds the four files: `.planning/seldon/` in a project, `samples/` in this repository.
+`<dir>` holds the four files: `.planning/seldon/` in a project, `samples/` in this repository. This is the full check, and it needs all four.
 
 - It exits 0 when all four conform, and prints one line: `seldon check: all four documents conform`.
 - It exits 1 when anything doesn't conform, and prints one line per problem, every problem it finds rather than the first. Each line names the file, then the epic or decision ID when there is one, then the section or field, then what's wrong, for example `epics.md: E-02: Done when: missing field`.
 - It exits 2 when the directory argument is missing or isn't a directory.
 
 The check covers what this document defines and nothing more. It doesn't size epics or trace requirements into epics.
+
+### The brief alone
+
+```
+node lib/check.mjs --brief <dir>
+```
+
+This is for a step that has written only the brief and needs to check what it wrote.
+
+- It reads only `<dir>/brief.md` and holds it to the brief rules above. Whether the other three files exist doesn't matter.
+- It exits 0 when the brief conforms, and prints one line: `seldon check: brief.md conforms`.
+- Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `brief.md: missing file` when there's no brief. It exits 2 when the directory argument is missing or isn't a directory.
+
+The full check above still needs all four files, so a folder holding only the brief fails it.
 
 ## Examples
 
