@@ -22,6 +22,7 @@ files:
   - evals/existing-brief/graders/says-rerun-later.md
   - README.md
   - evals/fast-path/prompt.md
+  - skills/seldon/SKILL.md
 ---
 
 # Phase 2: The brief - Plan 4: Scaffolded cases, their guard and the README
