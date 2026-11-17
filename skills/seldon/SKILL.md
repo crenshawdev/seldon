@@ -975,6 +975,72 @@ confirm question "The epics check" ends on, which "Step confirm answered" in
 with `/seldon spine`. Ask no question, and end the turn there. Never split
 anyway with an `[ASSUMPTION]` boundary.
 
+## 19. The epics draft
+
+Write `.planning/seldon/epics.md` with the Write tool, and use Write only to
+create an `epics.md` that isn't there yet. Never Write over an `epics.md`
+that's there: one that's there changes only with Edit, never a fresh Write,
+through the routes this section names.
+
+The epics file has this shape, as `docs/FORMAT.md` fixes it, and the check
+holds it to it:
+
+- It opens with a `# ` title in the form `# <Project> - epics`.
+- Then comes one `## ` section per epic, in exactly this form, with two or
+  more digits:
+
+  ```
+  ## E-01: <name>
+  ```
+
+- No tag ever sits on a heading. There's no other `## ` heading.
+- Each epic holds six fields and nothing else, each once and in this order:
+  `**Outcome:**`, `**Boundaries:**`, `**Done when:**`, `**Depends on:**`,
+  `**Requirements:**`, `**Spine decisions:**`. Each starts a line with its
+  bold label, the colon inside the bold, so the first non-blank line under
+  the heading is `**Outcome:**`.
+- The three ID fields hold plain IDs separated by commas. `**Depends on:**`
+  holds `None` or epic IDs, and `**Spine decisions:**` holds `None` or S- IDs.
+
+**Done when.** A `- ` list on the lines below its label, with nothing on the
+label line, one item per bullet and 2 to 5 items. At least one item is the
+epic's own, and one is the integrated item, in exactly these words:
+
+```
+- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.
+```
+
+**No quotes.** Epics don't follow the quote-or-tag rule. An epic's source is
+its `**Requirements:**` and `**Spine decisions:**` IDs, so it carries no `> `
+lines. `[ASSUMPTION]` is allowed, not required, in Outcome, Boundaries and
+Done when. The tag never goes in an ID field or on a heading.
+
+```
+# Gristmill - epics
+
+## E-01: Ordering
+**Outcome:** A customer orders flour from the shop pages, and staff see each order.
+**Boundaries:** Placing an order and listing orders for staff. An order isn't changed once placed.
+**Done when:**
+- A customer can place an order, and it shows on the staff screen.
+- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.
+**Depends on:** None
+**Requirements:** SHOP-01, SHOP-02, NFR-01
+**Spine decisions:** S-01, S-02
+
+## E-02: Order history
+**Outcome:** Staff mark orders packed and shipped, and every change can be traced.
+**Boundaries:** Changing an order's state, only by appending to its log.
+**Done when:**
+- Each change to an order shows in its history, oldest first.
+- Everything built so far, this epic included, works end to end, with every test passing and nothing half-built showing.
+**Depends on:** E-01
+**Requirements:** ORD-01, ORD-02
+**Spine decisions:** S-01, S-02
+```
+
+Once the epics are written, run "The epics check".
+
 ## 21. The architecture document
 
 `/seldon architecture` over a `spine.md` that's there writes the full
