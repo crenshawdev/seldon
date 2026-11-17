@@ -53,8 +53,11 @@ holds wherever the conversation stands and whatever files exist, so don't look
 at the conversation for it:
 
 - **`architecture`:** the full architecture document, built from the brief,
-  the PRD and the spine. Look for `.planning/seldon/spine.md` with Read or
-  Glob.
+  the PRD and the spine. Look for `brief.md`, `prd.md` and `spine.md` with
+  Read or Glob.
+  - No brief or no PRD there: the document has nothing to draw on. Write
+    nothing, and say which is missing: `/seldon prd` builds the PRD from the
+    brief, and a bare `/seldon` starts with the brief when there's no brief.
   - No spine there: the document has nothing to expand on. Write nothing, and
     say the spine comes first: `/seldon spine` builds it once there's a PRD,
     and a bare `/seldon` takes the steps in order from wherever the files
