@@ -51,3 +51,15 @@ test('allowed-tools grants exactly D-02\'s five entries', () => {
     assert.ok(entries.includes(entry), `allowed-tools is missing D-02's entry: ${entry}`);
   }
 });
+
+// If the body's command drifts from the grant, the check prompts or gets refused mid-run.
+test('every check command in the body starts with the Bash rule\'s command', () => {
+  const { front, body } = readSkill();
+  const rule = allowedTools(front).find((entry) => entry.startsWith('Bash('));
+  assert.ok(rule?.endsWith(':*)'), `the Bash rule isn't a prefix rule: ${rule}`);
+  const prefix = rule.slice('Bash('.length, -':*)'.length);
+  for (const [command] of body.matchAll(/node\s+\S*lib\/check\.mjs/g)) {
+    assert.equal(command, prefix, `the body runs the check without the plugin root: ${command}`);
+  }
+  assert.ok(body.includes(`${prefix} --brief .planning/seldon`), `the body never runs: ${prefix} --brief .planning/seldon`);
+});

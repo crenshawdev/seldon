@@ -26,6 +26,8 @@ path, write the project's brief to `.planning/seldon/brief.md`.
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
+- The only command you run is the check in "The check", exactly as written
+  there.
 - No persona and no role-play. Speak as Seldon, plainly.
 </rules>
 
@@ -108,7 +110,7 @@ the user confirms that path or wants the other one, and end your turn.
 
 When the user answers, say which path you'll take - theirs if they chose the
 other one - and name the project again. Then draft the brief, in this same
-turn, as "The draft" says.
+turn, as "The draft" says, then run "The check".
 
 ## 6. The draft
 
@@ -157,5 +159,23 @@ won't do, then `because` and the reason, in the same bullet:
 
 Never invent a refusal. One the user hasn't stated is asked about, never
 guessed.
+
+## 7. The check
+
+Once the brief is written, run exactly this from the project root, with the
+path unquoted:
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --brief .planning/seldon
+```
+
+That's the plugin's own installed check, never a `lib/check.mjs` in the
+user's project, which has none.
+
+If it exits 1, fix each problem it names in `brief.md` with Edit, inside
+`.planning/seldon/`, and run it again until it passes.
+
+Then end with your final message: name the file you wrote, and repeat the
+check's result line word for word on a line of its own.
 
 </process>
