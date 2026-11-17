@@ -1,7 +1,69 @@
 {
   "layout": 1,
-  "cycleOpen": false,
-  "cursor": null,
-  "phases": [],
+  "cycleOpen": true,
+  "cursor": {
+    "phase": 1,
+    "status": "ready to plan",
+    "next": "/cad-context 1",
+    "updated": "2026-11-17"
+  },
+  "phases": [
+    {
+      "n": 1,
+      "name": "The document format and eval harness",
+      "description": "Fix the .planning/seldon/ format with sample files, make the plugin install, and run the eval harness locally",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 2,
+      "name": "The brief",
+      "description": "/seldon takes the user's dump, confirms fast path or coaching, and writes the brief",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 3,
+      "name": "The PRD, resume and rerun",
+      "description": "The PRD builds from the brief alone, the walk survives a /clear, and any step can be rerun",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 4,
+      "name": "The architecture spine",
+      "description": "Record only the decisions that would clash if built separately, each with a stable ID",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 5,
+      "name": "Epics and the full walk",
+      "description": "Small epics in build order, and /seldon walks all four steps end to end",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 6,
+      "name": "Existing projects and PRD changes",
+      "description": "Design the next body of work under Cadence, and carry PRD changes through spine and epics",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 7,
+      "name": "Readiness check and handoff",
+      "description": "An independent check before the handoff, then the exact Cadence command to run",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 8,
+      "name": "The full graders in CI",
+      "description": "The full graders check every run, and the eval suite runs in CI",
+      "status": "unplanned",
+      "plans": []
+    }
+  ],
   "requirements": []
 }

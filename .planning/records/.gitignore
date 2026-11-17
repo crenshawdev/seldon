@@ -1,0 +1,15 @@
+# Cadence's local diagnostics: the run record, the read record, their rotated generations, claim files and
+# killed-mid-rotation temps. One machine's events, never committed.
+/trace.jsonl
+/trace.1.jsonl
+/trace.1.jsonl.claim
+/trace.1.jsonl.claim.*
+/reads.jsonl
+/reads.1.jsonl
+/reads.1.jsonl.claim
+/reads.1.jsonl.claim.*
+/reads.jsonl.rotate.*
+/reads.1.jsonl.evict.*
+
+# Carried risk rulings are transient and never staged
+/risk-carry/

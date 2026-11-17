@@ -1,0 +1,25 @@
+{
+  "scope": "integrated",
+  "coverage": {
+    "lines": 85,
+    "branches": 85,
+    "statements": 0,
+    "include": [
+      "lib/**"
+    ],
+    "exclude": [
+      "tests/**"
+    ],
+    "commands": [
+      "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-include='lib/**' --test-coverage-exclude='tests/**' --test-coverage-lines={lines} --test-coverage-branches={branches} --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info tests/*.test.mjs",
+      "grep -q '^LF:[1-9]' lcov.info",
+      "! grep -qx 'LH:0' lcov.info"
+    ]
+  },
+  "strong_areas": [],
+  "required_jobs": [
+    "node-test",
+    "coverage",
+    "plugin-validate"
+  ]
+}
