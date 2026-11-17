@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 5,
-    "status": "executed",
-    "next": "/cad-verify 5",
+    "status": "phase complete",
+    "next": "/cad-context 6",
     "updated": "2026-11-17"
   },
   "phases": [
@@ -120,7 +120,7 @@
       "n": 5,
       "name": "Epics and the full walk",
       "description": "Small epics in build order, and /seldon walks all four steps end to end",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -233,7 +233,7 @@
     {
       "id": "FLOW-03",
       "phase": 5,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "ARCH-01",
@@ -253,17 +253,17 @@
     {
       "id": "EPIC-01",
       "phase": 5,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "EPIC-02",
       "phase": 5,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-01",
       "phase": 5,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }

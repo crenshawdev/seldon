@@ -92,13 +92,13 @@ Explicit exclusions. The reason prevents scope creep later.
 | DOCS-02 | Phase 3 | Complete |
 | FLOW-02 | Phase 3 | Complete |
 | FLOW-04 | Phase 3 | Complete |
-| FLOW-03 | Phase 5 | Pending |
+| FLOW-03 | Phase 5 | Complete |
 | ARCH-01 | Phase 4 | Complete |
 | ARCH-04 | Phase 4 | Complete |
 | ARCH-02 | Phase 4 | Complete |
-| EPIC-01 | Phase 5 | Pending |
-| EPIC-02 | Phase 5 | Pending |
-| FLOW-01 | Phase 5 | Pending |
+| EPIC-01 | Phase 5 | Complete |
+| EPIC-02 | Phase 5 | Complete |
+| FLOW-01 | Phase 5 | Complete |
 
 Bare headers - `/cad-plan` seeds a row per requirement when its phase is
 planned (`references/req-traceability.md`).

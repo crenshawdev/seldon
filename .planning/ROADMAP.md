@@ -10,7 +10,7 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 - [x] **Phase 2: The brief** - /seldon takes the user's dump, confirms fast path or coaching, and writes the brief
 - [x] **Phase 3: The PRD, resume and rerun** - The PRD builds from the brief alone, the walk survives a /clear, and any step can be rerun
 - [x] **Phase 4: The architecture spine** - Record only the decisions that would clash if built separately, each with a stable ID
-- [ ] **Phase 5: Epics and the full walk** - Small epics in build order, and /seldon walks all four steps end to end
+- [x] **Phase 5: Epics and the full walk** - Small epics in build order, and /seldon walks all four steps end to end
 - [ ] **Phase 6: Existing projects and PRD changes** - Design the next body of work under Cadence, and carry PRD changes through spine and epics
 - [ ] **Phase 7: Readiness check and handoff** - An independent check before the handoff, then the exact Cadence command to run
 - [ ] **Phase 8: The full graders** - The full graders check every run, and /cad-verify runs the whole eval suite locally
