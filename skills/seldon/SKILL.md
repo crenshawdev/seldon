@@ -416,7 +416,21 @@ exactly this form, with only the ID inside the bold:
 **User journeys.** Prose that walks a user through the product, from what
 they set out to do to having done it.
 
-**Non-goals.** What the product won't do.
+**Non-goals.** What the product won't do. Each refusal in the brief's
+`## What it refuses` goes here first, in the brief's own shape: a `- ` bullet
+saying what the product won't do, then `because` and the reason, with the
+brief's quote for that refusal under it, word for word:
+
+```
+- It won't take reservations, because a tool goes to whoever is at the counter.
+  > no reservations, whoever's at the counter gets the drill
+```
+
+Refusals go in Non-goals, never in a section of their own, so the PRD keeps
+its five sections. Never invent a refusal. When the brief refuses nothing,
+which shows as only a quoted line saying so, carry none. Other non-goals can
+follow the refusals, each with a quote or a tag as "The user's own words"
+below says.
 
 **MVP scope.** Which requirement IDs come first.
 
