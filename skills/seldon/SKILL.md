@@ -51,9 +51,8 @@ so don't look at the conversation for it:
   - No brief there: the PRD has nothing to build from. Write nothing, and
     say there's no brief yet and that a bare `/seldon` starts one.
   - A brief and no PRD: go to "The PRD step".
-  - A brief and a PRD: this is the PRD rerun. Go to "The PRD step", and
-    update the PRD that's there with Edit, as "The PRD draft" says for a
-    `/seldon prd` rerun.
+  - A brief and a PRD: this is the PRD rerun. Update the PRD that's there
+    with Edit, as "The PRD rerun" in "The PRD draft" says.
 - **`brief`:** look for `brief.md` with Read or Glob.
   - A brief there: this is the brief rerun. When your last turn ended on the
     documents question, the text that question asked about is the rerun's
@@ -407,7 +406,8 @@ The PRD is built from `.planning/seldon/brief.md` and nothing else. Read that
 file and nothing more for it: never `docs/design/` or any other design folder,
 never the dump, and never the earlier conversation, whatever it holds. A fact
 from a design folder reaches the PRD only through a quote the brief already
-carries.
+carries. The one other file a PRD step reads is the `prd.md` a `/seldon prd`
+rerun updates, as "The PRD rerun" says.
 
 The brief on disk is the confirmed one, even where it differs from something
 said earlier in this conversation: the user may have edited the file by hand
@@ -440,7 +440,8 @@ there, write nothing, and end your message on the later-release line from
 That guard is about creating a PRD with Write. Two routes change a PRD that's
 there, and both do it with Edit, never a fresh Write:
 
-- A `/seldon prd` rerun.
+- A `/seldon prd` rerun, as "The PRD rerun" below says. It's the only route
+  into the PRD step that updates a PRD that's there.
 - "Names changes" in "Where the conversation stands", when the user answers
   the PRD's own confirm question with changes. Make those changes with Edit,
   quote the user's new words as "The user's own words" below says, then run
@@ -448,6 +449,36 @@ there, and both do it with Edit, never a fresh Write:
 
 Every other route that reaches this step and finds `prd.md` writes nothing and
 ends on the later-release line.
+
+**The PRD rerun.** A `/seldon prd` that finds `prd.md` there brings it in line
+with the brief as it stands now. Read `prd.md` first, the previous version of
+this document, then `brief.md`, and nothing else: not the conversation and not
+a design folder. Change the PRD with Edit only, never a fresh Write over it, so
+a line the change doesn't touch is never typed again:
+
+- A requirement the brief's change doesn't touch keeps its bullet line and its
+  quote or tag lines byte-identical: the same ID, the same text, the same
+  quote.
+- A requirement the change alters keeps its ID and takes the new text, with
+  its new quote or tag.
+- A requirement the change drops is removed, its bullet and its quote lines
+  both. Its ID goes on the `Retired:` line, one prose line directly under
+  `## Requirements`, before the first `### ` category:
+
+  ```
+  Retired: CAT-03, LOAN-02
+  ```
+
+  Make the line when the first ID retires, and add each later one to its end,
+  plain and comma-separated.
+- A new requirement takes the next unused number for its prefix. Never give it
+  an ID that's in use or on the `Retired:` line: IDs carry into Cadence's
+  `REQUIREMENTS.md` unchanged, so a retired ID stays retired.
+- Non-goals and MVP scope follow the brief too. A refusal the brief gained
+  becomes a non-goal bullet with its quote, as "Non-goals" below says, and MVP
+  scope stops naming a retired ID.
+
+Then run "The PRD check" and end the step the way it says.
 
 The PRD has this shape, and the check holds it to it:
 
