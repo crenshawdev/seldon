@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: epics-later
+description: A /seldon epics in a fresh session where a confirmed brief, its PRD and its spine are already at .planning/seldon/, seeded from samples/brief.md, samples/prd.md and samples/spine.md, so Seldon has to write and edit nothing and end on the fixed line saying the epics step comes in a later release, rather than drafting epics from the three documents.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
