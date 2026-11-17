@@ -5,7 +5,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BRIEF_OK_LINE, checkDir, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE } from '../lib/check.mjs';
+import { BRIEF_OK_LINE, checkDir, EPICS_OK_LINE, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE } from '../lib/check.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const samples = join(root, 'samples');
@@ -178,7 +178,7 @@ test('a Retired line under the spine title passes the full check and --spine', (
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -297,6 +297,38 @@ test('--spine on a folder with no spine exits 1 with a missing file', (t) => {
 
 test('--spine with no directory exits 2', () => {
   const r = run('--spine');
+  assert.equal(r.status, 2);
+  assert.match(r.stderr, /usage:/);
+});
+
+test('--epics on the samples exits 0 with the epics line', () => {
+  const r = run('--epics', samples);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), EPICS_OK_LINE);
+});
+
+test('--epics passes a folder holding only the epics', (t) => {
+  const r = run('--epics', only(t, 'epics.md'));
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), EPICS_OK_LINE);
+});
+
+test('--epics on an epic missing Done when exits 1, naming the epic and the field', (t) => {
+  const dir = only(t, 'epics.md');
+  edit(dir, 'epics.md', inEpic('E-02', (s) => s.replace(/^\*\*Done when:\*\*.*\n/m, '')));
+  const r = run('--epics', dir);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'epics.md: E-02: Done when: missing field');
+});
+
+test('--epics on a folder with no epics exits 1 with a missing file', (t) => {
+  const r = run('--epics', temp(t));
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'epics.md: missing file');
+});
+
+test('--epics with no directory exits 2', () => {
+  const r = run('--epics');
   assert.equal(r.status, 2);
   assert.match(r.stderr, /usage:/);
 });

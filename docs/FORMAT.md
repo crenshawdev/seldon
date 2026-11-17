@@ -358,6 +358,20 @@ This is for the spine step, which has written the spine and needs to check what 
 
 The full check above still needs all four files, so a folder holding only the brief, the PRD and the spine fails it.
 
+### The epics alone
+
+```
+node lib/check.mjs --epics <dir>
+```
+
+This is for the epics step, which has written the epics and needs to check what it wrote. The step runs this mode, never the full check.
+
+- It reads only `<dir>/epics.md` and holds it to the epics rules above. Whether the other three files exist doesn't matter.
+- It exits 0 when the epics conform, and prints one line: `seldon check: epics.md conforms`.
+- Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `epics.md: missing file` when there's no epics file. It exits 2 when the directory argument is missing or isn't a directory.
+
+The full check above still needs all four files, so a folder holding only the epics fails it.
+
 ## Examples
 
 These are minimal. `samples/` has a complete set.
