@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: prd-rerun
+description: A /seldon prd in a fresh session where .planning/seldon/ holds samples/prd.md and a brief that has since dropped reminders, the one thing LOAN-03 quotes, and gained a refusal to send them. Seldon has to update prd.md in place, keeping every other requirement's line and quote byte-identical, list LOAN-03 on a Retired line under Requirements and never bring LOAN-03 back as a bullet.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
