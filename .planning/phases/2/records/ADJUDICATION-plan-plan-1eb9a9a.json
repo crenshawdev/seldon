@@ -1,0 +1,94 @@
+{
+  "phase": "2",
+  "trigger": "plan",
+  "discriminator": "plan-1eb9a9a",
+  "round": 1,
+  "base": "1eb9a9a",
+  "head": "1eb9a9a",
+  "base_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53",
+  "head_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53",
+  "voices": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-cross-plan",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/2/PLAN-1.md",
+      "line": 99,
+      "severity": "medium",
+      "claim": "Task 3 adds a false rule to the FORMAT.md contract. It says the tag can go inline after guessed text in any field value, and that lib/check.mjs neither requires nor rejects it, so a document checks the same with or without tags. In fact the check rejects the tag in the ID-list epic fields (Depends on, Requirements, Spine decisions), because each comma-split item must match EPIC_ID, REQ_ID or SPINE_ID exactly (lib/check.mjs:152-154).",
+      "failure_scenario": "A writer follows the documented contract and tags a guessed dependency in samples/epics.md as `**Depends on:** None [ASSUMPTION]`. Running `node lib/check.mjs <dir>` then exits 1 with `epics.md: E-01: Depends on: \"None [ASSUMPTION]\" is not an epic ID` (reproduced on a copy of samples/). This contradicts the new section's claim that a document checks the same with or without tags, and any later step that tags a guessed ID fails its own check. Task 3's Verify only tries the tag in brief.md's Scope body, so it cannot catch this. The fix is to exclude ID-list field values from the allowed placements, or to say the tag goes after the field's text rather than inside an ID list.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53",
+      "head_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/2/PLAN-3.md",
+      "line": 126,
+      "severity": "medium",
+      "claim": "AC1 and roadmap criterion 1 say `/seldon` on a new project asks for the user's dump, but in the asks-for-dump case that request is hand-written in history.jsonl (line 127) and the case prompt is the dump itself, so the model never produces the ask and no grader checks it. No other phase 2 case does either: Plan 4's cases all prompt with `/seldon` plus a dump.",
+      "failure_scenario": "Plan 2 changes the step that asks for the dump. Its Task 2 adds a new first process step that decides where Seldon is in the conversation, and its Task 7 puts a Read/Glob check for an existing brief before the dump is asked for. Say either change breaks the empty-`$ARGUMENTS` branch, so that `/seldon` with no text drafts guesses, recommends a path from nothing, or asks through AskUserQuestion instead of plain prose. asks-for-dump still scores 1.00, because its history already contains a correct hand-written request and its two graders only look at the recommendation turn (recommends-a-path, no-write). AC1's 'asking for the user's dump' is reported as proven while the behavior is untested. A single-turn case that prompts with a bare `/seldon` and puts a regex on the request in `last_message` would cover it.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53",
+      "head_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/2/PLAN-4.md",
+      "line": 104,
+      "severity": "low",
+      "claim": "Task 2 Verify (3) uses `git grep -l` to show the coined name appears only in the fixture and its grader, but plain `git grep` searches only tracked files. The executor contract runs Verify before it stages and commits (cad-executor-contract steps 2 and 4), so every file Task 2 creates is still untracked when this check runs, and the check cannot see a leak of the name into `prompt.md` or any other new file.",
+      "failure_scenario": "The executor writes `evals/design-folder/prompt.md` with the coined project name in the dump by mistake, then runs Verify (3) before committing. `git grep -l <name>` prints nothing because `overview.md`, `prompt.md` and the grader are all untracked, so the check misses the leak. The leak breaks AC4's 'a fact found only in that fixture' proof, because the design-folder case can then score 1.00 without Seldon reading `docs/design/`. A fix is `git grep --untracked -l` or a plain `grep -rl --exclude-dir=results`.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53",
+      "head_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53"
+    },
+    {
+      "voice": "claude-subagent-cross-plan",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/2/PLAN-4.md",
+      "line": 816,
+      "severity": "high",
+      "claim": "Plan 4 Task 5 requires phase 1's fast-path case to score 1.00 with no `not granted`. Plan 2 Tasks 7 and 8 make every new run call Read or Glob first (to look for `.planning/seldon/brief.md` and `docs/design/`), but no plan changes `evals/fast-path/prompt.md`, whose `allowed_tools` is still `[Skill, AskUserQuestion]`.",
+      "failure_scenario": "After Plan 2, the single-turn fast-path case (`/seldon` plus the Shelfmark dump) starts a new run, so SKILL.md tells Seldon to Read or Glob `.planning/seldon/brief.md` and `docs/design/`. The case allows only Skill and AskUserQuestion, so those calls come back `not granted`. The full-suite run in Plan 4 Task 5 then breaks its own 'no `not granted`' condition, or Seldon behaves differently and the case scores below 1.00. Plan 3 reruns only `replay` (and replay's resumed turn isn't a new run), so nothing catches this before the final nine-case run. Task 5 also allows `git status` to show only README.md, which leaves no room to fix the case file.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "77580fc",
+      "citation_missing": true,
+      "base_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53",
+      "head_id": "1eb9a9a2175d17ced60f3427797a40bae9304d53"
+    }
+  ]
+}
