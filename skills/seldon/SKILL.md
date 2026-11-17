@@ -54,10 +54,17 @@ so don't look at the conversation for it:
   - A brief and a PRD: this is the PRD rerun. Update the PRD that's there
     with Edit, as "The PRD rerun" in "The PRD draft" says.
 - **`brief`:** look for `brief.md` with Read or Glob.
-  - A brief there: this is the brief rerun. When your last turn ended on the
-    documents question, the text that question asked about is the rerun's
-    change, and the rerun doesn't ask for one again. Rerunning the brief comes
-    in a later release, so for now write nothing and say that.
+  - A brief there: this is the brief rerun, as "The brief rerun" in "The
+    draft" says. Check these in order:
+    - **After the documents question:** your last turn ended on the documents
+      question in "A dump when documents are there". The text from that
+      question's turn is the rerun's change. Update the brief with it in this
+      same turn, as "The brief rerun" says, without asking what should change:
+      the user already gave it once.
+    - **Otherwise, reopen it:** Read `brief.md`, name it, and ask in one
+      plain-prose question what should change. Recommend no path, since the
+      user chose one when the brief was first written. Write nothing in that
+      turn, and end it on that question.
   - No brief there: a new brief run with no dump, since the step name isn't
     one. Ask for the dump as "The dump" says for an empty `$ARGUMENTS`.
 
@@ -104,19 +111,26 @@ these in order:
   `prd.md` that's there, go to "The PRD rerun" in "The PRD draft" and carry
   the rerun on with those answers, changing `prd.md` with Edit, never a fresh
   Write. Otherwise go to "The PRD draft" and draft with those answers.
+- **Brief change answered:** your last turn reopened the brief on a
+  `/seldon brief` rerun and asked what should change, and the user answered.
+  That answer is the change: update `brief.md` with it, as "The brief rerun"
+  in "The draft" says.
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
-  Look for the files again, as "Where a run starts" says. Going on from the
-  brief follows that section's routes, exactly as a resume does:
-  - Only a brief there: start with the resume line, then go to "The PRD step".
-  - A brief and a PRD there: write nothing, and end on the later-release line.
-    Going on never runs the PRD step over a PRD that's there.
+  - **Rerun the brief:** the user chose the rerun in their own words. The text
+    from the question's turn is the rerun's change, just as it is for a
+    `/seldon brief` typed as the reply, which the step-name test above has
+    already taken to the brief rerun. Update the brief with it in this same
+    turn, as "The brief rerun" in "The draft" says, without asking what should
+    change.
+  - **Go on from the brief:** look for the files again, as "Where a run
+    starts" says, and follow that section's routes, exactly as a resume does:
+    - Only a brief there: start with the resume line, then go to "The PRD
+      step".
+    - A brief and a PRD there: write nothing, and end on the later-release
+      line. Going on never runs the PRD step over a PRD that's there.
 
-  The text from the question's turn isn't input to the PRD. A `/seldon brief`
-  typed as the reply is a step name, so the step-name test above has already
-  taken it to the brief rerun. When the user asks in their own words to rerun
-  the brief instead, write nothing and say that rerunning the brief comes in a
-  later release.
+    The text from the question's turn isn't input to the PRD.
 
 Anything else is a new run: start at "Where a run starts". The files in
 `.planning/seldon/` decide where a new run goes, even when this conversation
@@ -308,8 +322,9 @@ which is never tagged.
 
 ## 10. The draft
 
-Write `.planning/seldon/brief.md` with the Write tool. The brief has this
-shape, and the check holds it to it:
+Write `.planning/seldon/brief.md` with the Write tool. A brief that's already
+there changes only with Edit, as "The brief rerun" below says. The brief has
+this shape, and the check holds it to it:
 
 - It opens with a `# ` title naming the project.
 - Then come exactly eight `## ` sections, in this order and this spelling,
@@ -380,6 +395,24 @@ When their answer leaves it unsettled - they declined it, skipped it or left it
 open - ask it again in your next message, before you write anything, and end
 your turn on that question. Say the brief needs this section, and that
 "nothing" is an answer too. Write nothing until it's settled.
+
+**The brief rerun.** A `/seldon brief` over a `brief.md` that's there updates
+that brief in place, once the user has said what should change: in answer to
+the rerun's own question, or in the text the documents question asked about.
+Read `brief.md` first, then change it with Edit only, never a fresh Write over
+it, so a line the change doesn't touch is never typed again:
+
+- An item the change doesn't touch keeps its line and its quote, file or tag
+  lines byte-identical.
+- An item the change alters or adds takes the user's new words, word for word,
+  on its quoted line, as "The user's own words" above says, or a tag when it's
+  a guess.
+- What it refuses keeps its rules above. A refusal the change leaves
+  unsettled is asked about before you write anything, never guessed.
+- Never write or edit `.planning/seldon/prd.md` on a brief rerun, even when
+  the change leaves the PRD out of date.
+
+Then run "The check" and end the step the way it says.
 
 ## 11. The check
 
