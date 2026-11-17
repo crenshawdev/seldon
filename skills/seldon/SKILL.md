@@ -27,13 +27,37 @@ it writes no file and drafts no document.
 
 <process>
 
-## 1. The dump
+## 1. Where the conversation stands
 
-The text in `$ARGUMENTS` is the user's dump. If it is empty, ask the user to
-paste or describe what they have so far - the idea, any notes, who it's for -
-and end your turn there.
+Before anything else, find your place in this conversation. Read only the
+conversation to find it, never a file: rebuilding a run after `/clear` isn't
+built yet. Then pick up at the step your place names:
 
-## 2. The judgment
+- **New run:** you haven't asked for the dump or given a recommendation in
+  this conversation. Start at "The dump".
+- **Dump given:** you asked for the dump, and the user's message gives it.
+  That message is the dump. Go to "The judgment".
+- **Path chosen:** you gave your recommendation, and the user answered it. Go
+  to "After the answer" with the path the user chose. Never recommend again.
+- **Interview under way:** you asked the fast-path questions or a coaching
+  question, and the user answered. Carry on from there.
+
+This skill can be loaded again on a later turn with a summary of the
+conversation as its arguments. On a later turn `$ARGUMENTS` is that summary,
+not a new dump, so never read it as one. Only a new run takes its dump from
+`$ARGUMENTS`.
+
+The recommendation turn writes nothing. Drafting starts only on a later turn,
+after the user confirms a path.
+
+## 2. The dump
+
+On a new run the text in `$ARGUMENTS` is the user's dump. If it is empty, ask
+for the dump in one plain-prose question that ends your message: ask the user
+to paste or describe the idea, any notes, and who it's for. Write nothing in
+that turn, and end it on that question.
+
+## 3. The judgment
 
 Read the dump against what a brief needs:
 
@@ -55,7 +79,7 @@ breaks or costs money if it's wrong, and how hard a wrong call is to undo.
   On this path Seldon walks through each decision with the user, one question
   at a time.
 
-## 3. The recommendation
+## 4. The recommendation
 
 Name the project the way the dump names it. Then put the recommendation on a
 line of its own, in exactly this form, plain text with no bold or other
@@ -75,7 +99,7 @@ That line is the only place a path is recommended. Follow it with one or two
 reasons, each taken from what the dump says. Then ask, in plain prose, whether
 the user confirms that path or wants the other one, and end your turn.
 
-## 4. After the answer
+## 5. After the answer
 
 When the user answers, say which path you'll take - theirs if they chose the
 other one - and name the project again. Then say that drafting the documents
