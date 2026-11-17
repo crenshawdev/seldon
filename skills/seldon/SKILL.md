@@ -97,7 +97,7 @@ these in order:
     and quote the user's new words as "The draft" says, for the PRD as "The
     PRD draft" says, or for the spine as "The spine draft" says. For the PRD
     this is one of the three routes "The PRD draft" lets change a `prd.md`
-    that's there, so its later-release guard doesn't stop it. For the spine
+    that's there, so the PRD's create guard doesn't stop it. For the spine
     it's one of the routes "The spine draft" names for changing a `spine.md`
     that's there. Then run that step's check again and end the step the way
     "The check" says.
@@ -490,8 +490,12 @@ tagged `[ASSUMPTION]`. Never ask a question about the stakes.
 Write `.planning/seldon/prd.md` with the Write tool, and use Write only to
 create a `prd.md` that isn't there yet. Right before that Write, whatever route
 brought you here, look for `.planning/seldon/prd.md` with Read or Glob. If it's
-there, write nothing, and end your message on the later-release line from
-"Where a run starts", on a line of its own, with nothing after it.
+there, write nothing. End your message with exactly these words, on a line
+of their own, with nothing after them. This is the PRD's create guard line:
+
+```
+.planning/seldon/prd.md is already there, so I've written nothing this time. To revise the PRD, run /seldon prd.
+```
 
 That guard is about creating a PRD with Write. Three routes change a PRD
 that's there, and all three do it with Edit, never a fresh Write:
@@ -507,7 +511,8 @@ that's there, and all three do it with Edit, never a fresh Write:
   "The PRD check" again.
 
 Every other route that reaches this step and finds `prd.md` writes nothing and
-ends on the later-release line.
+ends on the PRD's create guard line, on a line of its own, with nothing after
+it.
 
 **The PRD rerun.** A `/seldon prd` that finds `prd.md` there brings it in line
 with the brief as it stands now. Read `prd.md` first, the previous version of
