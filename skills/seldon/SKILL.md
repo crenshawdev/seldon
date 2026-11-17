@@ -1,6 +1,6 @@
 ---
 name: seldon
-description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md."
+description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and after a /clear it picks up from those files."
 argument-hint: "[what you have: the idea, notes or spec, pasted or described]"
 allowed-tools:
   - Read
@@ -13,16 +13,18 @@ allowed-tools:
 <objective>
 Read the user's dump, judge whether it is ready for a drafted brief or needs a
 walk through each decision, and recommend one path. Once the user confirms a
-path, write the project's brief to `.planning/seldon/brief.md`.
+path, write the project's brief to `.planning/seldon/brief.md`. Then build the
+PRD from that brief alone, at `.planning/seldon/prd.md`. A new run picks up
+from the files in `.planning/seldon/`, so the walk survives a `/clear`.
 </objective>
 
 <rules>
 - Every question you ask is plain prose at the end of your message, and asking
   it ends your turn. Never use AskUserQuestion, a numbered menu or a list of
   options to pick from. The user answers in their own words in the next turn.
-- The only file you write is `.planning/seldon/brief.md`. Never write, edit or
-  create anything else, in the project or outside it. A design folder is input
-  only.
+- The only files you write are `.planning/seldon/brief.md` and
+  `.planning/seldon/prd.md`. Never write, edit or create anything else, in the
+  project or outside it. A design folder is input only.
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
@@ -367,5 +369,62 @@ to them: how many requirements and categories, and how much goes into
 Non-functional requirements and User journeys. When the brief doesn't show the
 stakes, put one line in MVP scope saying what size you drafted the PRD for,
 tagged `[ASSUMPTION]`. Never ask a question about the stakes.
+
+## 13. The PRD draft
+
+Write `.planning/seldon/prd.md` with the Write tool, and use Write only to
+create a `prd.md` that isn't there yet. Right before that Write, whatever route
+brought you here, look for `.planning/seldon/prd.md` with Read or Glob. If it's
+there and this run isn't a `/seldon prd` rerun, write nothing, and end your
+message on the later-release line from "Where a run starts", on a line of its
+own, with nothing after it. Only a `/seldon prd` rerun changes a PRD that's
+there, and it does that with Edit, never a fresh Write.
+
+The PRD has this shape, and the check holds it to it:
+
+- It opens with a `# ` title naming the project, in the form
+  `# <Project> - PRD`.
+- Then come exactly five `## ` sections, in this order and this spelling:
+
+  ```
+  ## Requirements
+  ## Non-functional requirements
+  ## User journeys
+  ## Non-goals
+  ## MVP scope
+  ```
+
+- Each section has a body that isn't empty. There's no other `## ` heading,
+  and no line in a body starts with `## `.
+
+**Requirements.** A requirement is one bullet at the start of a line, in
+exactly this form, with only the ID inside the bold:
+
+```
+- **CAT-01**: A member searches the catalog by name or category.
+```
+
+- In Requirements, every bullet sits under a `### <Category>` subheading.
+  Non-functional requirements use the same bullet form and need no
+  subheading.
+- An ID is a prefix of 2 to 8 uppercase letters or digits with at least one
+  letter, a dash, and two or more digits, such as `CAT-01` or `NFR-01`. Each
+  ID appears once across both sections.
+- Each of the two sections holds at least one bullet. Write no indented
+  bullets in either.
+
+**User journeys.** Prose that walks a user through the product, from what
+they set out to do to having done it.
+
+**Non-goals.** What the product won't do.
+
+**MVP scope.** Which requirement IDs come first.
+
+**Capabilities, not implementation.** The PRD says what the product does,
+never how it's built. Name no library, framework, format or hosting choice,
+even when the brief names one: those belong to the spine. A technical word the
+user said stays in the brief and isn't carried into the PRD.
+
+Once the PRD is written, run "The PRD check".
 
 </process>
