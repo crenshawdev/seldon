@@ -684,4 +684,61 @@ inside one part, stays out. A spine doesn't need all six kinds.
 
 Draft the spine in this same turn, as "The spine draft" says.
 
+## 16. The spine draft
+
+Write `.planning/seldon/spine.md` with the Write tool, and use Write only to
+create a spine that isn't there yet. Never Write over a `spine.md` that's
+there: one that's there changes only with Edit, never a fresh Write, through
+the routes below.
+
+The spine has this shape, as `docs/FORMAT.md` fixes it, and the check holds it
+to it:
+
+- It opens with a `# ` title in the form `# <Project> - architecture spine`.
+- Then comes one `## ` section per decision, in exactly this form, numbered
+  from `S-01` with two or more digits:
+
+  ```
+  ## S-01: <decision>
+  ```
+
+- No tag ever sits on a heading. There's no other `## ` heading, and no line
+  in a body starts with `## `.
+- Each body states the decision in prose and holds exactly one line that
+  starts at column 0 with `Kind: `, naming one of the six kinds in "The spine
+  step", spelled exactly, lowercase, with nothing else on that line.
+
+**The user's own words.** Every decision's body carries one of two things:
+
+- a `> ` quote directly under the decision's text
+- an `[ASSUMPTION]` tag, inline right after the decision's text, never on the
+  `## ` heading and never on the `Kind:` line
+
+A spine quote comes from one of two sources, and nowhere else:
+
+- The brief's `> ` lines, word for word. A quote is a whole `> ` line or one
+  unbroken run of that line's exact words. Where the brief's quote had a
+  `(docs/design/...)` line under it, keep that line under the spine's quote
+  too.
+- The user's replies to this step's own question.
+
+The brief's item text and the PRD's text are Seldon's wording, not the user's,
+so neither is ever quoted. Never paraphrase a quote and never tidy it. A
+decision with no source words is a guess and carries the tag.
+
+```
+# Gristmill - architecture spine
+
+## S-01: Orders are an append-only log
+Kind: how state changes
+An order's changes are stored as events and never edited. Its current state is computed from the log.
+> every change to an order has to be traceable
+
+## S-02: One server-rendered web app
+Kind: design approach
+The shop pages and the staff screens are pages of one app, with no separate API. [ASSUMPTION]
+```
+
+Once the spine is written, run "The spine check".
+
 </process>
