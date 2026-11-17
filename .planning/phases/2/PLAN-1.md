@@ -32,7 +32,7 @@ A user runs `/seldon` on a new project, dumps what they have, confirms fast path
 ## Context
 
 - Locked: D-05 (a brief-only mode with its own result line; FORMAT.md's check section and the Node tests change with it; the full check still requires all four files) and D-06 (the tag is exactly `[ASSUMPTION]`, inline after the guessed text, documented in FORMAT.md, not enforced by `lib/check.mjs`).
-- Also locked: D-17 (a "What it refuses" section after Scope and before Vision, each item naming something the product won't do and the reason; FORMAT.md lists it, the brief-only check requires it and requires it not empty, `samples/brief.md` carries one) and D-18 (each item written from a user answer keeps that answer word for word on a quoted line under it; a fast-path guess has no quote; FORMAT.md sets the format and `samples/brief.md` shows it).
+- Also locked: D-17 (a "What it refuses" section after Scope and before Vision, each item naming something the product won't do and the reason; FORMAT.md lists it, the brief-only check requires it and requires it not empty, `samples/brief.md` carries one) and D-18 (each item drafted from the user's own words, in the dump or a reply, keeps the exact phrase it came from word for word on a quoted line under it, never the whole dump; an item with no source words is an `[ASSUMPTION]` with no quote; FORMAT.md sets the format and `samples/brief.md` shows it).
 - This plan fixes the command shape Plans 2 to 4 use: `node lib/check.mjs --brief <dir>`, which reads only `<dir>/brief.md` and passes with the line `seldon check: brief.md conforms`.
 - Patterns to follow: `lib/check.mjs` has no dependencies and prints one line per problem. `tests/check.test.mjs` starts every broken case from a copy of `samples/` (`copy`, `edit`) and runs the script through `run`.
 - Out of scope: the epic size and trace checks (phases 5 and 8) and any partial mode besides the brief.
@@ -167,10 +167,10 @@ A user runs `/seldon` on a new project, dumps what they have, confirms fast path
 - **Reads:** docs/FORMAT.md#Rules for every file, docs/FORMAT.md#The check, samples/brief.md
 - **Decisions:** D-18
 - **Action:** Add a `## ` section to FORMAT.md, after the `[ASSUMPTION]` section and before "The check", that sets how the brief keeps the user's own words (D-18):
-  - **The rule:** each item Seldon writes in `brief.md` from a user answer keeps that answer word for word, on a quoted line directly under the item. No paraphrase, no summary, no tidied wording.
+  - **The rule:** each item Seldon writes in `brief.md` from the user's own words keeps the exact phrase it came from, word for word, on a quoted line directly under the item. No paraphrase, no summary, no tidied wording.
   - **The line:** it starts with `> `. Under a `- ` bullet it's indented two spaces (`  > `), so it stays with its bullet. An answer that runs over several lines keeps its line breaks, each line starting the same way. This plan picks the `> ` form, since D-18 fixes the words and leaves the format to FORMAT.md.
   - **One answer, several items:** each item quotes the part of the answer it rests on, as one run of the user's exact words. This plan picks that too: D-18 fixes the words, not how a long answer is split.
-  - **What counts as an answer:** what the user wrote in reply to a question Seldon asked. A fast-path guess has no quote, which is why it carries `[ASSUMPTION]`.
+  - **What counts as the user's own words:** anything the user wrote, in the dump or in a reply to a question Seldon asked. An item quotes only the exact phrase it came from, never the whole dump. An item with no source words is a guess, so it carries `[ASSUMPTION]` and no quote.
   - **The check:** it neither requires nor rejects a quoted line. To the check, a `> ` line is body text.
   - Give one short example: an item, then its quote.
   - The section covers the brief only. The PRD and spine take the same rule in phases 3 and 4.
@@ -190,5 +190,5 @@ A user runs `/seldon` on a new project, dumps what they have, confirms fast path
   - the `> ` quote line (Task 6, under D-18)
 
   Plan 2's SKILL.md and Plan 3's graders follow both.
-- **Open reading, flagged in the return:** D-18 says "a user answer". Task 6 reads that as the user's reply to a question Seldon asked, so an item drafted from the dump carries no quote. Whether dump text counts as an answer is John's call.
+- **D-18's reading, settled by John:** "a user answer" means the user's own words wherever they appear, in the dump or in a reply. An item drafted from them quotes the exact phrase it came from, never the whole dump, and an item with no source words is an `[ASSUMPTION]` with no quote.
 - Prior art from memory: phase 1 D-05 (the format check is code that Seldon's own steps run), cited from phases/1/CONTEXT.md, phase 1.

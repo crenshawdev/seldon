@@ -25,7 +25,7 @@ A user runs `/seldon` on a new project, dumps what they have, confirms fast path
 - Once the user confirms a path in a later turn, `/seldon` writes `.planning/seldon/brief.md`:
   - It has a title and the eight sections in FORMAT.md's order, What it refuses among them, with each refusal giving its reason.
   - Every guess is tagged `[ASSUMPTION]`.
-  - Each item written from a user answer keeps that answer word for word on a quoted line under it.
+  - Each item drafted from the user's own words, in the dump or a reply, keeps the exact phrase it came from word for word on a quoted line under it, never the whole dump. An item with no source words is a guess: `[ASSUMPTION]`, no quote.
   - Nothing is written anywhere else.
 - It then runs the plugin's own brief-only check and repeats the check's result line in its final message.
 - On the fast path, it asks every blocking question in one prose turn before drafting. That always includes who the project is for, and what it refuses, when the dump never says.
@@ -121,7 +121,7 @@ A user runs `/seldon` on a new project, dumps what they have, confirms fast path
     - Each section has a body that isn't empty. There's no other `## ` heading, and no body line starts with `## `.
     - State this shape in SKILL.md itself. The check is what holds the brief to it.
   - **Refusals (D-17):** each item under What it refuses names something the product won't do and the reason, as a `- ` bullet in FORMAT.md's form: what it won't do, then `because` and the reason. Seldon never invents a refusal. One the user hasn't stated is asked about, never guessed (D-01, Task 5).
-  - **Answers (D-18):** each item written from a user answer, meaning the user's reply to a question Seldon asked, keeps that answer word for word on a quoted line directly under it, in FORMAT.md's form. That's a `> ` line, indented two spaces under a bullet. There's no paraphrase, and the words aren't tidied.
+  - **The user's own words (D-18):** each item drafted from the user's own words, in the dump or in a reply to a question Seldon asked, keeps the exact phrase it came from word for word on a quoted line directly under it, in FORMAT.md's form, never the whole dump. That's a `> ` line, indented two spaces under a bullet. There's no paraphrase, and the words aren't tidied. An item with no source words is a guess, so it carries `[ASSUMPTION]` and no quote.
   - **Guesses:**
     - Every guess is tagged `[ASSUMPTION]`, spelled exactly that way, inline right after the guessed text, and never on a heading line (D-06). A guess has no quote.
     - No section is left empty. A section with nothing from the user gets a tagged guess (D-01), except What it refuses, which is asked about.
