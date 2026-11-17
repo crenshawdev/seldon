@@ -206,6 +206,16 @@ test('an epic may depend on a higher-numbered epic placed before it', (t) => {
   assert.deepEqual(checkDir(dir), []);
 });
 
+// The epics' Retired line sits above the first epic too; after the last one it would join that epic's last field.
+test('a Retired line under the epics title passes the full check and --epics', (t) => {
+  const dir = copy(t);
+  edit(dir, 'epics.md', (s) => s.replace(/^(# .*\n)/, '$1\nRetired: E-07, E-08\n'));
+  assert.deepEqual(checkDir(dir), []);
+  const r = run('--epics', dir);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), EPICS_OK_LINE);
+});
+
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);

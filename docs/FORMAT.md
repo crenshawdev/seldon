@@ -232,6 +232,17 @@ Retired: S-03
 - A retired ID is never reused, because the epics and the phases built from them cite decisions by ID.
 - To the check this is text before the first decision, which no rule reads.
 
+When an epics rerun drops an epic, `epics.md` keeps its ID on one prose line directly under the `# ` title, before the first `## ` epic:
+
+```
+Retired: E-03
+```
+
+- The rules are the spine line's: the IDs are plain and separated by commas, in the order they were retired. The line is absent until the first retirement, and a later one extends it.
+- A retired ID is never reused, because Cadence's phases are built from the epics by ID.
+- It sits under the title because after the last epic the check would read it as part of that epic's last field.
+- To the check this is text before the first epic, which no rule reads.
+
 Spine decisions and epics use a one-letter prefix on purpose. Cadence's audit admits only a prefix of 2 to 8 characters before the dash as a requirement ID, so it never counts `S-01` or `E-01` as a requirement.
 
 ## The [ASSUMPTION] tag
