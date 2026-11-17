@@ -1,0 +1,14 @@
+{
+  "name": "seldon",
+  "owner": {
+    "name": "John Crenshaw"
+  },
+  "description": "Seldon's own marketplace, so the plugin can be installed straight from this repository.",
+  "plugins": [
+    {
+      "name": "seldon",
+      "source": "./",
+      "description": "A Claude Code plugin that does the design work before Cadence builds. It interviews you about what you want to build, then writes a brief, a PRD, an architecture spine and a set of epics into .planning/seldon/, so Cadence starts from fixed boundaries and small phases."
+    }
+  ]
+}

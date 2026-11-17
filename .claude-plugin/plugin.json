@@ -1,0 +1,19 @@
+{
+  "name": "seldon",
+  "displayName": "Seldon",
+  "description": "A Claude Code plugin that does the design work before Cadence builds. It interviews you about what you want to build, then writes a brief, a PRD, an architecture spine and a set of epics into .planning/seldon/, so Cadence starts from fixed boundaries and small phases.",
+  "version": "0.1.0",
+  "author": {
+    "name": "John Crenshaw"
+  },
+  "homepage": "https://github.com/crenshawdev/seldon",
+  "repository": "https://github.com/crenshawdev/seldon.git",
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "design",
+    "architecture",
+    "requirements",
+    "claude-code"
+  ]
+}
