@@ -77,9 +77,15 @@ at the conversation for it:
     line, since the user named the step.
   - A spine there: this is the spine rerun. Update the spine that's there
     with Edit, as "The spine rerun" in "The spine draft" says.
-- **`epics`:** write nothing, edit nothing and run nothing. End your message
-  on the later-release line from "Where a run starts", on a line of its own,
-  with nothing after it.
+- **`epics`:** the epics step, built from `.planning/seldon/prd.md` and
+  `.planning/seldon/spine.md` alone, as "The epics step" says. Look for
+  `spine.md` and `epics.md` with Read or Glob.
+  - No spine there: the epics have nothing to build from. Write nothing, and
+    say there's no spine yet and that `/seldon spine` builds it.
+  - A spine, no epics: go to "The epics step". There's no resume line, since
+    the user named the step.
+  - An `epics.md` there: this is the epics rerun. Update the epics that are
+    there with Edit, as "The epics rerun" in "The epics draft" says.
 - **`prd`:** the PRD step, built from `.planning/seldon/brief.md` alone, as
   "The PRD step" says. Look for `brief.md` and `prd.md` with Read or Glob.
   - No brief there: the PRD has nothing to build from. Write nothing, and
@@ -184,12 +190,14 @@ these in order:
       PRD step".
     - A brief and a PRD, no spine: start with the spine resume line, then go
       to "The spine step".
-    - A brief, a PRD and a spine: write nothing, and end on the later-release
-      line.
+    - A brief, a PRD and a spine, no epics: start with the epics resume line,
+      then go to "The epics step".
+    - All four there: write nothing, and end on the later-release line.
 
-    Going on never runs the PRD step over a PRD that's there, or the spine
-    step over a spine that's there. The text from the question's turn isn't
-    input to the PRD or the spine.
+    Going on never runs the PRD step over a PRD that's there, the spine step
+    over a spine that's there, or the epics step over an `epics.md` that's
+    there. The text from the question's turn isn't input to the PRD, the
+    spine or the epics.
 
 Anything else is a new run: start at "Where a run starts". The files in
 `.planning/seldon/` decide where a new run goes, even when this conversation
@@ -207,8 +215,8 @@ after the user confirms a path.
 ## 2. Where a run starts
 
 Before you ask for or read any dump, look for `.planning/seldon/brief.md`,
-`.planning/seldon/prd.md` and `.planning/seldon/spine.md` in the project with
-Read or Glob. An error or no
+`.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
+`.planning/seldon/epics.md` in the project with Read or Glob. An error or no
 match means that file isn't there. A brief on disk counts as confirmed, so
 there's no record of a confirmation to look for. `$ARGUMENTS` counts as empty
 when it holds nothing but blanks. Then:
@@ -236,12 +244,23 @@ when it holds nothing but blanks. Then:
 
   Never Write `spine.md` on a resume until that line is in your reply. Then go
   to "The spine step".
-- **A brief, a PRD and a spine, and empty `$ARGUMENTS`:** write nothing. End
-  your message with exactly these words, on a line of their own, with nothing
-  after them. This is the later-release line:
+- **A brief, a PRD and a spine, no epics, and empty `$ARGUMENTS`:** this is a
+  resume too. Before your next tool call, and before you read the PRD or the
+  spine, draft or write anything, say exactly these words, on a line of their
+  own, as the first text of your reply. This is the epics resume line:
 
   ```
-  The epics step comes in a later release, so I've written nothing this time.
+  I'm building the epics from .planning/seldon/spine.md, the spine that's already there, and the PRD. To revise the spine instead, run /seldon spine.
+  ```
+
+  Never Write `epics.md` on a resume until that line is in your reply. Then go
+  to "The epics step".
+- **All four documents, and empty `$ARGUMENTS`:** write nothing. End your
+  message with exactly these words, on a line of their own, with nothing after
+  them. This is the later-release line:
+
+  ```
+  All four documents are there. The readiness check and the handoff to Cadence come in a later release, so I've written nothing this time.
   ```
 
 - **A brief, and `$ARGUMENTS` isn't empty:** write nothing, and go to "A dump
