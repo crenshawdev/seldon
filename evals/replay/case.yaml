@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: replay
+description: Resumes a saved /seldon session at its question, so the reply can only name the project by reading the history.
+runs: 1
+context:
+  history_file: history.jsonl
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill]
