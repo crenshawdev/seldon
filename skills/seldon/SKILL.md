@@ -659,7 +659,8 @@ folder reaches the spine only through a quote the brief already carries. A
 stack or hosting word the user said reaches it only through the brief's `> `
 quotes, since the PRD leaves those words out. The one thing it takes from the
 conversation is the user's answers to this step's own question, the confirm
-question "The spine check" ends on.
+question "The spine check" ends on. The one other file a spine step reads is
+the `spine.md` a `/seldon spine` rerun updates, as "The spine rerun" says.
 
 The brief and the PRD on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -694,10 +695,40 @@ create a spine that isn't there yet. Never Write over a `spine.md` that's
 there: one that's there changes only with Edit, never a fresh Write, through
 these routes:
 
+- A `/seldon spine` rerun, as "The spine rerun" below says. It's the only
+  route into the spine step that updates a spine that's there.
 - "Names changes" in "Where the conversation stands", when the user answers
   the spine's own confirm question with changes. Make those changes in
   `spine.md` with Edit, quote the user's new words as "The user's own words"
   below says, then run "The spine check" again.
+
+**The spine rerun.** A `/seldon spine` that finds `spine.md` there brings it
+in line with the brief and the PRD as they stand now. Read `spine.md` first,
+the previous version of this document, then `brief.md` and `prd.md`, and
+nothing else: not a design folder, not the dump, and not the conversation.
+Change the spine with Edit only, never a fresh Write over it, so a line the
+change doesn't touch is never typed again:
+
+- A decision the change doesn't touch keeps its heading, its `Kind:` line,
+  its text and its quote or tag lines byte-identical: the same ID, the same
+  kind, the same text, the same quote.
+- A decision the change alters keeps its ID and takes the new text, with its
+  new quote or tag.
+- A decision that no longer applies is removed, its heading and its whole
+  body. Its ID goes on the `Retired:` line, one prose line directly under the
+  `# ` title, before the first decision:
+
+  ```
+  Retired: S-03
+  ```
+
+  Make the line when the first ID retires, and add each later one to its end,
+  plain and comma-separated.
+- A new decision takes the next unused number. Never give it an ID that's in
+  use or on the `Retired:` line: the epics and the phases built from them cite
+  decisions by ID, so a retired ID stays retired.
+
+Then run "The spine check" and end the step the way it says.
 
 The spine has this shape, as `docs/FORMAT.md` fixes it, and the check holds it
 to it:
