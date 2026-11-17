@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: resume-later
-description: A bare /seldon in a fresh session where a confirmed brief and its PRD are already at .planning/seldon/, seeded from samples/brief.md and samples/prd.md, so Seldon has to write and edit nothing and end on the fixed line saying the spine and epics steps come in a later release, rather than drafting or rewriting the PRD.
+description: A bare /seldon in a fresh session where a confirmed brief, its PRD and its spine are already at .planning/seldon/, seeded from samples/brief.md, samples/prd.md and samples/spine.md, so Seldon has to write and edit nothing and end on the fixed line saying the epics step comes in a later release, rather than drafting epics or rewriting the spine.
 runs: 1
 context:
   scaffold_script: seed.sh
