@@ -19,11 +19,11 @@ When a run fails, the counter screen shows the volunteers a notice naming the re
 
 ## S-04: Node with one SQLite database
 Kind: stack
-The app and the daily job run on Node and keep the catalog, the members and the loan log in one SQLite database file. [ASSUMPTION]
+The app runs on Node and keeps the catalog, the members and the loan log in one SQLite database file. [ASSUMPTION]
 
 ## S-05: One small rented server
 Kind: hosting
-The app, its database file and the daily job all run on one small rented virtual server. [ASSUMPTION]
+The app and its database file run on one small rented virtual server. [ASSUMPTION]
 
 ## S-06: Members reach only the catalog
 Kind: boundaries
