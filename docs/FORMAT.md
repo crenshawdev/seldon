@@ -151,7 +151,7 @@ On the fast path Seldon drafts with guesses, and it tags each one so a reader ca
 
 Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own.
 
-In the free-text places above, `lib/check.mjs` neither requires nor rejects the tag, so text there checks the same with or without it.
+In the free-text places above, `lib/check.mjs` neither requires nor rejects the tag, so text there checks the same with or without it. The tag on its own isn't text, so a section body or field holding only the tag is empty.
 
 ```
 A treasurer closes the month in under ten minutes. [ASSUMPTION]
@@ -216,27 +216,32 @@ These are minimal. `samples/` has a complete set.
 
 ## Problem
 Small clubs track dues in spreadsheets that drift out of date.
+> our dues spreadsheet is always out of date
 
 ## Solution
 A shared ledger that records each payment once and shows who owes what.
+> one place to record each payment that shows who still owes
 
 ## Who it serves
 Treasurers of clubs with under 200 members.
+> treasurers like me, clubs under 200 members
 
 ## What's different
-It records payments, not balances, so a balance is never typed by hand.
+It records payments, not balances, so a balance is never typed by hand. [ASSUMPTION]
 
 ## Success criteria
-A treasurer closes the month in under ten minutes.
+A treasurer closes the month in under ten minutes. [ASSUMPTION]
 
 ## Scope
 Members, dues and payments.
+> members, dues, payments, that's it
 
 ## What it refuses
 - It won't send invoices, because treasurers already invoice from their bank.
+  > no invoices, we do those from the bank
 
 ## Vision
-Every small club's books are right without anyone checking them.
+Every small club's books are right without anyone checking them. [ASSUMPTION]
 ```
 
 ### prd.md

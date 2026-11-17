@@ -114,6 +114,16 @@ const cases = [
     ['epics.md: E-03: fields: out of order, expected Outcome, Boundaries, Done when, Depends on, Requirements, Spine decisions']],
   ['text before the Outcome line', (dir) => edit(dir, 'epics.md', inEpic('E-01', (s) => s.replace('**Outcome:**', 'Intro.\nMore intro.\n**Outcome:**'))),
     ['epics.md: E-01: Outcome: text before the **Outcome:** line']],
+  // FORMAT.md keeps the tag off every heading line, ID headings included.
+  ['a tagged spine heading', (dir) => edit(dir, 'spine.md', (s) => s.replace(/^(## S-01: .*)$/m, '$1 [ASSUMPTION]')),
+    ['spine.md: "## S-01: Loans are an append-only event log [ASSUMPTION]": not a "## S-01: decision" heading']],
+  ['a tagged epic heading', (dir) => edit(dir, 'epics.md', (s) => s.replace('## E-01: Catalog', '## E-01: Catalog [ASSUMPTION]')),
+    ['epics.md: "## E-01: Catalog [ASSUMPTION]": not a "## E-01: name" heading']],
+  // A tag with nothing to mark is no content.
+  ['a section holding only the tag', (dir) => edit(dir, 'brief.md', (s) => s.replace(/(## Scope\n)[^#]*/, '$1[ASSUMPTION]\n\n')),
+    ['brief.md: Scope: empty section']],
+  ['an epic field holding only the tag', (dir) => edit(dir, 'epics.md', inEpic('E-01', (s) => s.replace(/^\*\*Outcome:\*\*.*$/m, '**Outcome:** [ASSUMPTION]'))),
+    ['epics.md: E-01: Outcome: empty field']],
 ];
 
 for (const [name, breakIt, expected] of cases) {
