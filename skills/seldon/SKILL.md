@@ -47,9 +47,19 @@ When the whole trimmed argument is exactly one of the four step names,
 step. That holds wherever the conversation stands and whatever files exist,
 so don't look at the conversation for it:
 
-- **`spine` or `epics`:** write nothing, edit nothing and run nothing. End
-  your message on the later-release line from "Where a run starts", on a line
-  of its own, with nothing after it.
+- **`spine`:** the spine step, built from `.planning/seldon/brief.md` and
+  `.planning/seldon/prd.md` alone, as "The spine step" says. Look for
+  `brief.md`, `prd.md` and `spine.md` with Read or Glob.
+  - No PRD there: the spine has nothing to build from. Write nothing, and say
+    there's no PRD yet and that `/seldon prd` builds it, or that a bare
+    `/seldon` starts with the brief when there's no brief either.
+  - A brief and a PRD, no spine: go to "The spine step". There's no resume
+    line, since the user named the step.
+  - A spine there: this is the spine rerun. Update the spine that's there
+    with Edit, as "The spine rerun" in "The spine draft" says.
+- **`epics`:** write nothing, edit nothing and run nothing. End your message
+  on the later-release line from "Where a run starts", on a line of its own,
+  with nothing after it.
 - **`prd`:** the PRD step, built from `.planning/seldon/brief.md` alone, as
   "The PRD step" says. Look for `brief.md` and `prd.md` with Read or Glob.
   - No brief there: the PRD has nothing to build from. Write nothing, and
@@ -141,12 +151,16 @@ these in order:
     change.
   - **Go on from the brief:** look for the files again, as "Where a run
     starts" says, and follow that section's routes, exactly as a resume does:
-    - Only a brief there: start with the resume line, then go to "The PRD
-      step".
-    - A brief and a PRD there: write nothing, and end on the later-release
-      line. Going on never runs the PRD step over a PRD that's there.
+    - Only a brief there: start with the PRD resume line, then go to "The
+      PRD step".
+    - A brief and a PRD, no spine: start with the spine resume line, then go
+      to "The spine step".
+    - A brief, a PRD and a spine: write nothing, and end on the later-release
+      line.
 
-    The text from the question's turn isn't input to the PRD.
+    Going on never runs the PRD step over a PRD that's there, or the spine
+    step over a spine that's there. The text from the question's turn isn't
+    input to the PRD or the spine.
 
 Anything else is a new run: start at "Where a run starts". The files in
 `.planning/seldon/` decide where a new run goes, even when this conversation
@@ -163,8 +177,9 @@ after the user confirms a path.
 
 ## 2. Where a run starts
 
-Before you ask for or read any dump, look for `.planning/seldon/brief.md` and
-`.planning/seldon/prd.md` in the project with Read or Glob. An error or no
+Before you ask for or read any dump, look for `.planning/seldon/brief.md`,
+`.planning/seldon/prd.md` and `.planning/seldon/spine.md` in the project with
+Read or Glob. An error or no
 match means that file isn't there. A brief on disk counts as confirmed, so
 there's no record of a confirmation to look for. `$ARGUMENTS` counts as empty
 when it holds nothing but blanks. Then:
@@ -173,7 +188,7 @@ when it holds nothing but blanks. Then:
 - **A brief, no PRD and empty `$ARGUMENTS`:** this is a resume. Before your
   next tool call, and before you read the brief, draft or write anything, say
   exactly these words, on a line of their own, as the first text of your
-  reply:
+  reply. This is the PRD resume line:
 
   ```
   I'm building the PRD from .planning/seldon/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.
@@ -181,12 +196,23 @@ when it holds nothing but blanks. Then:
 
   Never Write `prd.md` on a resume until that line is in your reply. Then go
   to "The PRD step".
-- **A brief and a PRD, and empty `$ARGUMENTS`:** write nothing. End your
-  message with exactly these words, on a line of their own, with nothing after
-  them. This is the later-release line:
+- **A brief and a PRD, no spine, and empty `$ARGUMENTS`:** this is a resume
+  too. Before your next tool call, and before you read the brief or the PRD,
+  draft or write anything, say exactly these words, on a line of their own, as
+  the first text of your reply. This is the spine resume line:
 
   ```
-  The spine and epics steps come in a later release, so I've written nothing this time.
+  I'm building the spine from .planning/seldon/prd.md, the PRD that's already there, and the brief. To revise the PRD instead, run /seldon prd.
+  ```
+
+  Never Write `spine.md` on a resume until that line is in your reply. Then go
+  to "The spine step".
+- **A brief, a PRD and a spine, and empty `$ARGUMENTS`:** write nothing. End
+  your message with exactly these words, on a line of their own, with nothing
+  after them. This is the later-release line:
+
+  ```
+  The epics step comes in a later release, so I've written nothing this time.
   ```
 
 - **A brief, and `$ARGUMENTS` isn't empty:** write nothing, and go to "A dump
