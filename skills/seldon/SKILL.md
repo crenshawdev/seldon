@@ -918,7 +918,15 @@ If it exits 1, fix each problem it names in `spine.md` with Edit, inside
 Then end the step the way "The check" says: name the file you wrote, repeat
 the check's result line word for word on a line of its own, and end your turn
 on one plain-prose question asking whether the user confirms the spine or
-wants changes.
+wants changes. That same question names `/seldon architecture` as the way to
+ask for the full architecture document once the spine is confirmed, such as:
+do you confirm the spine, after which `/seldon architecture` can write the
+full architecture document if you want one, or do you want changes?
+
+Naming it writes nothing. Only `/seldon architecture` itself writes the
+document, as "The architecture document" says, and a `/seldon architecture`
+typed as the reply goes through the name test in "Where the conversation
+stands" first, like any step name.
 
 ## 18. The architecture document
 
