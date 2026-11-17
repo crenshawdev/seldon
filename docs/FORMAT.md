@@ -94,6 +94,20 @@ A requirement ID is a prefix, a dash and a number:
 
 Examples: `**CAT-01**`, `**SYNC-03**`, `**NFR-01**`, `**2FA-01**`.
 
+### Non-goals
+
+Each refusal in the brief's `## What it refuses` carries into `## Non-goals` in the brief refusal's own shape: a `- ` bullet that says what the product won't do, then `because` and the reason. The brief's quote for that refusal sits under it, word for word:
+
+```
+- It won't send invoices, because treasurers already invoice from their bank.
+  > no invoices, we do those from the bank
+```
+
+- The PRD keeps exactly its five sections. Refusals go in `## Non-goals`, never in a section of their own.
+- `## Non-goals` can hold other non-goals too, each under the quote-or-tag rule (see "In the PRD", under "The user's own words").
+- When the brief refuses nothing, its refusal section holds only the user's quote saying so. No refusal is carried, and Seldon invents none.
+- The check reads `## Non-goals` only for being present and not empty, and doesn't read its bullets.
+
 ## spine.md
 
 The spine holds one `## ` section per decision, and no other `## ` sections:
@@ -322,7 +336,8 @@ Every small club's books are right without anyone checking them. [ASSUMPTION]
 The treasurer opens the ledger, records three payments and checks who still owes.
 
 ## Non-goals
-Invoicing and payment processing.
+- It won't send invoices, because treasurers already invoice from their bank.
+  > no invoices, we do those from the bank
 
 ## MVP scope
 LEDG-01 and MEMB-01.
