@@ -1,6 +1,6 @@
 ---
 name: seldon
-description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and the architecture spine from the brief and the PRD at .planning/seldon/spine.md, and after a /clear it picks up from those files. On request, /seldon architecture writes a full architecture document from those three at .planning/seldon/architecture.md."
+description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, the architecture spine from the brief and the PRD at .planning/seldon/spine.md, and in the epics step small epics in build order from the PRD and the spine at .planning/seldon/epics.md. After a /clear it picks up from those files. On request, /seldon architecture writes a full architecture document from those three at .planning/seldon/architecture.md."
 argument-hint: "[what you have: the idea, notes or spec, pasted or described] | brief | prd | spine | epics | architecture"
 allowed-tools:
   - Read
@@ -17,7 +17,9 @@ path, write the project's brief to `.planning/seldon/brief.md`. Then build the
 PRD from that brief alone, at `.planning/seldon/prd.md`. Then take the spine
 step: record the architecture decisions that would clash if two parts were
 built separately, from the brief and the PRD alone, at
-`.planning/seldon/spine.md`. A new run picks up from the files in
+`.planning/seldon/spine.md`. Then take the epics step: cut the work into small
+epics in build order, from the PRD and the spine alone, at
+`.planning/seldon/epics.md`. A new run picks up from the files in
 `.planning/seldon/`, so the walk survives a `/clear`.
 </objective>
 
@@ -26,7 +28,8 @@ built separately, from the brief and the PRD alone, at
   it ends your turn. Never use AskUserQuestion, a numbered menu or a list of
   options to pick from. The user answers in their own words in the next turn.
 - The only files you write are `.planning/seldon/brief.md`,
-  `.planning/seldon/prd.md` and `.planning/seldon/spine.md`, plus
+  `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
+  `.planning/seldon/epics.md`, plus
   `.planning/seldon/architecture.md`, the one file written only on
   `/seldon architecture`, as "The architecture document" says. Never write,
   edit or create anything else, in the project or outside it. A design folder
@@ -931,7 +934,25 @@ document, as "The architecture document" says, and a `/seldon architecture`
 typed as the reply goes through the name test in "Where the conversation
 stands" first, like any step name.
 
-## 18. The architecture document
+## 18. The epics step
+
+The epics are built from `.planning/seldon/prd.md` and
+`.planning/seldon/spine.md` and nothing else. Read those two files and nothing
+more for it: never the brief, never `docs/design/` or any other design folder,
+never the dump, and never the earlier conversation, whatever it holds.
+
+The PRD and the spine on disk are the confirmed ones, even where they differ
+from something said earlier in this conversation, as "The PRD step" says of
+the brief. Build from the files as they stand.
+
+Running this step is the go-ahead. Recommend no path and ask for no
+confirmation first. The PRD and the spine count as answered, their
+`[ASSUMPTION]` guesses included. The step asks no questions of its own: draft
+in this same turn, as "The epics draft" says. Its one stop point is the
+confirm question "The epics check" ends on, which "Step confirm answered" in
+"Where the conversation stands" already carries.
+
+## 21. The architecture document
 
 `/seldon architecture` over a `spine.md` that's there writes the full
 architecture document, `.planning/seldon/architecture.md`. It's not a step and
