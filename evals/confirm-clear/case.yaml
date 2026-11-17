@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: confirm-clear
+description: Resumes a /seldon session whose last turn wrote the Toolshed brief, repeated the check's pass line and asked the user to confirm it, so the user's plain confirmation has to end on the fixed words suggesting /clear and then /seldon, with nothing written or edited.
+runs: 1
+context:
+  history_file: history.jsonl
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
