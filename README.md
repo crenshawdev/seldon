@@ -68,6 +68,7 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `prd-from-brief` resumes from a brief whose quotes name a framework, a database and a host, and checks that the PRD passes the check, carries every refusal into Non-goals with its quote, quotes or tags every line and names none of that technology.
 - `confirm-clear` confirms a brief Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
 - `spine-later` runs `/seldon spine` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
+- `resume-later` runs a bare `/seldon` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
 - `prd-reads-brief` runs `/seldon prd` in a conversation that says one thing while the brief, edited by hand since, says another, and checks that the PRD carries the brief's fact and leaves the conversation's out.
 - `prd-rerun` runs `/seldon prd` on a PRD whose brief has since dropped one requirement's source, and checks that every other requirement line stays byte-identical and the dropped ID goes on a `Retired:` line and never comes back.
 - `brief-rerun` answers the question a `/seldon brief` rerun asks with a change, and checks that the brief takes the new words on a quoted line, an untouched item stays byte-identical and the PRD beside it is neither written nor edited.
