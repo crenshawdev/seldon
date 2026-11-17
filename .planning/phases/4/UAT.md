@@ -4,6 +4,7 @@ phase: 4
 fields_version: 1
 started: 2026-11-17
 updated: 2026-11-17
+ci: 6f74be836c049854cc4b607a0f44bfb058c8de24
 ---
 
 ## Items
@@ -99,28 +100,29 @@ evidence: aggregate-result.json at 2026-11-17T19-13-10-936Z: 26/26 cases at 1.00
 ### 12. node-test passes in CI
 expected: The node-test required job passes on this commit. (ci: node-test)
 criterion: AC7
-status: pending_ci
+status: pass
 job: node-test
-commit: 4e1bcee03bd1907f7330a1d768ce63667e345725
+commit: 6f74be836c049854cc4b607a0f44bfb058c8de24
+first_pass: pass
 source: model
-evidence: node-test runs in GitHub Actions (.github/workflows/test.yml); the same files pass locally, node --test tests/*.test.mjs: 71 pass, 0 fail on Node v26.13.1, but CI runs Node 22 and 24, which this session cannot run as the job
+evidence: node-test concluded success at 6f74be836c049854cc4b607a0f44bfb058c8de24 (node-test (22) and node-test (24) both success)
 
 ### 13. coverage passes in CI
 expected: The coverage required job passes on this commit, the suite under the coverage gate. (ci: coverage)
 criterion: AC7
-status: pending_ci
+status: pass
 job: coverage
-commit: 4e1bcee03bd1907f7330a1d768ce63667e345725
+commit: 6f74be836c049854cc4b607a0f44bfb058c8de24
+first_pass: pass
 source: model
-evidence: coverage runs in GitHub Actions (.github/workflows/test.yml) with the 85/85 gate and two lcov guards; thresholds are enforced by the required job and not re-measured here
+evidence: coverage concluded success at 6f74be836c049854cc4b607a0f44bfb058c8de24
 
 ## Summary
 
 total: 13
-passed: 11
+passed: 13
 failed: 0
 pending: 0
-pending_ci: 2
 skipped: 0
 blocked: 0
 reworked: 0

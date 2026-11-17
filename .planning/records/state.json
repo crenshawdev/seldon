@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 4,
-    "status": "executed",
-    "next": "/cad-verify 4",
+    "status": "phase complete",
+    "next": "/cad-context 5",
     "updated": "2026-11-17"
   },
   "phases": [
@@ -84,7 +84,7 @@
       "n": 4,
       "name": "The architecture spine",
       "description": "Record only the decisions that would clash if built separately, each with a stable ID",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -209,17 +209,17 @@
     {
       "id": "ARCH-01",
       "phase": 4,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "ARCH-04",
       "phase": 4,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "ARCH-02",
       "phase": 4,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }
