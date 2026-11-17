@@ -43,7 +43,7 @@ Plan shape: multiple plans - several plans inside this phase; plans that share `
 - [ ] AC3: A replayed conversation whose dump never says who the project is for shows Seldon asking who it's for, with `tool_used` Write at 0 in that turn.
 - [ ] AC4: A case with a `docs/design` fixture, copied in by a scaffold script from `samples/`, shows a fact found only in that fixture in Seldon's reply, with Edit at 0, Write at 0 for any path outside `.planning/seldon/`, and Bash at 0 for anything but the check command. A second case, whose dump invites writing outside `.planning/seldon/`, shows Write and Edit outside it at 0 and the run not erroring, proving D-16's scope holds.
 - [ ] AC5: A coaching replay case, whose history finishes the coaching answers, creates `.planning/seldon/brief.md`, and its reply carries the check's pass line. A regex on `brief.md` finds a phrase from one of the replayed answers inside a quoted line, word for word.
-- [ ] AC6: A case where `.planning/seldon/brief.md` already exists (seeded by the scaffold) shows `/seldon` writing nothing (`tool_used` Write at 0) and saying that rerunning a step comes later.
+- [ ] AC6: A case where `.planning/seldon/brief.md` already exists (seeded by the scaffold) shows `/seldon` writing nothing (`tool_used` Write and Edit at 0) and saying that rerunning a step comes later.
 - [ ] AC7: The brief-only check exits 0 on `samples/brief.md` and non-zero, naming the section, on a brief missing one. The scaffold guard test fails on a planted script holding a forbidden command. A grep of SKILL.md's `allowed-tools` finds no Edit and no Bash broader than the check command. The suite passes under the coverage gate. (ci: node-test, coverage)
 
 ## Flagged assumptions

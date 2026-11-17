@@ -3,9 +3,14 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 2,
-    "status": "context gathered",
-    "next": "/cad-plan 2",
-    "updated": "2026-11-17"
+    "status": "planned",
+    "next": "/cad-execute 2",
+    "updated": "2026-11-17",
+    "plan": {
+      "k": 1,
+      "j": 4,
+      "name": "The brief's check and its format contract"
+    }
   },
   "phases": [
     {
@@ -28,8 +33,25 @@
       "n": 2,
       "name": "The brief",
       "description": "/seldon takes the user's dump, confirms fast path or coaching, and writes the brief",
-      "status": "unplanned",
-      "plans": []
+      "status": "planned",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": false
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": false
+        }
+      ]
     },
     {
       "n": 3,
@@ -94,6 +116,26 @@
       "id": "REL-01",
       "phase": 1,
       "status": "Complete"
+    },
+    {
+      "id": "DOCS-01",
+      "phase": 2,
+      "status": "Pending"
+    },
+    {
+      "id": "FLOW-06",
+      "phase": 2,
+      "status": "Pending"
+    },
+    {
+      "id": "FLOW-07",
+      "phase": 2,
+      "status": "Pending"
+    },
+    {
+      "id": "DOCS-03",
+      "phase": 2,
+      "status": "Pending"
     }
   ]
 }
