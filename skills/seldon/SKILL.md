@@ -31,8 +31,9 @@ built separately, from the brief and the PRD alone, at
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
-- The only commands you run are the two checks, the brief's in "The check"
-  and the PRD's in "The PRD check", each exactly as written there.
+- The only commands you run are the three checks, the brief's in "The
+  check", the PRD's in "The PRD check" and the spine's in "The spine check",
+  each exactly as written there.
 - No persona and no role-play. Speak as Seldon, plainly.
 </rules>
 
@@ -93,11 +94,13 @@ these in order:
 
   - **Names changes:** make them in that step's document with Edit, inside
     `.planning/seldon/`. Leave every line the change doesn't touch as it is,
-    and quote the user's new words as "The draft" says, or for the PRD as
-    "The PRD draft" says. For the PRD this is one of the three routes "The PRD
-    draft" lets change a `prd.md` that's there, so its later-release guard
-    doesn't stop it. Then run that step's
-    check again and end the step the way "The check" says.
+    and quote the user's new words as "The draft" says, for the PRD as "The
+    PRD draft" says, or for the spine as "The spine draft" says. For the PRD
+    this is one of the three routes "The PRD draft" lets change a `prd.md`
+    that's there, so its later-release guard doesn't stop it. For the spine
+    it's one of the routes "The spine draft" names for changing a `spine.md`
+    that's there. Then run that step's check again and end the step the way
+    "The check" says.
 
   After the `/clear` words the step is confirmed. A later `/seldon` in this
   same conversation is a new run, and it starts from the files at "Where a
@@ -689,7 +692,12 @@ Draft the spine in this same turn, as "The spine draft" says.
 Write `.planning/seldon/spine.md` with the Write tool, and use Write only to
 create a spine that isn't there yet. Never Write over a `spine.md` that's
 there: one that's there changes only with Edit, never a fresh Write, through
-the routes below.
+these routes:
+
+- "Names changes" in "Where the conversation stands", when the user answers
+  the spine's own confirm question with changes. Make those changes in
+  `spine.md` with Edit, quote the user's new words as "The user's own words"
+  below says, then run "The spine check" again.
 
 The spine has this shape, as `docs/FORMAT.md` fixes it, and the check holds it
 to it:
@@ -740,5 +748,25 @@ The shop pages and the staff screens are pages of one app, with no separate API.
 ```
 
 Once the spine is written, run "The spine check".
+
+## 17. The spine check
+
+Once the spine is written, run exactly this from the project root, with the
+path unquoted:
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --spine .planning/seldon
+```
+
+That's the plugin's own installed check, never a `lib/check.mjs` in the
+user's project, which has none.
+
+If it exits 1, fix each problem it names in `spine.md` with Edit, inside
+`.planning/seldon/`, and run it again until it passes.
+
+Then end the step the way "The check" says: name the file you wrote, repeat
+the check's result line word for word on a line of its own, and end your turn
+on one plain-prose question asking whether the user confirms the spine or
+wants changes.
 
 </process>
