@@ -82,6 +82,8 @@ Other lines in these sections, such as prose and indented lines, are not require
 
 In `## Requirements`, every requirement sits under a `### <Category>` subheading, so no requirement comes before the section's first `### ` line. `## Non-functional requirements` uses the same bullet form, and its bullets need no subheading.
 
+Each of the two sections holds at least one requirement in this form. Prose and `### ` lines alone don't count, so a section without one fails the check, for example `prd.md: Requirements: no "- **CAT-01**: text" requirement`. A missing or empty section is reported as that instead, with no second line.
+
 ### Requirement IDs
 
 A requirement ID is a prefix, a dash and a number:

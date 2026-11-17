@@ -73,6 +73,10 @@ test('a missing field exits 1 and prints the field and the epic', (t) => {
   assert.match(r.stdout, /Done when/);
 });
 
+// Requirements keeps its ### lines and gains one prose line, but loses every bullet and anything indented under one.
+const proseRequirements = (s) => s.replace(/(## Requirements\n)([^]*?)(?=## Non-functional)/,
+  (_, head, body) => `${head}Volunteers run the counter.\n${body.replace(/^(- |  ).*\n/gm, '')}`);
+
 const cases = [
   ['a missing file', (dir) => rmSync(join(dir, 'brief.md')), ['brief.md: missing file']],
   ['an unreadable file', (dir) => {
@@ -122,6 +126,15 @@ const cases = [
   // A tag with nothing to mark is no content.
   ['a section holding only the tag', (dir) => edit(dir, 'brief.md', (s) => s.replace(/(## Scope\n)[^#]*/, '$1[ASSUMPTION]\n\n')),
     ['brief.md: Scope: empty section']],
+  // Prose is not a requirement: each requirement section needs one ID'd bullet.
+  ['a Requirements section with only prose', (dir) => edit(dir, 'prd.md', proseRequirements), ['prd.md: Requirements: no "- **CAT-01**: text" requirement']],
+  ['a Non-functional requirements section with only prose',
+    (dir) => edit(dir, 'prd.md', (s) => s.replace(/(## Non-functional requirements\n)[^#]*/, '$1Checkouts stay quick on a phone.\n\n')),
+    ['prd.md: Non-functional requirements: no "- **CAT-01**: text" requirement']],
+  ['a requirement section whose only bullet is malformed',
+    (dir) => edit(dir, 'prd.md', (s) => s.replace(/(## Non-functional requirements\n)[^#]*/, '$1- NFR-01: Checkouts stay quick.\n\n')),
+    ['prd.md: Non-functional requirements: "- NFR-01: Checkouts stay quick." is not a "- **CAT-01**: text" requirement',
+      'prd.md: Non-functional requirements: no "- **CAT-01**: text" requirement']],
   ['an epic field holding only the tag', (dir) => edit(dir, 'epics.md', inEpic('E-01', (s) => s.replace(/^\*\*Outcome:\*\*.*$/m, '**Outcome:** [ASSUMPTION]'))),
     ['epics.md: E-01: Outcome: empty field']],
 ];
@@ -211,4 +224,12 @@ test('--prd with no directory exits 2', () => {
   const r = run('--prd');
   assert.equal(r.status, 2);
   assert.match(r.stderr, /usage:/);
+});
+
+test('--prd on a PRD whose Requirements hold only prose exits 1, naming Requirements', (t) => {
+  const dir = only(t, 'prd.md');
+  edit(dir, 'prd.md', proseRequirements);
+  const r = run('--prd', dir);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'prd.md: Requirements: no "- **CAT-01**: text" requirement');
 });
