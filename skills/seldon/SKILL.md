@@ -420,6 +420,33 @@ they set out to do to having done it.
 
 **MVP scope.** Which requirement IDs come first.
 
+**The user's own words.** This is the rule `docs/FORMAT.md` sets for the PRD
+under "The user's own words". Every requirement bullet, in both requirement
+sections, and every line in Non-goals carries one of two things:
+
+- a quote directly under it, starting `> `, and under a `- ` bullet indented
+  two spaces, `  > `
+- an `[ASSUMPTION]` tag, inline right after the text, never inside the bold ID
+
+A PRD quote comes from one of two sources, and nowhere else:
+
+- The brief's `> ` lines, word for word. A quote is a whole `> ` line or one
+  unbroken run of that line's exact words. Where the brief's quote had a
+  `(docs/design/...)` line under it, keep that line under the PRD's quote too.
+- The user's replies to this step's own questions.
+
+The brief's item text is Seldon's wording, not the user's, so it's never
+quoted. Never paraphrase a quote and never tidy it. When a brief quote holds a
+technical word the user said, don't carry the word: quote a run of that line
+without it, or tag the requirement instead. A requirement with no source words
+is a guess and carries the tag. User journeys and MVP scope need no quotes.
+
+```
+- **LOAN-01**: A volunteer checks a tool out to a member with a due date.
+  > something the volunteers can use at the counter to check tools out
+- **NFR-01**: A checkout takes under three seconds on a phone. [ASSUMPTION]
+```
+
 **Capabilities, not implementation.** The PRD says what the product does,
 never how it's built. Name no library, framework, format or hosting choice,
 even when the brief names one: those belong to the spine. A technical word the
