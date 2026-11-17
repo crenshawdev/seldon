@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 1,
-    "status": "ready to plan",
-    "next": "/cad-context 1",
+    "status": "context gathered",
+    "next": "/cad-plan 1",
     "updated": "2026-11-17"
   },
   "phases": [
