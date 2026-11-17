@@ -1,7 +1,7 @@
 ---
 name: seldon
 description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and after a /clear it picks up from those files."
-argument-hint: "[what you have: the idea, notes or spec, pasted or described]"
+argument-hint: "[what you have: the idea, notes or spec, pasted or described] | brief | prd | spine | epics"
 allowed-tools:
   - Read
   - Glob
@@ -37,9 +37,38 @@ from the files in `.planning/seldon/`, so the walk survives a `/clear`.
 
 ## 1. Where the conversation stands
 
-Before anything else, find your place. The conversation decides it only inside
-a step that's already under way, which the message that ended your last turn
-shows. Check these in order:
+Before anything else, look at `$ARGUMENTS`, trimmed of blanks at both ends.
+When the whole trimmed argument is exactly one of the four step names,
+`brief`, `prd`, `spine` or `epics`, and nothing more, it's a rerun of that
+step. That holds wherever the conversation stands and whatever files exist,
+so don't look at the conversation for it:
+
+- **`spine` or `epics`:** write nothing, edit nothing and run nothing. End
+  your message on the later-release line from "Where a run starts", on a line
+  of its own, with nothing after it.
+- **`prd`:** the PRD step, built from `.planning/seldon/brief.md` alone, as
+  "The PRD step" says. Look for `brief.md` and `prd.md` with Read or Glob.
+  - No brief there: the PRD has nothing to build from. Write nothing, and
+    say there's no brief yet and that a bare `/seldon` starts one.
+  - A brief and no PRD: go to "The PRD step".
+  - A brief and a PRD: this is the PRD rerun. Go to "The PRD step", and
+    update the PRD that's there with Edit, as "The PRD draft" says for a
+    `/seldon prd` rerun.
+- **`brief`:** look for `brief.md` with Read or Glob.
+  - A brief there: this is the brief rerun. When your last turn ended on the
+    documents question, the text that question asked about is the rerun's
+    change, and the rerun doesn't ask for one again. Rerunning the brief comes
+    in a later release, so for now write nothing and say that.
+  - No brief there: a new brief run with no dump, since the step name isn't
+    one. Ask for the dump as "The dump" says for an empty `$ARGUMENTS`.
+
+Any other argument isn't a step name and keeps its usual meaning: the dump on
+a new run, the text the documents question asks about when documents are
+there, or a summary or answer on a later turn.
+
+Then find your place. The conversation decides it only inside a step that's
+already under way, which the message that ended your last turn shows. Check
+these in order:
 
 - **Step confirm answered:** the message that ended your last turn repeated a
   check's result line and asked whether the user confirms the document or
@@ -81,10 +110,11 @@ shows. Check these in order:
   - A brief and a PRD there: write nothing, and end on the later-release line.
     Going on never runs the PRD step over a PRD that's there.
 
-  The text from the question's turn isn't input to the PRD. When the user
-  asks to rerun the brief instead, `/seldon brief` typed as the reply
-  included, write nothing and say that rerunning the brief comes in a later
-  release.
+  The text from the question's turn isn't input to the PRD. A `/seldon brief`
+  typed as the reply is a step name, so the step-name test above has already
+  taken it to the brief rerun. When the user asks in their own words to rerun
+  the brief instead, write nothing and say that rerunning the brief comes in a
+  later release.
 
 Anything else is a new run: start at "Where a run starts". The files in
 `.planning/seldon/` decide where a new run goes, even when this conversation
