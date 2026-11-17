@@ -25,7 +25,7 @@ Each of these is a hypothesis until it ships and proves itself.
 - [ ] Each step reads only the documents before it, never the earlier conversation, and Seldon suggests a `/clear` between steps.
 - [ ] The user first dumps what they have. Seldon reads the stakes from it and recommends a fast path (a draft with guesses tagged `[ASSUMPTION]`) or coaching (walking each decision), and the user confirms which.
 - [ ] The interview asks the questions the user wouldn't think to ask.
-- [ ] The brief covers the problem, the solution, who it serves, what's different, success criteria, scope, what it refuses (each refusal with its reason) and vision.
+- [ ] The brief covers the problem, the solution, who it serves, what's different, success criteria, scope, what it refuses (each refusal with its reason) and vision. Each item written from a user answer keeps that answer verbatim beside it as a quoted line.
 - [ ] The PRD covers capabilities, not implementation: requirements with stable IDs, non-functional requirements, user journeys, non-goals and MVP scope, sized to the stakes.
 - [ ] The architecture spine holds only the decisions that would clash if two parts were built separately (design approach, boundaries, how state changes, who owns shared data, stack, hosting), each with a stable ID. It also asks about trust boundaries, failure and what runs unattended, each only when the design has the part it concerns.
 - [ ] On a project already under Cadence, the architect reads the existing code and records its conventions in the spine as decisions with stable IDs.
