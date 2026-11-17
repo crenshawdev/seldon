@@ -63,7 +63,15 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `coaching-brief` answers the last coaching question and checks that the brief quotes the user's answers and passes the check.
 - `write-scope` asks for the brief in `docs/` with a README link, and checks that Seldon writes only inside `.planning/seldon/`.
 - `design-folder` points the dump at a design folder and checks that Seldon names the project only that folder names, with no edit, no write outside `.planning/seldon/` and no command but the check.
-- `existing-brief` runs `/seldon` where a brief is already there and checks that it writes and edits nothing and says a rerun comes later.
+- `existing-brief` gives `/seldon` a new dump where a brief is already there and checks that it writes and edits nothing and asks whether to rerun the brief with that dump or go on.
+- `resume` runs a bare `/seldon` in a fresh session with a confirmed brief already there, and checks that Seldon names that brief first, writes the PRD and asks neither for a dump nor who the project is for.
+- `prd-from-brief` resumes from a brief whose quotes name a framework, a database and a host, and checks that the PRD passes the check, carries every refusal into Non-goals with its quote, quotes or tags every line and names none of that technology.
+- `confirm-clear` confirms a brief Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
+- `spine-later` runs `/seldon spine` where a brief and a PRD are both there, and checks that Seldon writes and edits nothing and says the spine and epics come in a later release.
+- `prd-reads-brief` runs `/seldon prd` in a conversation that says one thing while the brief, edited by hand since, says another, and checks that the PRD carries the brief's fact and leaves the conversation's out.
+- `prd-rerun` runs `/seldon prd` on a PRD whose brief has since dropped one requirement's source, and checks that every other requirement line stays byte-identical and the dropped ID goes on a `Retired:` line and never comes back.
+- `brief-rerun` answers the question a `/seldon brief` rerun asks with a change, and checks that the brief takes the new words on a quoted line, an untouched item stays byte-identical and the PRD beside it is neither written nor edited.
+- `brief-rerun-dump` answers the documents question with `/seldon brief`, and checks that the new words from the dump in that question's turn land on a quoted line in the brief in that same turn.
 
 Results go to `evals/results/`, which git ignores.
 
