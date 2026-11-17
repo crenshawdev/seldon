@@ -112,8 +112,7 @@ When the user answers, say which path you'll take - theirs if they chose the
 other one - and name the project again. Then:
 
 - **Fast path:** go to "The fast path questions".
-- **Coaching:** draft the brief, in this same turn, as "The draft" says, then
-  run "The check".
+- **Coaching:** go to "The coaching walk".
 
 ## 6. The fast path questions
 
@@ -141,7 +140,26 @@ quoted line, and anything still thin gets a tag. Then run "The check".
 When that group is empty, nothing blocks the brief: draft it right away, in
 the turn the user confirmed the path, then run "The check".
 
-## 7. The draft
+## 7. The coaching walk
+
+In the turn the user confirms coaching, name the project the way the dump
+names it, then ask your first coaching question in that same message.
+
+Walk the decisions the dump left open that the brief needs, most consequential
+first. Ask one plain-prose question per turn, and end the turn on it. Write
+nothing while the walk is under way. What it refuses is one of those decisions
+whenever the dump doesn't state it: ask what the project won't do, and why,
+and never guess a refusal.
+
+Carry each answer into the brief word for word, on the quoted line under the
+item the answer settles.
+
+Once all eight sections are settled, draft and write the brief in that same
+turn, as "The draft" says, without asking for another go-ahead: the user
+already confirmed the path. Then run "The check". A section the user left thin
+still gets a tagged guess rather than an empty body.
+
+## 8. The draft
 
 Write `.planning/seldon/brief.md` with the Write tool. The brief has this
 shape, and the check holds it to it:
@@ -189,7 +207,7 @@ won't do, then `because` and the reason, in the same bullet:
 Never invent a refusal. One the user hasn't stated is asked about, never
 guessed.
 
-## 8. The check
+## 9. The check
 
 Once the brief is written, run exactly this from the project root, with the
 path unquoted:
