@@ -157,6 +157,26 @@ In the free-text places above, `lib/check.mjs` neither requires nor rejects the 
 A treasurer closes the month in under ten minutes. [ASSUMPTION]
 ```
 
+## The user's own words
+
+When Seldon writes an item in `brief.md` from the user's own words, the item keeps the exact phrase it came from, word for word, on a quoted line directly under it. No paraphrase, no summary and no tidied wording.
+
+- The user's own words are anything the user wrote, in the dump or in a reply to a question Seldon asked.
+- An item quotes only the phrase it came from, never the whole dump.
+- The quoted line starts with `> `. Under a `- ` bullet it's indented two spaces, `  > `, so it stays with its bullet.
+- A phrase that runs over several lines keeps its line breaks, and each line starts the same way.
+- When one answer feeds several items, each item quotes the part of it that item rests on, as one run of the user's exact words.
+- An item with no source words is a guess, so it carries `[ASSUMPTION]` and no quote.
+
+The check neither requires nor rejects a quoted line. To the check it's body text.
+
+```
+- It won't take reservations, because a tool goes to whoever is at the counter.
+  > no reservations, whoever's at the counter gets the drill
+```
+
+This covers `brief.md` only. The PRD and spine take the same rule when their steps are built.
+
 ## The check
 
 ```
