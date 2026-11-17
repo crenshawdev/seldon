@@ -5,7 +5,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkDir, OK_LINE } from '../lib/check.mjs';
+import { BRIEF_OK_LINE, checkDir, OK_LINE } from '../lib/check.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const samples = join(root, 'samples');
@@ -13,11 +13,23 @@ const script = join(root, 'lib', 'check.mjs');
 
 const run = (...args) => spawnSync(process.execPath, [script, ...args], { encoding: 'utf8' });
 
-// Every broken case starts from a set known to pass, so nothing broken is committed.
-function copy(t) {
+function temp(t) {
   const dir = mkdtempSync(join(tmpdir(), 'seldon-check-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
+  return dir;
+}
+
+// Every broken case starts from a set known to pass, so nothing broken is committed.
+function copy(t) {
+  const dir = temp(t);
   cpSync(samples, dir, { recursive: true });
+  return dir;
+}
+
+// What the brief step leaves behind: the brief and nothing else.
+function briefOnly(t) {
+  const dir = temp(t);
+  cpSync(join(samples, 'brief.md'), join(dir, 'brief.md'));
   return dir;
 }
 
@@ -113,8 +125,46 @@ for (const [name, breakIt, expected] of cases) {
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
+});
+
+test('--brief on the samples exits 0 with the brief line', () => {
+  const r = run('--brief', samples);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), BRIEF_OK_LINE);
+});
+
+test('--brief passes a folder holding only the brief', (t) => {
+  const r = run('--brief', briefOnly(t));
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), BRIEF_OK_LINE);
+});
+
+test('--brief on a brief missing a section exits 1, naming only that section', (t) => {
+  const dir = briefOnly(t);
+  edit(dir, 'brief.md', (s) => s.replace(/## Vision\n[^#]*/, ''));
+  const r = run('--brief', dir);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'brief.md: Vision: missing section');
+});
+
+test('--brief on a folder with no brief exits 1 with a missing file', (t) => {
+  const r = run('--brief', temp(t));
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'brief.md: missing file');
+});
+
+test('the full check still wants all four files when only the brief is there', (t) => {
+  const r = run(briefOnly(t));
+  assert.equal(r.status, 1);
+  assert.deepEqual(r.stdout.trim().split('\n'), ['prd.md: missing file', 'spine.md: missing file', 'epics.md: missing file']);
+});
+
+test('--brief with no directory exits 2', () => {
+  const r = run('--brief');
+  assert.equal(r.status, 2);
+  assert.match(r.stderr, /usage:/);
 });
