@@ -44,6 +44,8 @@ files:
   - evals/no-dump/graders/no-write.md
   - evals/no-dump/graders/no-ask-user-question.md
   - evals/fast-path/prompt.md
+  - evals/fast-path/graders/no-write.md
+  - evals/fast-path/graders/no-edit.md
   - skills/seldon/SKILL.md
 ---
 
