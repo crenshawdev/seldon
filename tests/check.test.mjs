@@ -5,7 +5,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BRIEF_OK_LINE, checkDir, OK_LINE, PRD_OK_LINE } from '../lib/check.mjs';
+import { BRIEF_OK_LINE, checkDir, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE } from '../lib/check.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const samples = join(root, 'samples');
@@ -168,7 +168,7 @@ test('a Retired line under Requirements passes the full check and --prd', (t) =>
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -250,4 +250,43 @@ test('--prd on a PRD whose Requirements hold only prose exits 1, naming Requirem
   const r = run('--prd', dir);
   assert.equal(r.status, 1);
   assert.equal(r.stdout.trim(), 'prd.md: Requirements: no "- **CAT-01**: text" requirement');
+});
+
+test('--spine on the samples exits 0 with the spine line', () => {
+  const r = run('--spine', samples);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), SPINE_OK_LINE);
+});
+
+test('--spine passes a folder holding only the spine', (t) => {
+  const r = run('--spine', only(t, 'spine.md'));
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), SPINE_OK_LINE);
+});
+
+// The three faults the spine step has to catch before the epics exist.
+for (const [name, change, expected] of [
+  ['no Kind line', (s) => s.replace('Kind: how state changes\n', ''), 'spine.md: S-01: Kind: missing line'],
+  ['a kind outside the six', (s) => s.replace('Kind: stack\n', 'Kind: security\n'), 'spine.md: S-04: Kind: "security" is not one of the six kinds'],
+  ['an empty body', (s) => s.replace(/(## S-05: .*\nKind: hosting\n)[^#]*/, '$1\n'), 'spine.md: S-05: decision: empty section'],
+]) {
+  test(`--spine on a decision with ${name} exits 1, naming the decision and the problem`, (t) => {
+    const dir = only(t, 'spine.md');
+    edit(dir, 'spine.md', change);
+    const r = run('--spine', dir);
+    assert.equal(r.status, 1);
+    assert.equal(r.stdout.trim(), expected);
+  });
+}
+
+test('--spine on a folder with no spine exits 1 with a missing file', (t) => {
+  const r = run('--spine', temp(t));
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'spine.md: missing file');
+});
+
+test('--spine with no directory exits 2', () => {
+  const r = run('--spine');
+  assert.equal(r.status, 2);
+  assert.match(r.stderr, /usage:/);
 });

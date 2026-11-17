@@ -326,6 +326,20 @@ This is for the PRD step, which has written the PRD and needs to check what it w
 
 The full check above still needs all four files, so a folder holding only the brief and the PRD fails it.
 
+### The spine alone
+
+```
+node lib/check.mjs --spine <dir>
+```
+
+This is for the spine step, which has written the spine and needs to check what it wrote before the epics exist.
+
+- It reads only `<dir>/spine.md` and holds it to the spine rules above, the `Kind:` line included. Whether the other three files exist doesn't matter.
+- It exits 0 when the spine conforms, and prints one line: `seldon check: spine.md conforms`.
+- Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `spine.md: missing file` when there's no spine. It exits 2 when the directory argument is missing or isn't a directory.
+
+The full check above still needs all four files, so a folder holding only the brief, the PRD and the spine fails it.
+
 ## Examples
 
 These are minimal. `samples/` has a complete set.
