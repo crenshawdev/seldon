@@ -25,7 +25,7 @@ It writes nothing outside `.planning/seldon/`. A design folder the project alrea
 
 ## brief.md
 
-The brief has these seven `## ` sections, written in this order:
+The brief has these eight `## ` sections, written in this order:
 
 1. `## Problem`
 2. `## Solution`
@@ -33,9 +33,20 @@ The brief has these seven `## ` sections, written in this order:
 4. `## What's different`
 5. `## Success criteria`
 6. `## Scope`
-7. `## Vision`
+7. `## What it refuses`
+8. `## Vision`
 
 Each one is present and not empty. A reader finds a section by its name, not its position.
+
+### Refusals
+
+`## What it refuses` names what the product won't do, and why. Each refusal is a `- ` bullet that says what it won't do, then `because` and the reason, in the same bullet:
+
+```
+- It won't send invoices, because treasurers already invoice from their bank.
+```
+
+One shape means a reader always finds the reason in the same place. The check requires the section present and not empty, like every brief section, and doesn't read its bullets.
 
 ## prd.md
 
@@ -199,7 +210,10 @@ It records payments, not balances, so a balance is never typed by hand.
 A treasurer closes the month in under ten minutes.
 
 ## Scope
-Members, dues and payments. No invoicing.
+Members, dues and payments.
+
+## What it refuses
+- It won't send invoices, because treasurers already invoice from their bank.
 
 ## Vision
 Every small club's books are right without anyone checking them.
