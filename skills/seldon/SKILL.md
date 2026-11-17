@@ -49,6 +49,8 @@ shows. Check these in order:
   recommend again.
 - **Interview under way:** your last turn asked the fast-path questions or a
   coaching question, and the user answered. Carry on from there.
+- **PRD questions answered:** your last turn asked the PRD step's questions,
+  and the user answered. Go to "The PRD draft" and draft with those answers.
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
   Look for the files again, as "Where a run starts" says. Going on from the
@@ -342,5 +344,28 @@ If it exits 1, fix each problem it names in `brief.md` with Edit, inside
 
 Then end with your final message: name the file you wrote, and repeat the
 check's result line word for word on a line of its own.
+
+## 12. The PRD step
+
+The PRD is built from `.planning/seldon/brief.md` and nothing else. Read that
+file and nothing more for it: never `docs/design/` or any other design folder,
+never the dump, and never the earlier conversation, whatever it holds. A fact
+from a design folder reaches the PRD only through a quote the brief already
+carries.
+
+Running this step is the go-ahead. Recommend no path and ask for no
+confirmation first. Every section of the brief counts as answered, its
+`[ASSUMPTION]` guesses included, so never ask the brief's questions again.
+
+Draft the PRD in this same turn, as "The PRD draft" says, unless something
+only the user can decide is still open. Then ask every such question in one
+plain-prose message that ends your turn, and write nothing in that turn.
+
+**The stakes.** Read them from the brief's Who it serves, Success criteria and
+Scope: who depends on the product, and what breaks if it's wrong. Size the PRD
+to them: how many requirements and categories, and how much goes into
+Non-functional requirements and User journeys. When the brief doesn't show the
+stakes, put one line in MVP scope saying what size you drafted the PRD for,
+tagged `[ASSUMPTION]`. Never ask a question about the stakes.
 
 </process>
