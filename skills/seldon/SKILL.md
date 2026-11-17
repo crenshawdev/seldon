@@ -49,6 +49,18 @@ shows. Check these in order:
   recommend again.
 - **Interview under way:** your last turn asked the fast-path questions or a
   coaching question, and the user answered. Carry on from there.
+- **Documents question answered:** your last turn ended on the documents
+  question in "A dump when documents are there", and the user answered it.
+  Look for the files again, as "Where a run starts" says. Going on from the
+  brief follows that section's routes, exactly as a resume does:
+  - Only a brief there: start with the resume line, then go to "The PRD step".
+  - A brief and a PRD there: write nothing, and end on the later-release line.
+    Going on never runs the PRD step over a PRD that's there.
+
+  The text from the question's turn isn't input to the PRD. When the user
+  asks to rerun the brief instead, `/seldon brief` typed as the reply
+  included, write nothing and say that rerunning the brief comes in a later
+  release.
 
 Anything else is a new run: start at "Where a run starts". The files in
 `.planning/seldon/` decide where a new run goes, even when this conversation
@@ -91,6 +103,20 @@ when it holds nothing but blanks. Then:
 
 - **A brief, and `$ARGUMENTS` isn't empty:** write nothing, and go to "A dump
   when documents are there".
+
+### A dump when documents are there
+
+The user's words are never set aside without asking. When a brief is already
+there and `$ARGUMENTS` isn't empty, write nothing in this turn. Don't read a
+design folder and don't judge a path on that text. Use no AskUserQuestion and
+no menu. End your message with exactly these words, on a line of their own,
+with nothing after them. This is the documents question:
+
+```
+Do you want to rerun the brief with this text, using /seldon brief, or go on from the brief that's already there?
+```
+
+That question ends your turn.
 
 ## 3. The dump
 
