@@ -102,6 +102,7 @@ Each of these is a hypothesis until it ships and proves itself.
 | Everything Seldon writes goes in `.planning/seldon/` | Cadence stays the only writer of its own files, and an existing design folder is never touched | - pending |
 | A built phase is never rewritten; a change to one becomes a new phase | Shipped work stays as built | - pending |
 | Eval cases take the fast path, and interview turns are tested by replaying saved conversations | `claude plugin eval` can't play a simulated user | - pending |
+| The eval job uses a model API key stored as a repository secret, runs only on pull requests to main and on release tags, and is skipped for forks and Dependabot | Every eval run spends model tokens, and the secret is a security boundary, so both stay narrow; John sets the secret, and `eval` joins the required jobs once it exists | - pending |
 | No UX step and no PRFAQ path in the first version | Kept out of the first version's scope | - pending |
 
 ---

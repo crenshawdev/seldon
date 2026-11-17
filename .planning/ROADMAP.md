@@ -91,8 +91,10 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 ### Phase 8: The full graders in CI
 **Goal:** The full graders check every run, and the eval suite runs in CI with nothing for a person to check by hand.
 **Depends on:** Phase 7
+**Precondition:** John stores a model API key as a repository secret. That's his step, not a task in this phase. How `claude plugin eval` authenticates in CI isn't checked yet, and this phase's research settles it. Once the secret exists, `eval` joins the required jobs through `/cad-config --testing`, since a plan never changes the required jobs itself.
 **Requirements:** EVAL-02, EVAL-04
 **Success Criteria:**
 1. The graders fail a run when a document is missing, a PRD requirement ID traces into no epic, an epic carries more than 5 requirement IDs, or the readiness check reports a finding.
 2. A fast-path case with a full project description runs the whole walk to the end and passes every grader.
-3. The eval suite, holding every case phases 1 to 7 added, runs in GitHub Actions with no manual step. The job's model secret, and when the job runs, are John's call and still pending.
+3. The `eval` job in GitHub Actions runs the suite, holding every case phases 1 to 7 added, with no manual step.
+4. The `eval` job runs only on pull requests to main and on release tags, and forks and Dependabot skip it, the same way Cadence's SonarCloud scan does (`/code/cadence/.github/workflows/test.yml:113`).
