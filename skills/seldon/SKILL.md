@@ -1015,6 +1015,24 @@ its `**Requirements:**` and `**Spine decisions:**` IDs, so it carries no `> `
 lines. `[ASSUMPTION]` is allowed, not required, in Outcome, Boundaries and
 Done when. The tag never goes in an ID field or on a heading.
 
+**Build order.** File order is build order:
+
+- Epics carrying the requirement IDs the PRD's MVP scope names come before
+  the rest.
+- An epic depends only on epics before it. `**Depends on:**` names each
+  earlier epic it builds on, or `None`.
+- A first draft numbers epics from E-01 upward in file order.
+
+**Citations.** `/cad-context` locks each epic's spine decisions for the phase
+built from it, so:
+
+- Every S- ID in the spine is cited by at least one epic.
+- Every epic cites every `design approach`, `stack` and `hosting` decision.
+- A split's epics on both sides cite the boundary, as "The epics step" says.
+- Cite only S- IDs that are decisions in `spine.md`, and list only
+  requirement IDs that `prd.md` declares. The check reads how an ID is
+  spelled, never whether it's declared, so this rule is yours to keep.
+
 ```
 # Gristmill - epics
 
