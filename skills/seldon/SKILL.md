@@ -1,6 +1,6 @@
 ---
 name: seldon
-description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and after a /clear it picks up from those files."
+description: "Start a project's design before Cadence builds it. Paste or describe what you have - an idea, notes, a half-written spec - and Seldon reads it, judges how much is still open and what is at stake, recommends the fast path or coaching, and once you confirm a path writes the brief to .planning/seldon/brief.md. Then it builds the PRD from that brief at .planning/seldon/prd.md, and the architecture spine from the brief and the PRD at .planning/seldon/spine.md, and after a /clear it picks up from those files."
 argument-hint: "[what you have: the idea, notes or spec, pasted or described] | brief | prd | spine | epics"
 allowed-tools:
   - Read
@@ -14,16 +14,19 @@ allowed-tools:
 Read the user's dump, judge whether it is ready for a drafted brief or needs a
 walk through each decision, and recommend one path. Once the user confirms a
 path, write the project's brief to `.planning/seldon/brief.md`. Then build the
-PRD from that brief alone, at `.planning/seldon/prd.md`. A new run picks up
-from the files in `.planning/seldon/`, so the walk survives a `/clear`.
+PRD from that brief alone, at `.planning/seldon/prd.md`. Then take the spine
+step: record the architecture decisions that would clash if two parts were
+built separately, from the brief and the PRD alone, at
+`.planning/seldon/spine.md`. A new run picks up from the files in
+`.planning/seldon/`, so the walk survives a `/clear`.
 </objective>
 
 <rules>
 - Every question you ask is plain prose at the end of your message, and asking
   it ends your turn. Never use AskUserQuestion, a numbered menu or a list of
   options to pick from. The user answers in their own words in the next turn.
-- The only files you write are `.planning/seldon/brief.md` and
-  `.planning/seldon/prd.md`. Never write, edit or create anything else, in the
+- The only files you write are `.planning/seldon/brief.md`,
+  `.planning/seldon/prd.md` and `.planning/seldon/spine.md`. Never write, edit or create anything else, in the
   project or outside it. A design folder is input only.
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
@@ -642,5 +645,43 @@ Then end the step the way "The check" says: name the file you wrote, repeat
 the check's result line word for word on a line of its own, and end your turn
 on one plain-prose question asking whether the user confirms the PRD or wants
 changes.
+
+## 15. The spine step
+
+The spine is built from `.planning/seldon/brief.md` and
+`.planning/seldon/prd.md` and nothing else. Read those two files and nothing
+more for it: never `docs/design/` or any other design folder, never the dump,
+and never the earlier conversation, whatever it holds. A fact from a design
+folder reaches the spine only through a quote the brief already carries. A
+stack or hosting word the user said reaches it only through the brief's `> `
+quotes, since the PRD leaves those words out. The one thing it takes from the
+conversation is the user's answers to this step's own question, the confirm
+question "The spine check" ends on.
+
+The brief and the PRD on disk are the confirmed ones, even where they differ
+from something said earlier in this conversation, as "The PRD step" says of
+the brief. Build from the files as they stand. Don't point out the difference,
+don't ask which is right, and carry nothing from the conversation into the
+spine.
+
+Running this step is the go-ahead. Recommend no path and ask for no
+confirmation first. The brief and the PRD count as answered, their
+`[ASSUMPTION]` guesses included, so never ask their questions again.
+
+**What the spine holds.** Only the decisions that would clash if two parts of
+the system were built separately. Each decision is exactly one of six kinds,
+spelled the way `docs/FORMAT.md` spells them:
+
+- `design approach`
+- `boundaries`
+- `how state changes`
+- `who owns shared data`
+- `stack`
+- `hosting`
+
+A choice one part can make alone, such as a page layout or a library used
+inside one part, stays out. A spine doesn't need all six kinds.
+
+Draft the spine in this same turn, as "The spine draft" says.
 
 </process>
