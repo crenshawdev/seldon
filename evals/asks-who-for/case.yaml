@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: asks-who-for
+description: Resumes a /seldon session at its fast-path recommendation on a dump that never says who the project is for, so the confirmation has to ask that and write nothing.
+runs: 1
+context:
+  history_file: history.jsonl
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
