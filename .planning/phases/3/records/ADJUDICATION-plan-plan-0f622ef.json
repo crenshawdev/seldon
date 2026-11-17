@@ -1,0 +1,111 @@
+{
+  "phase": "3",
+  "trigger": "plan",
+  "discriminator": "plan-0f622ef",
+  "round": 1,
+  "base": "0f622ef",
+  "head": "0f622ef",
+  "base_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+  "head_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+  "voices": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-5",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-cross-plan",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/3/PLAN-2.md",
+      "line": 99,
+      "severity": "medium",
+      "claim": "Task 2's answer position makes 'going on' always mean 'the fixed resume line, then the PRD step', even when the documents question was asked with both brief.md and prd.md on disk. Task 1 (line 80) sends any non-empty argument to that question whether or not a PRD exists, so this contradicts D-17 (with both documents there, write nothing and end on the later-release line) and lets the PRD step's fresh Write replace an existing PRD outside D-09/D-03's rerun rules. No later plan closes it: Plan 4 wires only the rerun answer (PLAN-4.md:246-253).",
+      "failure_scenario": "Start with .planning/seldon/brief.md and prd.md both on disk. The user runs `/seldon I also want a calendar view`, which hits Task 1's 'Documents there and an argument that isn't empty' route, so Seldon asks the documents question. The user answers `/seldon go on from the brief`. Under the §1 position Task 2 adds, Seldon gives the resume line and runs the PRD step, and Task 4's draft section writes .planning/seldon/prd.md with the Write tool. The existing PRD is overwritten: unchanged requirement lines can be reworded and IDs renumbered, with no Retired: line. D-17 says this state writes nothing and ends on the later-release line. No eval reaches this path, because existing-brief seeds only the brief and its answer turn is never replayed, so the suite still passes.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+      "head_id": "0f622ef86032261ee0133f0e5f6424f4b4766120"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/3/PLAN-3.md",
+      "line": 200,
+      "severity": "medium",
+      "claim": "Task 5's test for the combined history-plus-scaffold form can't fail on the recorded-cwd question it is meant to answer, because the case it runs is built so Seldon makes no file tool calls.",
+      "failure_scenario": "In confirm-clear, Task 4's confirm position tells Seldon to write, edit and run nothing. §1 also finds its place in the conversation before any file lookup, so the run can finish with no Read, Glob, Write, Edit or Bash call at all. Condition 3 ('Every file tool call in the trace resolves inside the run's own workspace') then holds with zero calls. Condition 4 only shows that the scaffold ran, not where Claude's tools resolve. Suppose the history's recorded cwd (for example /tmp/seldon-confirm-clear) does redirect tool paths away from the scaffolded workspace. The case still scores 1.00, keeps `scaffold_script`, and the report says the combined form works. Plan 4 reads that answer from `evals/confirm-clear/case.yaml` and builds prd-reads-brief and brief-rerun on it; brief-rerun has no fallback. Those cases need Seldon to Read the seeded brief and write prd.md under a history. They would then fail at run time, outside the fallback split CONTEXT planned for this assumption.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+      "head_id": "0f622ef86032261ee0133f0e5f6424f4b4766120"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/3/PLAN-3.md",
+      "line": 194,
+      "severity": "medium",
+      "claim": "The suggests-clear grader only has to find the fixed /clear words somewhere in last_message, and its D-21 check never tests them followed by more text. So it passes when Seldon doesn't end on them, which is what AC5 and D-07 require.",
+      "failure_scenario": "The user confirms with `/seldon Yes, that's right.`. Seldon gives the fixed /clear words, then adds 'Or I can start the PRD now if you'd rather - shall I?' and calls no tool. suggests-clear matches the words mid-message, and no-write and no-edit pass. The case scores 1.00, but AC5 ('shows Seldon ending on the fixed /clear suggestion') and Task 4's 'end on the fixed /clear words' are not shown. Task 5 Verify (1) has four negative samples (pass line, confirm question, resume line, a confirm without the words) and none of them is the fixed words followed by more text. Plan 2's matching grader for its fixed question, by contrast, is required to match 'as it ends the message'.",
+      "ruling": "downgraded",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+      "head_id": "0f622ef86032261ee0133f0e5f6424f4b4766120"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/3/PLAN-4.md",
+      "line": 246,
+      "severity": "medium",
+      "claim": "Task 1 checks for an exact step name before anything else, \"whatever position the conversation is in\" (line 97), and sends `brief` with a brief on disk to Task 6's Reopening, which asks what should change. So when the user answers Plan 2's documents question by typing the `/seldon brief` that question names, they never reach Task 6's documents-question path (line 246), which treats the earlier dump as the change. That earlier dump gets set aside, which contradicts D-02.",
+      "failure_scenario": "brief.md exists. The user runs `/seldon <new pacer dump>`. Seldon asks Plan 2's fixed question, which offers to rerun the brief with this text (`/seldon brief`) or go on. The user types `/seldon brief`, the command the question names. Task 1's rule runs first: the trimmed $ARGUMENTS is exactly `brief` and brief.md exists, so this is the brief rerun. Task 6's Reopening reads brief.md, names it and asks what should change, writing nothing. The dump the user was promised a rerun with is never used, so they have to type it again. Task 6's \"the text from that question's turn is the change\" only runs for answers that aren't exactly a step name, such as `/seldon yes, rerun it`. No case in this plan exercises that answer, so nothing catches it.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+      "head_id": "0f622ef86032261ee0133f0e5f6424f4b4766120"
+    },
+    {
+      "voice": "claude-subagent-plan-5",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/3/PLAN-5.md",
+      "line": 57,
+      "severity": "low",
+      "claim": "Task 1 has the README say the PRD step \"reads only `brief.md`\". Under D-09 that is false for a rerun: `/seldon prd` also reads the previous `prd.md`, and Plan 4 Task 4 has it read `prd.md` first.",
+      "failure_scenario": "After Plan 5, the README's PRD bullet says the step reads only brief.md. Two lines later its Reruns bullet says a PRD rerun keeps untouched requirements and their IDs. A user who hand-edits prd.md and then runs `/seldon prd` expects the edit to be ignored and the PRD rebuilt from the brief. Instead the rerun reads prd.md and keeps the edited lines byte-identical (D-09), so the shipped README misstates what the step reads on the rerun path. Task 1's greps (lines 72-75) only check for '/seldon prd', '/clear' and the removed sentence, so nothing catches the wrong text.",
+      "ruling": "survived",
+      "convergent": false,
+      "citation_missing": true,
+      "base_id": "0f622ef86032261ee0133f0e5f6424f4b4766120",
+      "head_id": "0f622ef86032261ee0133f0e5f6424f4b4766120"
+    }
+  ]
+}
