@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 2,
-    "status": "executed",
-    "next": "/cad-verify 2",
+    "status": "phase complete",
+    "next": "/cad-context 3",
     "updated": "2026-11-17"
   },
   "phases": [
@@ -28,7 +28,7 @@
       "n": 2,
       "name": "The brief",
       "description": "/seldon takes the user's dump, confirms fast path or coaching, and writes the brief",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -115,22 +115,22 @@
     {
       "id": "DOCS-01",
       "phase": 2,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-06",
       "phase": 2,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-07",
       "phase": 2,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "DOCS-03",
       "phase": 2,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }
