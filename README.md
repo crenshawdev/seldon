@@ -44,7 +44,7 @@ The eval cases live in `evals/`. Run them locally from the repository root:
 claude plugin eval . --trust-plugin --no-publish --ablation none --scaffold --allow-tools "Edit(.planning/seldon/**)" "Bash(node $PWD/lib/check.mjs:*)"
 ```
 
-The two `--allow-tools` rules are the whole grant. Seldon can write only inside `.planning/seldon/` and run only its own check, and nothing broader. Run from the root, `$PWD` is this repository, so the rule names the same `lib/check.mjs` the skill runs. `--scaffold` runs only the case scripts that copy fixtures from `samples/` into the run, and `tests/scaffold.test.mjs` checks each one does nothing else.
+The two `--allow-tools` rules are the whole grant. Seldon can write only inside `.planning/seldon/` and run only its own check, and nothing broader. Run from the root, `$PWD` is this repository, so the rule names the same `lib/check.mjs` the skill runs. `--scaffold` runs the case scripts that copy fixtures from `samples/` into the run, and `tests/scaffold.test.mjs` allows them nothing more. Apart from the shebang, `set -euo pipefail` and the line that finds the repository, every line must be `mkdir -p` or `cp [-R]` from `"$repo/samples/..."`, with targets inside the run. Any other line fails the test. So does a `case.yaml` that names its scaffold in a form the test can't read.
 
 - `fast-path` gives Seldon a full project description and checks that it recommends the fast path without asking through a menu.
 - `replay` resumes a saved `/seldon` session and checks that the reply uses a fact only that session holds.
