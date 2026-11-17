@@ -17,7 +17,12 @@ It records every checkout and return as it happens, so where a tool is comes fro
 - Overdue tools drop by half in the first three months.
 
 ## Scope
-The catalog, checkouts, returns and due-date reminders. No fees, no reservations and no member self-checkout.
+The catalog, checkouts, returns and due-date reminders.
+
+## What it refuses
+- It won't charge fees, because the library is free to its members and handling money is work the volunteers don't have time for.
+- It won't take reservations, because a tool goes to whoever is at the counter, first come first served.
+- It won't let members check tools out themselves, because a volunteer looks each tool over as it goes out and comes back.
 
 ## Vision
 Any volunteer-run lending library can track what it lends without a logbook.
