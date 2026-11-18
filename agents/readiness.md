@@ -63,6 +63,10 @@ the epics and the choice in a few words. The step that fixes it is the spine.
   it once, as the crossing, never also as a decision left open.
 - A choice the spine makes at all isn't open, whether it makes it loosely or as
   an `[ASSUMPTION]` guess.
+- The choice has to come from what an epic's Outcome, Boundaries, Done-when
+  items or requirements, or the PRD, need, so a detail only the spine mentions
+  can't raise this finding. A spine line tagged `[ASSUMPTION]` settles the
+  choice it states.
 
 ## Not findings
 
