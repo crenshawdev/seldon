@@ -49,7 +49,7 @@ Committed scope. Each maps to exactly one roadmap phase.
 - [ ] **EVAL-01**: `claude plugin eval` cases give Seldon a full project description up front, and Seldon takes the fast path with nothing to ask.
 - [ ] **EVAL-02**: Eval graders check that every document is present, every PRD requirement ID traces into an epic, every epic is within the size limit and the readiness check passes.
 - [ ] **EVAL-03**: Single interview turns are tested by replaying saved conversations through `context.history_file`.
-- [ ] **EVAL-04**: Every eval runs locally under `/cad-verify`, with nothing for a person to check by hand.
+- [ ] **EVAL-04**: Every eval runs locally with the README's suite command, never in CI, with nothing for a person to check by hand.
 
 ### Release
 
