@@ -105,7 +105,7 @@ test('every tool_used grader that states a max also states its min', () => {
 });
 
 // The case.yaml keys whose value is text; allowed_tools: [...] is a flow list on purpose and never reaches this.
-const STRING_KEY = /^ *(schema_version|name|description|history_file|scaffold_script):[ \t]+(.*?)[ \t\r]*$/;
+const STRING_KEY = /^ *(schema_version|name|description|history_file):[ \t]+(.*?)[ \t\r]*$/;
 // A plain value can't start with any of these and still be read as the text it looks like.
 const INDICATOR = /^[-?:,[\]{}#&*!|>%@`]/;
 
