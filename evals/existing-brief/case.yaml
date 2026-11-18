@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: existing-brief
+description: A /seldon dump on a project whose .planning/seldon/brief.md is already there, seeded from samples/brief.md, so Seldon has to write and edit nothing and ask whether to rerun the brief with that dump or go on from the brief on disk.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]

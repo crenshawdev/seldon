@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: resume
+description: A bare /seldon in a fresh session where a confirmed brief is already at .planning/seldon/brief.md, seeded from samples/brief.md, so Seldon has to name that brief before writing, write .planning/seldon/prd.md and ask none of the brief's questions again.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

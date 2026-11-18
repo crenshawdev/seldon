@@ -20,7 +20,7 @@ Committed scope. Each maps to exactly one roadmap phase.
 
 ### Documents
 
-- [ ] **DOCS-01**: The brief step writes a brief covering the problem, the solution, who it serves, what's different, success criteria, scope and vision.
+- [ ] **DOCS-01**: The brief step writes a brief covering the problem, the solution, who it serves, what's different, success criteria, scope, what it refuses (each refusal with its reason) and vision. Each item written from a user answer keeps that answer verbatim beside it as a quoted line.
 - [ ] **DOCS-02**: The PRD step writes a PRD of capabilities, not implementation: requirements with stable IDs, non-functional requirements, user journeys, non-goals and MVP scope, sized to the stakes.
 - [ ] **DOCS-03**: Seldon writes only inside `.planning/seldon/`, and reads a design folder the project already has, such as `docs/design/`, as input without writing to it.
 - [ ] **DOCS-04**: The `.planning/seldon/` document format is fixed and documented, with sample files Cadence's reader can be built and tested against.
@@ -49,7 +49,7 @@ Committed scope. Each maps to exactly one roadmap phase.
 - [ ] **EVAL-01**: `claude plugin eval` cases give Seldon a full project description up front, and Seldon takes the fast path with nothing to ask.
 - [ ] **EVAL-02**: Eval graders check that every document is present, every PRD requirement ID traces into an epic, every epic is within the size limit and the readiness check passes.
 - [ ] **EVAL-03**: Single interview turns are tested by replaying saved conversations through `context.history_file`.
-- [ ] **EVAL-04**: Every eval runs locally under `/cad-verify`, with nothing for a person to check by hand.
+- [ ] **EVAL-04**: Every eval runs locally with the README's suite command, never in CI, with nothing for a person to check by hand.
 
 ### Release
 
@@ -81,6 +81,33 @@ Explicit exclusions. The reason prevents scope creep later.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| DOCS-04 | Phase 1 | Complete |
+| EVAL-01 | Phase 1 | Complete |
+| EVAL-03 | Phase 1 | Complete |
+| REL-01 | Phase 1 | Complete |
+| DOCS-01 | Phase 2 | Complete |
+| FLOW-06 | Phase 2 | Complete |
+| FLOW-07 | Phase 2 | Complete |
+| DOCS-03 | Phase 2 | Complete |
+| DOCS-02 | Phase 3 | Complete |
+| FLOW-02 | Phase 3 | Complete |
+| FLOW-04 | Phase 3 | Complete |
+| FLOW-03 | Phase 5 | Complete |
+| ARCH-01 | Phase 4 | Complete |
+| ARCH-04 | Phase 4 | Complete |
+| ARCH-02 | Phase 4 | Complete |
+| EPIC-01 | Phase 5 | Complete |
+| EPIC-02 | Phase 5 | Complete |
+| FLOW-01 | Phase 5 | Complete |
+| FLOW-05 | Phase 6 | Complete |
+| ARCH-03 | Phase 6 | Complete |
+| CHECK-03 | Phase 7 | Complete |
+| CHECK-04 | Phase 7 | Complete |
+| CHECK-01 | Phase 8 | Complete |
+| CHECK-02 | Phase 8 | Complete |
+| FLOW-08 | Phase 8 | Complete |
+| EVAL-02 | Phase 9 | Complete |
+| EVAL-04 | Phase 9 | Complete |
 
 Bare headers - `/cad-plan` seeds a row per requirement when its phase is
 planned (`references/req-traceability.md`).

@@ -1,0 +1,48 @@
+{
+  "phase": "6",
+  "trigger": "diff",
+  "discriminator": "43f29ef-7304538",
+  "round": 1,
+  "base": "43f29ef",
+  "head": "7304538",
+  "base_id": "43f29ef332bae144e04285698e14bdef98854b60",
+  "head_id": "7304538bd93d7b2a68f9de166be39079f558c894",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 855,
+      "severity": "medium",
+      "claim": "The 444fc4f edit says the spine step reads the code \"with Read, Glob and Grep only, never a shell command\". Every kept Cadence run in this range broke that rule and still scored 1.00, so the edit doesn't do what its commit says, and no grader or case enforces it.",
+      "failure_scenario": "The plan's own report (.planning/phases/6/records/reports/plan-7.md, rows at lines 40, 45, 48 and 49) records four runs made after 444fc4f. They are spine-who-relies try 2, spine-conventions at 0d949a7, spine-who-relies at 7304538 and spine-conventions at 7304538. Each made a Bash listing such as `git ls-files; ls -la` or `ls -la; ls -la .planning .planning/seldon; git ls-files | head -100`, and each listing showed `.env` by name and size. The permission layer accepted those calls as read-only (`subcommandResults`), and each case still graded 1.00 because no grader checks Bash use apart from the value grep in no-secret. In the final spine-conventions run, `ls -la .planning` took the place of the Glob for `.planning/PROJECT.md` that lines 853-854 require. So the rule at lines 855 and 860-861 is prose the model doesn't follow, while the cases report the step as conforming. The secret rule's \"with any tool or command\" clause therefore rests only on a value grep, and a read-only shell command over a credential file the eval doesn't seed would get through the same `subcommandResults` acceptance.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "43f29ef332bae144e04285698e14bdef98854b60",
+      "head_id": "7304538bd93d7b2a68f9de166be39079f558c894"
+    },
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "evals/spine-who-relies/case.yaml",
+      "line": 3,
+      "severity": "low",
+      "claim": "The case says /seldon spine \"has to ask only the fixed who-relies question\", but none of its four graders checks the \"only\" part. Sibling cases that make the same kind of claim (spine-job, spine-outside-input) back it with not_contains graders.",
+      "failure_scenario": "I loaded the pattern from evals/spine-who-relies/graders/asks-who-relies.md and ran it in node against a last message that holds both the trust-boundary question and the who-relies question, each on its own line. It returned true. no-write and no-edit pass any turn that writes and edits nothing, and no-secret passes any trace without the value. So a run that also asks the trust-boundary, unattended-work or failure question still scores 1.00, even though the case's description and the plan's \"one question long\" ask turn say it shouldn't. A turn that also asks about a stack or host the code already settles (D-13) would pass the same way. A cheap guard is a not_contains grader on each fixed-word question, like evals/spine-job/graders/no-trust-question.md.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "07f1437",
+      "base_id": "43f29ef332bae144e04285698e14bdef98854b60",
+      "head_id": "7304538bd93d7b2a68f9de166be39079f558c894"
+    }
+  ]
+}

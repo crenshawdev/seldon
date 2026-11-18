@@ -1,0 +1,97 @@
+{
+  "phase": "9",
+  "trigger": "plan",
+  "discriminator": "plan-dae9e98",
+  "round": 1,
+  "base": "dae9e98",
+  "head": "dae9e98",
+  "base_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d",
+  "head_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d",
+  "voices": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-cross-plan",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/9/PLAN-1.md",
+      "line": 85,
+      "severity": "medium",
+      "claim": "Task 2's repo-side Verify changes `flags: m` to `flags: ms` in `evals/full-walk/graders/at-most-five-ids.md`. That file is one of the size grader's three byte-held copies, so Task 1's equal-copy check fails on the change by itself, and the step cannot show that the D-09 form check runs over the table's real files.",
+      "failure_scenario": "Suppose the executor wires the form checker only to the planted patterns and never applies it to the full-grader table's files, which the D-08/must-be-true #4 outcome requires. The mutation still turns the suite red, because the three at-most-five-ids.md copies now differ by bytes (the size check is unaffected, since the pattern holds no `.`). Verify passes even though a full grader carrying `flags: ms`, or any refused form, in a file outside a byte-held set (every-requirement-once.md, every-requirement-traced.md, the recommendation graders) would pass the suite undetected. Mutating a file that is not byte-held, such as evals/epics-from-spine/graders/every-requirement-once.md, would isolate the form check.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "aa4b8d004e5e908b2360e5a504a544a80a6033f5",
+      "citation_missing": true,
+      "base_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d",
+      "head_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d"
+    },
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/9/PLAN-2.md",
+      "line": 38,
+      "severity": "high",
+      "claim": "Task 1 says `claude plugin eval --help` lists `--case` as the only name filter and `--eval-dir` as the only other flag that changes which cases run. That is false. The help for the installed CLI also lists `--tag <tag...>  Filter cases by tag (repeatable)`, so the test as planned does not deliver AC5's \"`--case` or any other case filter\" (roadmap criterion 3). The must-be-true at line 19 and the planted inputs at line 40 repeat the same two flags and leave `--tag` out.",
+      "failure_scenario": "Someone edits README.md's fenced command to `claude plugin eval . --tag smoke --trust-plugin --no-publish ...`. The planned test looks only for `--case`, `--case=` and `--eval-dir`, so it passes: one command line and 58 bullets matching 58 folders. The documented suite command now runs only the tagged subset, which is the coverage failure criterion 3 says the unit test must catch. No planted input exercises `--tag`, so nothing in Verify shows the gap. The same help text says `--max-cost-usd` aborts the run and reports partial results, so a README command with a ceiling would also stop short of every case, and the plan's list of flags that change which cases run doesn't account for it either.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "aa4b8d004e5e908b2360e5a504a544a80a6033f5",
+      "citation_missing": true,
+      "base_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d",
+      "head_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/9/PLAN-3.md",
+      "line": 53,
+      "severity": "medium",
+      "claim": "Task 1 has SKILL.md keep allowing the `/seldon architecture` sentence on a line of its own, but readiness-fix's and readiness-fix-answer's unchanged ends-on-confirm.md need the command on the question's own line. Must-be-true 4, that those cases score 1.00, then depends on which form the model happens to pick.",
+      "failure_scenario": "evals/readiness-fix/graders/ends-on-confirm.md and evals/readiness-fix-answer/graders/ends-on-confirm.md both use the pattern '(?:^|\\n)(?=[^\\n]*[Cc]onfirm)(?=[^\\n]*/seldon architecture)[^\\n]*\\?\\s*$' (no m flag). If the model follows the new section 17 and writes \"`/seldon architecture` can write the full architecture document once you confirm.\\n\\nDo you confirm the spine, or do you want changes?\", the last line has no `/seldon architecture`, so both cases score 0 on a correct turn. Task 3 runs each case once, so it can pass by luck. The release full run, or any later run, can then fail. The plan already records this as a risk (line 91) and passes it to Daneel. Even so, it ships SKILL.md text that permits a form two shipped graders reject. D-13 doesn't settle the line placement, so making section 17 require the sentence on the question's line is the planner's own call.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "aa4b8d004e5e908b2360e5a504a544a80a6033f5",
+      "citation_missing": true,
+      "base_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d",
+      "head_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/9/PLAN-3.md",
+      "line": 75,
+      "severity": "low",
+      "claim": "Task 2 says samples/spine-rerun/prd.md is the PRD the go-ahead produces, but nothing checks the fresh capture's Edit inputs against that seed. The history's line 4 (the capture's last message) could then describe a PRD the stale-spine seed does not hold, and Verify wouldn't catch it.",
+      "failure_scenario": "I rebuilt samples/prd.md from the Edit inputs in the phase 8 kept capture (evals/results/phase-8-traces/full-run-3/prd-conflict-apply.trace.jsonl), and the result matches samples/spine-rerun/prd.md byte for byte. That proves only that one capture matched. The same capture's last message also offers to remove the User journeys reminder sentence. A fresh capture that removes or rewords that sentence on its own would describe it in line 4, while stale-spine's seed.sh still copies the unchanged samples/spine-rerun/prd.md. The replayed history would then contradict the seeded file, against D-17/D-28's rule that the history be one the skill at HEAD produces. Task 2's Verify checks only the line text, the check line, the closing `?`, the session ids and the scores. It never compares the capture's written prd.md with samples/spine-rerun/prd.md, even though D-10 names that rebuild technique for this kind of check.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "aa4b8d004e5e908b2360e5a504a544a80a6033f5",
+      "citation_missing": true,
+      "base_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d",
+      "head_id": "dae9e98c1392512e6d7d2ce8ece55dc2ccbd9a3d"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "phase": "8",
+  "trigger": "diff",
+  "discriminator": "6be8d3d-82c0953",
+  "round": 1,
+  "base": "6be8d3da9c6c9d1e71a30a64416b3127e11e488b",
+  "head": "82c0953e71c44abd16f1a159617fde70a16ea771",
+  "base_id": "6be8d3da9c6c9d1e71a30a64416b3127e11e488b",
+  "head_id": "82c0953e71c44abd16f1a159617fde70a16ea771",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": []
+}

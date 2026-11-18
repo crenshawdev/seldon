@@ -1,0 +1,271 @@
+{
+  "phase": "6",
+  "trigger": "plan",
+  "discriminator": "plan-0f189a9",
+  "round": 1,
+  "base": "0f189a9",
+  "head": "0f189a9",
+  "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+  "head_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+  "voices": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-5",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-6",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-7",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-plan-8",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "voice": "claude-subagent-cross-plan",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-1.md",
+      "line": 66,
+      "severity": "medium",
+      "claim": "Task 2's Verify cannot tell whether the source list became three, whether the no-tag sentence was written, or whether the [ASSUMPTION] section's \"Untagged text is the user's own, or a design document's\" line (docs/FORMAT.md:257) was changed. Its only content checks are one case-insensitive 'cadence' and one '(path)' line anywhere between '### In the spine' and '## The check', and line 257 is outside that range.",
+      "failure_scenario": "An executor adds the Cadence code-source bullet and the Tally example with its `(src/...)` line, but leaves line 326 as \"A spine quote comes from one of two sources, and nowhere else\" and leaves line 257 as it is. Verify (1) prints 1 and 1, (2) exits 0 and (3) prints nothing, so the task passes. The shipped contract then calls two sources exclusive while listing three, and it classes an untagged code quote with a (path) line as \"a design document's\" words. That breaks the plan's own must-be-true #3 and D-07's \"third quote source\", and Plan 6 is told to \"match its terms\".",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-1",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-1.md",
+      "line": 48,
+      "severity": "low",
+      "claim": "Task 1's Verify (1) counts `.planning/seldon/<name>/` matches across the whole file, so it can pass while \"The check\" still says `<dir>` is only `.planning/seldon/` or `samples/`, and must-be-true #2 is missing.",
+      "failure_scenario": "Location gets the path twice (the named-design bullet and a same-four-files sentence) and the architecture document gets `.planning/seldon/<name>/architecture.md`. That makes 3 lines, and Verify (1) passes. Line 346 is left unchanged, so the check section never says `<dir>` can be a named design's folder, and no verify step notices.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-2",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-2.md",
+      "line": 65,
+      "severity": "medium",
+      "claim": "Task 1 relies on Plan 2's case to prove the new section 2 statement (D-10: Cadence files in .planning/ don't change where a run starts). The case's only live turn is the fast-path confirmation, though. SKILL.md section 1 sends that turn through 'Path chosen' to 'After the answer', so the run never reaches section 2. The turn where a run actually starts (the dump on a project under Cadence, going to the recommendation instead of refusing) is the hand-written assistant line in history.jsonl (lines 95-97). No plan in phase 6 runs a no-brief dump live on the Cadence fixture: Plan 4 runs it only with a brief already seeded. So success criterion 1's 'starting a walk ... instead of refusing' and the D-10 statement have no live proof.",
+      "failure_scenario": "Say SKILL.md drops or garbles Task 1's paragraph. Or say the model, on a fresh `/seldon <repair-log dump>` with .planning/PROJECT.md and ROADMAP.md seeded, Globs or Reads them and tells the user to run /cad-phase instead of recommending a path. Either way the cadence-project case still scores 1.00, because the recommendation turn comes from the replayed history and the live turn starts at 'Path chosen'. Task 1's Verify (greps, skill.test, validate) passes as well, so the behavior FLOW-05 claims can be missing while every check in the plan passes.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-3.md",
+      "line": 101,
+      "severity": "medium",
+      "claim": "Task 3's §2 rule ('more than one design and an empty `$ARGUMENTS`: write nothing and ask the which-design question') has no exemption for a design the user just chose. The step routes on line 102 get one ('unless the user just chose a design at it for this run'), but this rule does not. 'Design chosen' on line 108 sends a bare run back to 'Where a run starts' with `$ARGUMENTS` counted empty, so if the executor writes this rule as worded, the run asks the which-design question again and never gets back to the run that asked.",
+      "failure_scenario": "There is a top-level design plus `.planning/seldon/sowlist/`. A bare `/seldon` asks which design, and the user replies `/seldon sowlist`. 'Design chosen' goes to 'Where a run starts' with empty `$ARGUMENTS`. §2 still counts two designs with empty `$ARGUMENTS`, so it asks the which-design question again instead of saying the PRD resume line for `.planning/seldon/sowlist/brief.md`. That breaks must-be-true #4 ('the answer routes back to the run that asked') and AC3's second half, the case Plan 5's which-design-answer covers. Task 3's Verify is greps for the question, the bullet and the phrase count, so it passes while the loop is there. Task 1 line 53 leaves 'more than one design' to Task 3, and Task 3 never says how §2 settles the working folder after a choice.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-3",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-3.md",
+      "line": 76,
+      "severity": "low",
+      "claim": "With more than one design, the dump turn sends a rerun through `/seldon brief`, and that route loses the dump. The one-design path applies the dump as the rerun's change (§1 'After the documents question' and 'Rerun the brief'). On this path the user's last turn ended on the which-design question, so the brief route falls through to 'Otherwise, reopen it' and asks what should change. That works against phase 3 D-02, which offers to 'rerun the brief with this dump'.",
+      "failure_scenario": "There are two designs. The user runs `/seldon <new text X>`, and the turn ends on the name line after the sentence saying `/seldon brief` reruns one design's brief. The user replies `/seldon brief`. The `brief` route asks which design, and the user picks the top-level one. 'Design chosen' then takes the `brief` route. The check 'your last turn ended on the documents question' is false, so the route reopens the brief and asks what should change. X is never applied, and the user has to give it again. With one design, the same reply applies X in the same turn. No task carries the dump through the which-design stop.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-4",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-4.md",
+      "line": 54,
+      "severity": "medium",
+      "claim": "The plan lets a failing run edit skills/seldon/SKILL.md mid-plan (line 54), but nothing reruns the cases already passed or redoes the loader-size check after such an edit. Task 1's three 1.00 results and the whole-skill check (Verify 4-6, lines 78-80) can therefore stand as 'done' against a SKILL.md that has since changed.",
+      "failure_scenario": "Task 1 passes new-design-name and existing-brief, and shows the loaded skill is whole. Task 2's new-design-brief then writes to the top-level folder. This is plausible because, with only the top-level brief on disk, Plan 3's rule 'with one design it's that design's folder' competes with 'a step under way keeps the working folder'. The executor tightens the working-folder or name-line text in SKILL.md, and new-design-brief passes on retry. No Verify reruns new-design-name or existing-brief, or checks the new size. If the fix moved or reworded the name line, or changed how the one-design dump turn ends, asks-for-name or asks-rerun-or-go-on now fails. Plan 4 still reports its Must-be-true lines 34, 36 and 37 as met, and the break only shows up in the later full-suite run, if that run happens at all.",
+      "ruling": "downgraded",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-5",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-5.md",
+      "line": 75,
+      "severity": "low",
+      "claim": "Must-be-true #1 and #3 (which-design at 1.00, resume at 1.00) are checked only in Task 1, but line 50 lets Task 2 edit SKILL.md if its run fails on the skill text. Nothing reruns `which-design` or `resume` after such an edit, so both claims can hold only for a SKILL.md that no longer exists when the plan finishes.",
+      "failure_scenario": "Plan 3 Task 3 puts the 'unless the user just chose a design' exception only in §1's step routes. Its §2 bullet ('more than one design and an empty $ARGUMENTS: ask the which-design question') has no exception, yet 'Design chosen' sends a bare /seldon back to §2 with $ARGUMENTS counted empty. which-design-answer can therefore re-ask, and the likely fix is an edit to §2, the section that holds resume's PRD resume line. Task 1 has already recorded resume and which-design at 1.00 against the old text, Task 2 passes after the edit, and the plan reports all its truths as met. A regression in resume or which-design then shows up only in Plan 8's full run, which leases only README.md and has to stop at a checkpoint instead of fixing it.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-6",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-6.md",
+      "line": 45,
+      "severity": "medium",
+      "claim": "Task 1 widens the spine's inputs only in §15's opening paragraph and in §16's \"The spine rerun\" list. Two other places in SKILL.md still say the spine is built from the brief and the PRD alone, and no task in this plan changes them: the `spine` route in §1 (SKILL.md lines 70-71, \"built from `.planning/seldon/brief.md` and `.planning/seldon/prd.md` alone, as \\\"The spine step\\\" says\") and the `<objective>` (lines 18-20, \"from the brief and the PRD alone\").",
+      "failure_scenario": "Both of Plan 7's cases start with `/seldon spine` on a project under Cadence, so the run goes through the §1 `spine` route. After this plan, that route still says to build the spine from the two files alone, while §15 says to read the code too. A run that follows the route reads only brief.md and prd.md, quotes no line of src/tools.mjs, and records no convention, so ARCH-03 and AC4 fail. If Plan 7's run still passes, it passes despite a contradiction this plan left in the file, and Plan 7 edits SKILL.md only when a run fails.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-6",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-6.md",
+      "line": 105,
+      "severity": "low",
+      "claim": "Task 5 adds the always-ask exception only to §15's \"On a rerun\" paragraph. §16's \"The spine rerun\" paragraph (SKILL.md lines 841-843) still says every decision in the spine counts as answered, \"so the rerun asks only about what it doesn't decide yet\". Task 1 edits that same paragraph but only its \"nothing else\" list, so the opposite rule stays there.",
+      "failure_scenario": "On a project under Cadence, take a spine.md that already records an earlier who-relies answer under a decision, and run `/seldon spine` again. §16 says the rerun asks only about what the spine doesn't decide yet, and the who-relies answer is already decided, so the model can draft with Edit in the same turn and never ask. That breaks D-09's \"always asks\", must-be-true #4 (\"always ends its first turn on the who-relies question\"), and the plan's own note \"A rerun asks again\". No Verify or Plan 7 case covers a rerun under Cadence.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-6",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-6.md",
+      "line": 117,
+      "severity": "medium",
+      "claim": "Task 5 asks the who-relies question on every project under Cadence, but it gives a rule for recording the answer only when the spine holds a decision for the part the answer names. The closing rule it keeps forbids both a new-kind decision and a decision that holds only the answer. The plan's Notes admit that an answer naming a part D-12 keeps out of the spine, or an answer that nothing relies on the project, has nowhere to go, and leave that open with no instruction in SKILL.md.",
+      "failure_scenario": "On a project under Cadence the user answers \"nobody outside relies on it, just me\". Or they answer \"the mobile app calls the /api/catalog endpoint\" while this body of work doesn't touch the catalog, so D-12 left the catalog out of the spine. D-09 says to record the answer under the decision for the part it names, but no such decision exists, and the closing rule forbids making one that holds only the answer. The model has to break one of the two rules: drop the answer, which breaks D-09's \"each answer is recorded\", or invent a decision that holds only the answer. Which one happens is undefined. This can happen on any run under Cadence, since the question is always asked.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-7",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-7.md",
+      "line": 60,
+      "severity": "low",
+      "claim": "The plan lets SKILL.md be edited to fix a failing spine-conventions run in Task 3, but every check that depends on SKILL.md runs only in Tasks 1 and 2 and none is run again after such an edit. Those checks are the spine-who-relies and spine-from-prd runs, the loaded-size check that Task 2 Verify (5) says is taken 'at SKILL.md's final size for the phase', `node --test tests/*.test.mjs` and `claude plugin validate --strict .`. So the Must-be-true bullets for those cases, the whole-skill load, the unit suite and the validator can all be stale when the plan reports done.",
+      "failure_scenario": "Task 3's first spine-conventions run fails because of the skill's text, for example on the code-quote form or on where the who-relies answer is recorded. The executor edits the spine step or the spine draft in SKILL.md to fix it, and spine-conventions then scores 1.00. Task 3 Verify (1)-(4) all pass, because they cover only scaffold.test.mjs, the token grep, the D-21 checks and the one spine-conventions run. If the edit breaks the who-relies question's fixed line, the one-turn draft for a project not under Cadence, the pinned allowed-tools or the loader's size limit, Plan 7 still finishes green. The regression first shows up in Plan 8's full suite. Plan 8 leases only README.md and declares any failing case a checkpoint, not a fix, so the fix has no lease left to land in.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-8",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-8.md",
+      "line": 39,
+      "severity": "medium",
+      "claim": "Plan 8 runs the full suite on the approval Plan 2 records, but Plan 2 asks the owner to approve runs 'one case at a time: `claude plugin eval . --case <name> ...`' (PLAN-2.md line 41), so the README's unscoped 39-case run falls outside the approved terms that Plan 8's own 'Anything off these terms is a checkpoint marked SECURITY' points to.",
+      "failure_scenario": "Plan 2's report records the owner's go for phase 6 runs on its one-case-at-a-time terms. Plan 8 Task 2 Verify (2) then runs `claude plugin eval . ... --keep-temp --allow-tools ...` with no `--case`, which runs all 39 cases in a single unscoped run the owner never approved. Under its own SECURITY rule the executor either runs it anyway, which is an unapproved run, or stops at an unplanned SECURITY checkpoint. Phase 5 set the precedent: its full run needed a separate decision checkpoint (phase 5 records/reports/plan-7.md: 'Run on the continuation after the owner's delegate approved it'). Plan 8 never names that step and instead treats Plan 2's per-case approval as enough.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "89b0c1befb9df5df3365ba8b55c15a50e4a03696",
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-8",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-8.md",
+      "line": 73,
+      "severity": "medium",
+      "claim": "Task 1's Verify greps only for `PROJECT.md`, the name characters, 'which design', 'who relies on what' and `.planning/seldon/<name>/`. Two README statements the plan's must-be-true list requires have no check: that Cadence's files are never written and never read for the brief or the PRD (D-11), and that the spine reads the code and records conventions quoted with their file without asking about a stack the code already settles (D-06, D-07, D-13).",
+      "failure_scenario": "An executor adds 'On a project with `.planning/PROJECT.md` ... reply with a short name in lowercase letters, digits and hyphens ... asks which design ... asks who relies on what today' to Using it and puts `.planning/seldon/<name>/` anywhere in the README, even outside 'What it writes'. The draft leaves out the never-write/never-read sentence and the code-conventions sentence. All of Verify (1) to (3) pass, so the plan reports done while two must-be-true bullets (PLAN-8.md lines 26 and 29) are missing from the README.",
+      "ruling": "refuted",
+      "convergent": false,
+      "counter_evidence": {
+        "file": "/code/seldon/.planning/phases/6/PLAN-8.md",
+        "line": 72,
+        "note": "Lines 58-59 and 65-69 deliver both statements in Task 1's Action, and line 72 makes greps that fail today the declared completion rule. The gap the finding names is a missing check, not an uncovered requirement."
+      },
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    },
+    {
+      "voice": "claude-subagent-plan-8",
+      "model": "claude-opus-5-5",
+      "file": ".planning/phases/6/PLAN-8.md",
+      "line": 79,
+      "severity": "low",
+      "claim": "Locked D-14 keeps the paragraph on the grant and the seeds unchanged, but the only guard in either task checks that `git diff` drops no line starting `claude plugin eval`. Nothing checks the grant paragraph (README.md line 65).",
+      "failure_scenario": "While adding the seven case lines, Task 2 rewords README.md line 65, for example by widening 'every line must be `mkdir -p` or `cp [-R]`' or editing the 'whole grant' sentence. Task 1 Verify (3) and Task 2 Verify (1) to (6) all still pass because the command line is intact, so the change to the locked paragraph goes through undetected.",
+      "ruling": "refuted",
+      "convergent": false,
+      "counter_evidence": {
+        "file": "/code/seldon/.planning/phases/6/PLAN-8.md",
+        "line": 88,
+        "note": "Task 2's Action keeps the grant paragraph unchanged, as does line 70 for Task 1, so the locked decision has a task that honors it. The finding names only a missing guard."
+      },
+      "citation_missing": true,
+      "base_id": "0f189a99d56a7c1ae618e8121634e20202296088",
+      "head_id": "0f189a99d56a7c1ae618e8121634e20202296088"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: prd-no-stakes
+description: A bare /seldon in a fresh session where a confirmed brief sits at .planning/seldon/brief.md that never says how many people depend on the project or what breaks if it's wrong, so Seldon has to write a .planning/seldon/prd.md whose MVP scope carries one line, tagged [ASSUMPTION], saying what size it drafted the PRD for.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

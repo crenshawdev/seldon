@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: stale-spine
+description: Resumes a /seldon session where /seldon prd brought the Toolshed PRD in line with a brief that dropped reminders, retired LOAN-03, and was confirmed with the /clear words. The brief and PRD at .planning/seldon/ are copied from samples/spine-rerun/, next to samples/spine.md and samples/epics.md, which were built before the change, so the spine is stale. A bare /seldon has to say the spine stale line before it edits spine.md, retire S-03 on a Retired line, stamp spine.md with the current PRD's hash, repeat the spine check's pass line, end on the spine confirm question, and never write or edit epics.md.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

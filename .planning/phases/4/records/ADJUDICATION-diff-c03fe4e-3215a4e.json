@@ -1,0 +1,53 @@
+{
+  "phase": "4",
+  "trigger": "diff",
+  "discriminator": "c03fe4e-3215a4e",
+  "round": 1,
+  "base": "c03fe4e",
+  "head": "3215a4e",
+  "base_id": "c03fe4e635ea14d4df087dfc4327930846d0615f",
+  "head_id": "3215a4e80ce9cc98216040237df4afc16940a9ac",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 55,
+      "severity": "low",
+      "claim": "The `architecture` route checks only that spine.md exists, then sends the run to §18, which reads brief.md and prd.md as required input. Nothing says what happens when either of those files is missing. The `spine` route next to it does guard its inputs: line 67 checks 'No PRD there' before it even looks at spine.md.",
+      "failure_scenario": "Start with .planning/seldon/ holding spine.md and brief.md but no prd.md, for example after the user deleted or moved the PRD by hand. The skill already treats hand-edited files as a real case (lines 514-516). Run `/seldon architecture`. The route finds the spine and goes to §18. Read of prd.md errors, and §18 gives no instruction for that. The model then either writes architecture.md anyway, explaining 'what in the brief and the PRD leads to it' with no PRD to draw on, or stops to ask. Asking would be a stop point with no §1 route, and the plan's stop-point audit says this route has none. The same happens when brief.md is missing. The no-spine case is the only missing input the diff handles.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "f4394ed",
+      "base_id": "c03fe4e635ea14d4df087dfc4327930846d0615f",
+      "head_id": "3215a4e80ce9cc98216040237df4afc16940a9ac"
+    },
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 950,
+      "severity": "low",
+      "claim": "§18 states that architecture.md cites only S- IDs that are decisions in spine.md and names every one. That only holds at the moment the file is written. The routes that change spine.md afterwards (the spine rerun at lines 808-838 and 'Names changes' at the spine confirm) never mention an architecture.md that's already there. So the stale file becomes the 'second, unlocked source a planner could follow against the spine' that lines 952-954 warn about.",
+      "failure_scenario": "The user runs `/seldon architecture`, which writes architecture.md expanding S-01 to S-06. They then run `/seldon spine`, and the rerun retires S-03 and adds S-07. spine.md now says `Retired: S-03` and has an S-07, while architecture.md still expands S-03 and has nothing for S-07. Nothing tells the user the document is out of date. The rerun's confirm question only says `/seldon architecture` 'can write the full architecture document if you want one', which reads as an offer, not a warning that the existing file is stale. A reader of architecture.md now follows a retired decision and misses a live one.",
+      "ruling": "refuted",
+      "convergent": false,
+      "counter_evidence": {
+        "file": "skills/seldon/SKILL.md",
+        "line": 963,
+        "note": "A second request replaces architecture.md whole from the current spine. Lines 478-479 show the established pattern that reruns leave downstream documents stale. REQUIREMENTS.md line 74 accepts that the full document goes stale."
+      },
+      "base_id": "c03fe4e635ea14d4df087dfc4327930846d0615f",
+      "head_id": "3215a4e80ce9cc98216040237df4afc16940a9ac"
+    }
+  ]
+}

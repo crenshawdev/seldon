@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: spine-from-prd
+description: A bare /seldon in a fresh session where .planning/seldon/ holds a confirmed brief and PRD for a one-person project with no unattended work and no outside input, and no spine. Seldon has to say the spine resume line before reading either file, write a .planning/seldon/spine.md that passes the spine check with one Kind line and a quote or tag on every decision, and write or edit no other file in .planning/seldon/.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

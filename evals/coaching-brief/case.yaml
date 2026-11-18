@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: coaching-brief
+description: Resumes a /seldon coaching walk at its last question, so the last answer has to write a brief that quotes the user's answers and passes the brief-only check.
+runs: 1
+context:
+  history_file: history.jsonl
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

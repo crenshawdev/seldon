@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: brief-rerun-dump
+description: A /seldon brief typed as the reply to the documents question, in a conversation where the user just gave a new Toolshed dump that opens the counter to the woodshop class at Alder Street School while samples/brief.md sits at .planning/seldon/brief.md. Seldon has to take that dump as the change and put its new words on a quoted line in brief.md in this same turn, without asking what should change.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

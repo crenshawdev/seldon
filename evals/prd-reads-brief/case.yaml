@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: prd-reads-brief
+description: A /seldon prd in a conversation that already holds the whole Kilnshare brief step, ending on the /clear words with no /clear run, where the user's dump kept fired pieces on the pickup shelf for 12 days and the brief at .planning/seldon/brief.md, edited by hand since, says 10 days. Seldon has to write a .planning/seldon/prd.md that carries the brief's 10 days and leaves the conversation's 12 out, because the PRD step reads the brief file and never the earlier talk.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

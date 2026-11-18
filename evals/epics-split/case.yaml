@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: epics-split
+description: A /seldon epics in a fresh session where .planning/seldon/ holds a confirmed brief, PRD and spine copied from samples/epics-split/, and no epics. The PRD's one category, Lettings, has eight requirements, PLOT-01 to PLOT-03 on the public waiting-list side of the spine's S-02 boundary and PLOT-04 to PLOT-08 on the committee side, so splitting by count or into halves crosses it. Seldon has to write a .planning/seldon/epics.md that splits Lettings along S-02 into at least two epics, never puts IDs from both sides on one epic, keeps every epic to at most five requirement IDs and five done-when items, and cites S-02 on every epic carrying a PLOT ID.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

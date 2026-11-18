@@ -2,68 +2,432 @@
   "layout": 1,
   "cycleOpen": true,
   "cursor": {
-    "phase": 1,
-    "status": "ready to plan",
-    "next": "/cad-context 1",
-    "updated": "2026-11-17"
+    "phase": 9,
+    "status": "phase complete",
+    "next": "/cad-milestone",
+    "updated": "2026-11-18"
   },
   "phases": [
     {
       "n": 1,
       "name": "The document format and eval harness",
       "description": "Fix the .planning/seldon/ format with sample files, make the plugin install, and run the eval harness locally",
-      "status": "unplanned",
-      "plans": []
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 2,
       "name": "The brief",
       "description": "/seldon takes the user's dump, confirms fast path or coaching, and writes the brief",
-      "status": "unplanned",
-      "plans": []
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 3,
       "name": "The PRD, resume and rerun",
       "description": "The PRD builds from the brief alone, the walk survives a /clear, and any step can be rerun",
-      "status": "unplanned",
-      "plans": []
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 4,
       "name": "The architecture spine",
       "description": "Record only the decisions that would clash if built separately, each with a stable ID",
-      "status": "unplanned",
-      "plans": []
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-7.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 5,
       "name": "Epics and the full walk",
       "description": "Small epics in build order, and /seldon walks all four steps end to end",
-      "status": "unplanned",
-      "plans": []
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-7.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 6,
-      "name": "Existing projects and PRD changes",
-      "description": "Design the next body of work under Cadence, and carry PRD changes through spine and epics",
-      "status": "unplanned",
-      "plans": []
+      "name": "Existing projects and design folders",
+      "description": "Design the next body of work under Cadence in its own folder, with the spine reading the existing code",
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-7.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-8.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 7,
-      "name": "Readiness check and handoff",
-      "description": "An independent check before the handoff, then the exact Cadence command to run",
-      "status": "unplanned",
-      "plans": []
+      "name": "PRD changes flow downstream",
+      "description": "Show what a PRD change conflicts with, and walk the documents built from a changed one again",
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-7.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-8.md",
+          "finished": true
+        }
+      ]
     },
     {
       "n": 8,
+      "name": "Readiness check and handoff",
+      "description": "An independent check before the handoff, then the exact Cadence command to run",
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-5.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-6.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-7.md",
+          "finished": true
+        }
+      ]
+    },
+    {
+      "n": 9,
       "name": "The full graders",
-      "description": "The full graders check every run, and /cad-verify runs the whole eval suite locally",
-      "status": "unplanned",
-      "plans": []
+      "description": "The full graders check every run that writes what they grade, and a unit test proves the suite command covers every case",
+      "status": "complete",
+      "plans": [
+        {
+          "file": "PLAN-1.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-2.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-3.md",
+          "finished": true
+        },
+        {
+          "file": "PLAN-4.md",
+          "finished": true
+        }
+      ]
     }
   ],
-  "requirements": []
+  "requirements": [
+    {
+      "id": "DOCS-04",
+      "phase": 1,
+      "status": "Complete"
+    },
+    {
+      "id": "EVAL-01",
+      "phase": 1,
+      "status": "Complete"
+    },
+    {
+      "id": "EVAL-03",
+      "phase": 1,
+      "status": "Complete"
+    },
+    {
+      "id": "REL-01",
+      "phase": 1,
+      "status": "Complete"
+    },
+    {
+      "id": "DOCS-01",
+      "phase": 2,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-06",
+      "phase": 2,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-07",
+      "phase": 2,
+      "status": "Complete"
+    },
+    {
+      "id": "DOCS-03",
+      "phase": 2,
+      "status": "Complete"
+    },
+    {
+      "id": "DOCS-02",
+      "phase": 3,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-02",
+      "phase": 3,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-04",
+      "phase": 3,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-03",
+      "phase": 5,
+      "status": "Complete"
+    },
+    {
+      "id": "ARCH-01",
+      "phase": 4,
+      "status": "Complete"
+    },
+    {
+      "id": "ARCH-04",
+      "phase": 4,
+      "status": "Complete"
+    },
+    {
+      "id": "ARCH-02",
+      "phase": 4,
+      "status": "Complete"
+    },
+    {
+      "id": "EPIC-01",
+      "phase": 5,
+      "status": "Complete"
+    },
+    {
+      "id": "EPIC-02",
+      "phase": 5,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-01",
+      "phase": 5,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-05",
+      "phase": 6,
+      "status": "Complete"
+    },
+    {
+      "id": "ARCH-03",
+      "phase": 6,
+      "status": "Complete"
+    },
+    {
+      "id": "CHECK-03",
+      "phase": 7,
+      "status": "Complete"
+    },
+    {
+      "id": "CHECK-04",
+      "phase": 7,
+      "status": "Complete"
+    },
+    {
+      "id": "CHECK-01",
+      "phase": 8,
+      "status": "Complete"
+    },
+    {
+      "id": "CHECK-02",
+      "phase": 8,
+      "status": "Complete"
+    },
+    {
+      "id": "FLOW-08",
+      "phase": 8,
+      "status": "Complete"
+    },
+    {
+      "id": "EVAL-02",
+      "phase": 9,
+      "status": "Complete"
+    },
+    {
+      "id": "EVAL-04",
+      "phase": 9,
+      "status": "Complete"
+    }
+  ]
 }

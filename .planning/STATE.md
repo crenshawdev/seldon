@@ -1,6 +1,6 @@
 # State
 
-Phase: 1 of 8 (The document format and eval harness)
-Status: ready to plan
-Next: /cad-context 1
-Updated: 2026-11-17
+Phase: 9 of 9 (The full graders)
+Status: phase complete
+Next: /cad-milestone
+Updated: 2026-11-18

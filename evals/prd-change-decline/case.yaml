@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: prd-change-decline
+description: Resumes a /seldon session where the user answered the PRD confirm question with a change dropping the email reminders, and Seldon stopped on the conflict question after naming S-03, which quotes the line LOAN-03 quotes. The brief, PRD and spine at .planning/seldon/ are copied from samples/brief.md, samples/prd.md and samples/spine.md. The user declines in plain words. The change came from the conversation, not the brief, so Seldon has to write and edit nothing and end on the nothing-changed line without naming /seldon brief.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]

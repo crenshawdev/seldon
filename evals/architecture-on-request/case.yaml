@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: architecture-on-request
+description: A /seldon architecture in a fresh session where a confirmed brief, its PRD and its spine are already at .planning/seldon/, seeded from samples/brief.md, samples/prd.md and samples/spine.md, so Seldon has to write the full architecture document at .planning/seldon/architecture.md, expanding on the spine's decisions by their S- IDs without adding any of its own.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

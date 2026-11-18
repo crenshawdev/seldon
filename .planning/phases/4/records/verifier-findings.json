@@ -1,0 +1,105 @@
+{
+  "status": "delivered",
+  "score": "12/12",
+  "truths": [
+    {
+      "n": 1,
+      "truth": "A bare /seldon over a confirmed brief and PRD (brief states stack and hosting, no unattended work, no outside input) names prd.md first, writes .planning/seldon/spine.md, repeats the --spine pass line, and every decision has an S-NN heading, one Kind: line naming one of the six kinds, and a > quote or [ASSUMPTION] tag",
+      "status": "VERIFIED",
+      "uat_item": 1,
+      "evidence": "evals/results/2026-11-17T19-13-10-936Z/aggregate-result.json: spine-from-prd score 1, 8/8 graders pass (names-prd-first, writes-spine, runs-check, check-passes, every-decision-has-kind, every-decision-quoted-or-tagged, no-write-but-spine, no-edit-but-spine). Fixture samples/spine-from-prd/brief.md quotes 'built with Rails and SQLite' and 'run on the old laptop in the studio', one user, no job. The two file graders discriminate: run against samples/spine.md they pass, and they fail when a Kind line is removed, when a kind is 'security', when a tag or a quote is removed (scratchpad graders.mjs, 7/7 as expected). lib/check.mjs:109-146 rejects any ## heading that is not S-NN and any Kind outside KINDS (line 14), and SKILL.md:222-232 and 908-913 wire the resume line and the --spine run."
+    },
+    {
+      "n": 2,
+      "truth": "A replayed design with a scheduled job gets the fixed unattended-work and failure questions and writes nothing that turn; a replayed design with no unattended work gets neither",
+      "status": "VERIFIED",
+      "uat_item": 2,
+      "evidence": "aggregate-result.json: spine-job score 1 with asks-unattended, asks-failure, no-write, no-edit passing; spine-outside-input score 1 with no-unattended-question and no-failure-question (not_contains on the fixed lines, as AC2 specifies) passing. Both cases replay history.jsonl ending on the PRD's /clear words (evals/spine-job/history.jsonl tail). Fixed lines live at SKILL.md:776-782; the Sowlist brief describes a morning job, the Quaylost brief none."
+    },
+    {
+      "n": 3,
+      "truth": "A replayed design that takes outside input gets the fixed trust-boundary question; one whose only input is the operator's own data does not",
+      "status": "VERIFIED",
+      "uat_item": 3,
+      "evidence": "aggregate-result.json: spine-outside-input asks-trust passes (fixed line SKILL.md:770 on a line of its own); spine-job no-trust-question passes (not_contains, flags i). Fixtures: samples/spine-outside-input/brief.md takes passenger reports from the public; samples/spine-job/brief.md reads only 'one planting file she keeps herself', which SKILL.md:759-762 names as not outside input."
+    },
+    {
+      "n": 4,
+      "truth": "Answering the spine-job questions writes a spine.md that passes --spine, with both answers quoted on > lines inside the job's own S- decision, who is told when it breaks and how included",
+      "status": "VERIFIED",
+      "uat_item": 4,
+      "evidence": "aggregate-result.json: spine-answers score 1, carries-answer, check-passes, writes-spine pass. evals/spine-answers/history.jsonl ends on the assistant asking both fixed questions; prompt answers 'text my phone so I know to check the file myself'. Routed by SKILL.md:148-153 (Spine questions answered) into SKILL.md:878-889. carries-answer discriminates: it passes answers in the job's decision and fails answers in a decision holding only them, and fails with the failure answer missing (graders.mjs, 3/3). The fixed-word-list limit is the SUMMARY's own open item."
+    },
+    {
+      "n": 5,
+      "truth": "No full architecture document is written unless asked; /seldon architecture over a confirmed spine writes .planning/seldon/architecture.md",
+      "status": "VERIFIED",
+      "uat_item": 5,
+      "evidence": "aggregate-result.json: spine-from-prd no-write-but-spine and no-edit-but-spine pass (no Write or Edit to any .planning/seldon/ path but spine.md), resume-later and epics-later no-write and no-edit pass, architecture-on-request writes-architecture passes and its seed.sh copies only brief.md, prd.md and spine.md. Wired by SKILL.md:55-65 and section 18 (934-972). Note: the case's only grader is file_exists, as CONTEXT D-15 fixed. The SUMMARY goal check's 'with every spine ID and the spine byte-identical' rests on plan 6's one-off Verify (5) audit of a run whose trace was removed (records/reports/plan-6.md:11), not on a grader, so the eval suite does not re-prove it. AC5 and ROADMAP criterion 4 don't require it."
+    },
+    {
+      "n": 6,
+      "truth": "/seldon spine over an existing spine with a changed PRD keeps every untouched decision byte-identical, lists the dropped S- ID on a Retired: line under the title, and never reuses it",
+      "status": "VERIFIED",
+      "uat_item": 6,
+      "evidence": "aggregate-result.json: spine-rerun score 1, keeps-untouched-decisions, retires-dropped-id, no-reused-id pass. Fixture: samples/spine-rerun/prd.md retires LOAN-03 (reminders), the basis of samples/spine.md S-03. The graders discriminate: they pass a correct rerun (S-03 removed, 'Retired: S-03' under the title), and they fail when S-04 is reworded, when S-06 is dropped, when there's no Retired line, when the Retired line sits below a decision, and when S-03 is brought back (graders.mjs, 8/8). Rerun rules are at SKILL.md:811-841, and the Retired line is in docs/FORMAT.md:201-209."
+    },
+    {
+      "n": 7,
+      "truth": "node lib/check.mjs --spine exits 0 on samples with the pass line, and exits 1 naming the decision and problem for a missing Kind line, a kind outside the six, or an empty body",
+      "status": "VERIFIED",
+      "uat_item": 7,
+      "evidence": "Spot-check: `node lib/check.mjs --spine samples` printed 'seldon check: spine.md conforms', exit 0; the full check on samples printed 'seldon check: all four documents conform', exit 0. On scratch copies: no Kind gives 'spine.md: S-01: Kind: missing line' exit 1; Kind: security gives 'spine.md: S-04: Kind: \"security\" is not one of the six kinds' exit 1; an emptied S-05 gives 'spine.md: S-05: decision: empty section' exit 1. The named tests in tests/check.test.mjs:265-301 pass in the full-suite run."
+    },
+    {
+      "n": 8,
+      "truth": "SKILL.md allowed-tools is still phase 2 D-02's five entries, per the pinned test",
+      "status": "VERIFIED",
+      "uat_item": 8,
+      "evidence": "skills/seldon/SKILL.md:5-10 lists Read, Glob, Grep, Edit(.planning/seldon/**), Bash(node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs:*). tests/skill.test.mjs:45 'allowed-tools grants exactly D-02's five entries' passes in the suite run (also 'every check command in the body starts with the Bash rule's command')."
+    },
+    {
+      "n": 9,
+      "truth": "resume-later (brief, PRD and spine seeded) and epics-later (/seldon epics) both end on the epics-only later-release line and write nothing",
+      "status": "VERIFIED",
+      "uat_item": 9,
+      "evidence": "aggregate-result.json: resume-later and epics-later each score 1 with says-later-release, no-write, no-edit passing. Both seed.sh files copy samples/brief.md, prd.md and spine.md. The grader matches 'The epics step comes in a later release, so I.ve written nothing this time.' at the end of the last message, the line at SKILL.md:237-238, routed by SKILL.md:77-79 and 233-238."
+    },
+    {
+      "n": 10,
+      "truth": "The old line 'The spine and epics steps come in a later release' is gone from skills/, docs/, README.md and evals/",
+      "status": "VERIFIED",
+      "uat_item": 10,
+      "evidence": "`git grep -n 'The spine and epics steps come in a later release'` over the tracked tree minus .planning: no hits (exit 1). `grep -rn` on skills/ docs/ README.md evals/ excluding evals/results: no hits (exit 1). evals/spine-later/ no longer exists. A literal recursive grep of evals/ does hit 3 gitignored result files from runs before phase 4 (evals/results/2026-11-17T15-45-51-263Z, 16-10-17-214Z, 16-34-47-415Z). They're local run output, not repository content."
+    },
+    {
+      "n": 11,
+      "truth": "The full eval suite passes with the README's command, every phase 1 to 4 case included, spine-later replaced by epics-later and resume-later rewritten",
+      "status": "VERIFIED",
+      "uat_item": 11,
+      "evidence": "evals/results/2026-11-17T19-13-10-936Z/aggregate-result.json: partial false, threshold 1, ablation none, 26 cases, 0 with score below 1, a failed arm or an error. The case list equals the 26 folders under evals/. The run started 14:13:10 EST, after f4394ed (14:03:55, the last commit outside README and .planning). `git diff --stat eebedae HEAD` outside .planning shows only README.md, and no tracked file outside .planning changed after the run started. Not re-run, per the owner's cost constraint. plan-7.md:8 records the command as the README's plus --keep-temp."
+    },
+    {
+      "n": 12,
+      "truth": "The test suite passes, and the coverage gate's saved output on the current lib/ and tests/ meets its thresholds and guards (local evidence only; UAT items 12 and 13 are CI-job criteria left to the walk's ci-status)",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "`node --test tests/*.test.mjs` on Node v26.13.1 gave tests 71, pass 71, fail 0, exit 0. This was the one full-suite run. lcov.info was written at 14:19:56 EST by plan 7's coverage-command run after 3586d1d, and lib/check.mjs is unchanged since 12:32. It shows lines 258/260 = 99.23% and branches 100/103 = 97.09% against 85/85, and both guards pass (LF nonzero, no LH:0). Items 12 and 13 are not recorded here: cadence/v0.1.0 is 17 commits ahead of origin (origin at 72661b0) by the local tracking ref, so as far as this checkout knows CI has not run on 4e1bcee. They belong to pending_ci."
+    }
+  ],
+  "passes": [
+    { "k": 1, "name": "Spine written from a confirmed PRD", "evidence": "spine-from-prd scores 1 with 8/8 graders in the 19:13:10Z full run. The Kind and quote-or-tag graders were checked to fail on broken spines, and lib/check.mjs:109-146 enforces S-NN headings and the six kinds." },
+    { "k": 2, "name": "Unattended work gets the run-time and failure questions", "evidence": "spine-job: asks-unattended, asks-failure, no-write, no-edit pass. spine-outside-input: no-unattended-question and no-failure-question pass. Both cases are history replays." },
+    { "k": 3, "name": "Outside input gets the trust-boundary question", "evidence": "spine-outside-input asks-trust passes, and spine-job no-trust-question passes. The fixtures differ as AC3 requires: the public sends reports in one, and the other reads only the owner's own planting file." },
+    { "k": 4, "name": "Spine answers land in the job's own decision", "evidence": "spine-answers: carries-answer, check-passes, writes-spine pass. carries-answer passes answers in the job's decision and fails answers in a decision holding only them." },
+    { "k": 5, "name": "Full architecture document only on request", "evidence": "spine-from-prd no-write-but-spine and no-edit-but-spine pass. architecture-on-request writes-architecture passes, and its seed copies no architecture.md." },
+    { "k": 6, "name": "Spine rerun keeps IDs and retires the dropped one", "evidence": "spine-rerun: keeps-untouched-decisions, retires-dropped-id, no-reused-id pass. All three were checked to fail on a reworded or dropped decision, a missing or misplaced Retired line, and a reused S-03." },
+    { "k": 7, "name": "--spine check mode", "evidence": "`node lib/check.mjs --spine samples` prints 'seldon check: spine.md conforms', exit 0. The no-Kind, bad-kind and empty-body copies each exit 1, naming S-01, S-04 and S-05 and the problem." },
+    { "k": 8, "name": "allowed-tools unchanged", "evidence": "SKILL.md:5-10 holds the five D-02 entries, and tests/skill.test.mjs 'allowed-tools grants exactly D-02's five entries' passes." },
+    { "k": 9, "name": "Later-release lines name only epics", "evidence": "resume-later and epics-later each score 1, with says-later-release matching 'The epics step comes in a later release, so I've written nothing this time.' and no Write or Edit." },
+    { "k": 10, "name": "Old later-release line is gone", "evidence": "git grep over the tracked tree finds 0 hits, and grep of skills/ docs/ README.md evals/ outside the gitignored evals/results finds 0 hits." },
+    { "k": 11, "name": "Full eval suite passes", "evidence": "aggregate-result.json at 2026-11-17T19-13-10-936Z: 26/26 cases at 1.00, partial false, and the case list equals the evals/ folders. Only README.md changed outside .planning since the run started." }
+  ],
+  "gaps": [],
+  "human_checks": []
+}

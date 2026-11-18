@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: spine-outside-input
+description: Resumes a /seldon session that confirmed the Quaylost PRD and ended on the /clear words, with a confirmed brief and PRD in .planning/seldon/ whose design takes lost-item reports from passengers and runs nothing with nobody there, and no spine. A bare /seldon has to reach the spine step and ask the fixed trust-boundary question, neither the unattended-work nor the failure question, and write and edit nothing in that turn.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: epics-no-spine
+description: A /seldon epics in a fresh session where .planning/seldon/ holds the brief and PRD from samples/brief.md and samples/prd.md and no spine, so the epics step has nothing to build from. Seldon has to write and edit nothing and point to /seldon spine to build the spine first.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]

@@ -1,0 +1,47 @@
+{
+  "phase": "2",
+  "trigger": "diff",
+  "discriminator": "0071fba-e645d61",
+  "round": 1,
+  "base": "0071fba",
+  "head": "e645d61",
+  "base_id": "0071fbad4f66bd61b1ef12b846b3f9d01c1e4f71",
+  "head_id": "e645d6102bf23a41bee78bf2df8587bc6e715be0",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 161,
+      "severity": "medium",
+      "claim": "Nothing tells Seldon what to do when the user's reply leaves the refusal unsettled. The fast-path text says 'anything still thin gets a tag', which tells it to guess a refusal. The rules that no section may be empty (line 230 area) and that the check loop must run 'until it passes' (line 246) leave inventing one as the only way out. That contradicts D-01 and D-17's 'never guessed'.",
+      "failure_scenario": "Fast path, a dump that names no refusal. Seldon asks who it's for and what it won't do. The user answers only the audience, or says 'nothing really, it should do everything'. Line 161 then has Seldon tag a guessed refusal with [ASSUMPTION]. If Seldon instead leaves '## What it refuses' empty, check.mjs --brief exits 1 on the empty section, and line 246 makes it Edit brief.md until the check passes, which again means inventing a refusal. Coaching has the same gap: line 180 writes once 'all eight sections are settled', with no rule for a refusal question the user declined.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "0071fbad4f66bd61b1ef12b846b3f9d01c1e4f71",
+      "head_id": "e645d6102bf23a41bee78bf2df8587bc6e715be0"
+    },
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 42,
+      "severity": "medium",
+      "claim": "The position table counts a run as new only when this conversation has no dump request and no recommendation yet. The existing-brief check runs only on a new run (line 69). So a second /seldon in the same conversation skips the D-08 stop and can overwrite the brief it already wrote.",
+      "failure_scenario": "In one session the user runs /seldon, confirms fast path, and brief.md gets written. Then they type '/seldon <a different idea>'. The conversation already holds a recommendation, so 'New run' doesn't match, and the turn reads as 'Path chosen' or 'Interview under way' (lines 46-48). Step 2's brief check is skipped because 'this check runs only when a run starts', and Seldon goes on to draft. The Write tool then replaces the existing .planning/seldon/brief.md instead of stopping and saying a rerun comes later. AC6's eval starts from a fresh conversation with a seeded brief, so it doesn't cover this path.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "0071fbad4f66bd61b1ef12b846b3f9d01c1e4f71",
+      "head_id": "e645d6102bf23a41bee78bf2df8587bc6e715be0"
+    }
+  ]
+}

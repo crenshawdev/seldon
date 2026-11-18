@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: prd-change-conflict
+description: Resumes a /seldon session whose last turn ran /seldon prd, found the PRD in line with the brief, repeated the PRD check's pass line and asked the user to confirm the PRD. The brief, PRD and spine at .planning/seldon/ are copied from samples/brief.md, samples/prd.md and samples/spine.md. The user answers with a change that drops the email reminders, which retires LOAN-03, and spine decision S-03 quotes the same brief line LOAN-03 does. Seldon has to name S-03 before writing anything and end on the conflict question with nothing written or edited.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]

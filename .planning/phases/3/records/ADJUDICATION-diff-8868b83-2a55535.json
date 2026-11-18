@@ -1,0 +1,35 @@
+{
+  "phase": "3",
+  "trigger": "diff",
+  "discriminator": "8868b83-2a55535",
+  "round": 1,
+  "base": "8868b83",
+  "head": "2a55535",
+  "base_id": "8868b8334b2f0fdd4bb1f5a6c0f1eb30e09e9643",
+  "head_id": "2a55535b01314cd2f1712f3becc335ea041ba439",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 450,
+      "severity": "medium",
+      "claim": "A /seldon prd rerun that stops to ask the user a question can never finish. The answer turn reaches the PRD draft through \"PRD questions answered\", not through the step name, so §13's guard sends it to the later-release line and the PRD is never updated.",
+      "failure_scenario": "Setup: brief.md and prd.md are both on disk, and the brief has since gained something only the user can decide. The user runs `/seldon prd`. §1 routes it to the PRD rerun, and §12 (lines 421-423), which the rerun runs under, says to ask every open question in one message and write nothing. The user replies `/seldon <answer>`. That argument isn't a step name, so §1 takes the \"PRD questions answered\" route (line 102): \"Go to 'The PRD draft' and draft with those answers.\" §13 says the `/seldon prd` rerun is \"the only route into the PRD step that updates a PRD that's there\" (443-444) and that \"Every other route that reaches this step and finds prd.md writes nothing and ends on the later-release line\" (450-451). So the turn drops the user's answers, leaves prd.md unchanged and ends with \"The spine and epics steps come in a later release, so I've written nothing this time.\" The rerun the plan promises (FLOW-03/D-09) never happens. Neither the continuation route nor the guard's exception list allows a rerun to carry over into its question-answer turn.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "0d8c4c4",
+      "base_id": "8868b8334b2f0fdd4bb1f5a6c0f1eb30e09e9643",
+      "head_id": "2a55535b01314cd2f1712f3becc335ea041ba439"
+    }
+  ]
+}

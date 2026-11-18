@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: prd-conflict-apply
+description: Resumes a /seldon session whose last turn ran /seldon prd and stopped on the conflict question after naming S-03, which quotes the line LOAN-03 quotes. The brief at .planning/seldon/ is copied from samples/prd-rerun/, which dropped reminders and gained a refusal to send them, next to samples/prd.md and samples/spine.md, which were built before that change. Dropping reminders retires LOAN-03, and spine decision S-03 quotes the same brief line LOAN-03 does. The user goes ahead in plain words, so Seldon has to apply the change it reported with Edit, list LOAN-03 on a Retired line under Requirements, stamp prd.md with the current brief's hash, repeat the PRD check's pass line, and end on the PRD confirm question.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

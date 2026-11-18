@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: design-folder
+description: A /seldon dump that points at docs/design/, seeded from samples/design/, so the recommendation has to name the project only the design note names, with no Edit, no Write outside .planning/seldon/ and no Bash but the check.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
