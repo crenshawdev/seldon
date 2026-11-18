@@ -18,12 +18,15 @@ const GITHUB_TOKEN = /^\s*(?:\.\s*GITHUB_TOKEN\b|\[\s*(['"])GITHUB_TOKEN\1\s*\])
 const ESCAPE = /\\[xuU]/g;
 // An OIDC token logs a job into Bedrock or Vertex, and that reaches a model with no key to grep for.
 const ID_TOKEN = /\bid-token['"]?\s*:/g;
+// write-all grants id-token without naming it; the bare word still counts behind an alias, a tag or a line break.
+const WRITE_ALL = /\bwrite-all\b/g;
 
 function workflowProblems(text) {
   const problems = [];
   const lineOf = (index) => text.slice(0, index).split('\n').length;
   for (const m of text.matchAll(ESCAPE)) problems.push({ line: lineOf(m.index), why: 'a YAML escape that can spell a hidden name' });
   for (const m of text.matchAll(ID_TOKEN)) problems.push({ line: lineOf(m.index), why: 'a cloud login that can reach a model without a key' });
+  for (const m of text.matchAll(WRITE_ALL)) problems.push({ line: lineOf(m.index), why: 'a cloud login that can reach a model without a key' });
   for (const m of text.matchAll(EVAL)) problems.push({ line: lineOf(m.index), why: 'runs claude plugin eval' });
   for (const m of text.matchAll(MODEL_KEY)) problems.push({ line: lineOf(m.index), why: 'names ANTHROPIC_API_KEY' });
   for (const m of text.matchAll(SECRETS)) {
@@ -70,6 +73,8 @@ test('the eval command, a model key and any secret but GITHUB_TOKEN are each fla
     [ESCAPED_KEY, 2, 'a YAML escape that can spell a hidden name'],
     ['"\\U00000073ecrets"\n', 1, 'a YAML escape that can spell a hidden name'],
     ['permissions:\n  id-token: write\n', 2, 'a cloud login that can reach a model without a key'],
+    ['permissions: write-all\n', 1, 'a cloud login that can reach a model without a key'],
+    ['jobs:\n  test:\n    permissions: "write-all"\n', 3, 'a cloud login that can reach a model without a key'],
   ];
   for (const [text, line, why] of flagged) assert.deepEqual(workflowProblems(text), [{ line, why }], JSON.stringify(text));
   const clean = [
