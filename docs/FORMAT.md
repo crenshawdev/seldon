@@ -260,7 +260,7 @@ On the fast path Seldon drafts with guesses, and it tags each one so a reader ca
 - It goes only in free text: prose or a bullet's text in a section body, or the value of a free-text epic field (`**Outcome:**`, `**Boundaries:**`, `**Done when:**`).
 - It never goes inside an ID-list field (`**Depends on:**`, `**Requirements:**`, `**Spine decisions:**`), on a `## ` heading line, on a spine decision's `Kind:` line, inside a bold field label or inside a requirement's bold ID span. The check reads all of those exactly, so a tag there fails it. `**Depends on:** None [ASSUMPTION]` is reported as not an epic ID, for example. A guessed ID is noted in free text instead.
 
-Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own, or a design document's when its quote names a source file (see "The user's own words").
+Tagged text is a guess Seldon made that the user hasn't confirmed, and a reader treats it as one to confirm. Untagged text is the user's own, or a design document's or the existing code's when its quote names a source file (see "The user's own words").
 
 In the free-text places above, `lib/check.mjs` neither requires nor rejects the tag, so text there checks the same with or without it. The tag on its own isn't text, so a section body or field holding only the tag is empty.
 
@@ -329,10 +329,13 @@ In `spine.md` the rule holds every decision. Its body carries one of two things:
 - A `> ` quote directly under the decision's text.
 - An inline `[ASSUMPTION]` tag, never on the `## ` heading and never on the `Kind:` line.
 
-A spine quote comes from one of two sources, and nowhere else:
+A spine quote comes from one of three sources, and nowhere else:
 
 - The brief's `> ` lines, word for word. A quote is a whole `> ` line or one unbroken run of that line's exact words. Where the brief's quote had a design-file source line under it, the spine's quote keeps that source line under it too, as the PRD's does.
 - The user's replies to the spine step's own questions.
+- On a project already under Cadence, one with `.planning/PROJECT.md`, the project's existing code outside `.planning/`, quoted word for word from the file. The line right after the quote names the file, relative to the project root, in parentheses and indented like the quote, as words from a design folder do.
+
+A convention quoted from the code carries no `[ASSUMPTION]`, because what the code shows isn't a guess.
 
 The brief's item text and the PRD's text are Seldon's wording, not the user's, so neither is ever a quote source. In the spine, as in the brief and the PRD, the check neither requires nor rejects a quoted line or a tag.
 
@@ -341,6 +344,14 @@ The brief's item text and the PRD's text are Seldon's wording, not the user's, s
 Kind: how state changes
 Balances are computed from payments and never stored.
 > one place to record each payment
+```
+
+```
+## S-02: The ledger keeps its data in SQLite
+Kind: stack
+New work stores its data through better-sqlite3, as the existing code does.
+> import Database from 'better-sqlite3';
+(src/db.js)
 ```
 
 ## The check
