@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: handoff-cadence
+description: A bare /seldon in a fresh session on a project already under Cadence, where Toolshed's finished design, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md, sits at the top of .planning/seldon/ beside Cadence's PROJECT.md, ROADMAP.md and STATE.md and none of it is stale, so Seldon has to run the readiness check, say its no-findings line, ask nothing, write and edit nothing, and end on the under-Cadence command and the already-built sentence, never a /cad-milestone command.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
