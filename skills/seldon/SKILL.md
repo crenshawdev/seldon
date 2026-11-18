@@ -222,7 +222,9 @@ here. Files in `.planning/` outside `.planning/seldon/`, Cadence's included,
 don't change where a run starts. With no brief a run goes to "The dump", just
 as on a new project, and writes only inside `.planning/seldon/`. The brief and
 PRD steps read none of those files. The dump describes the next body of work,
-and what the project already has enters the design only at the spine step.
+and what the project has already built enters the design only at the spine
+step, and a design folder still enters at the brief as "The design folder"
+says.
 
 Before you ask for or read any dump, look for `.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
