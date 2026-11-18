@@ -145,7 +145,7 @@ these in order:
     and quote the user's new words as "The draft" says, for the PRD as "The
     PRD draft" says, or for the spine as "The spine draft" says. For the
     epics, make them in `epics.md` and quote nothing, since epics carry no
-    quotes. For the PRD this is one of the three routes "The PRD draft" lets
+    quotes. For the PRD this is one of the routes "The PRD draft" lets
     change a `prd.md` that's there, so the PRD's create guard doesn't stop it,
     and "The conflict check" there runs before the first Edit.
     For the spine it's one of the routes "The spine draft" names for changing
@@ -172,6 +172,31 @@ these in order:
   conflict check" there before the first Edit, then change `prd.md` with
   Edit, never a fresh Write. Otherwise go to "The PRD draft" and draft with
   those answers.
+- **Conflict question answered:** your last turn ended on the conflict
+  question in "The conflict check" in "The PRD draft", and the user answered.
+  - **A go-ahead:** apply exactly the change your report described, with
+    Edit, never a fresh Write. A change named at the PRD's confirm question
+    comes from the conversation. A rerun's change is worked out again from
+    the files, as "The PRD rerun" says. Then record the stamp as "Stamps and
+    stale links" says, run "The PRD check", and end the step the way it says,
+    on the PRD's confirm question. A go-ahead runs no second conflict check.
+  - **A decline:** write and edit nothing. When the change came from the
+    brief, through the PRD rerun however it's reached or "PRD questions
+    answered" carrying one on, end your message with the brief decline line.
+    When it was named at the PRD's confirm question, end with the
+    nothing-changed line. Either goes on a line of its own, with nothing after
+    it. These are the brief decline line and the nothing-changed line:
+
+    ```
+    I've changed nothing, so the PRD stays behind the brief. To take the change back out of the brief, run /seldon brief.
+    ```
+
+    ```
+    I've changed nothing, so the PRD stays as it was.
+    ```
+
+  - **Anything else:** write nothing, and end on the conflict question again,
+    on a line of its own, with nothing after it.
 - **Who-relies question answered:** your last turn asked the who-relies
   question in "The spine's questions", alone or with the spine's other
   questions, and the user answered. Carry the step on with those answers just
@@ -757,8 +782,8 @@ of their own, with nothing after them. This is the PRD's create guard line:
 .planning/seldon/prd.md is already there, so I've written nothing this time. To revise the PRD, run /seldon prd.
 ```
 
-That guard is about creating a PRD with Write. Three routes change a PRD
-that's there, and all three do it with Edit, never a fresh Write:
+That guard is about creating a PRD with Write. These routes change a PRD
+that's there, and each does it with Edit, never a fresh Write:
 
 - A rerun, from `/seldon prd` or from a bare `/seldon` whose stale check
   found `prd.md` stale, as "The PRD rerun" below says. It's the only route
@@ -770,8 +795,11 @@ that's there, and all three do it with Edit, never a fresh Write:
   the PRD's own confirm question with changes. Run "The conflict check" below
   first. Then make those changes with Edit, quote the user's new words as "The
   user's own words" below says, and run "The PRD check" again.
+- "Conflict question answered" in "Where the conversation stands", when the
+  user goes ahead with a change "The conflict check" below stopped. It applies
+  exactly the change the report described, as that route says.
 
-Each of the three keeps the stamp line current, as "Stamps and stale links"
+Each of these keeps the stamp line current, as "Stamps and stale links"
 says. Every other route that reaches this step and finds `prd.md` writes
 nothing and ends on the PRD's create guard line, on a line of its own, with
 nothing after it.
