@@ -14,10 +14,20 @@ const FULL = [
   { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
+  ...['resume-later', 'handoff-cadence', 'handoff-named', 'readiness-agent'].map((c) => ({ kind: 'last-message', case: c, file: `evals/${c}/graders/says-no-findings.md` })),
 ];
 
 // The kinds D-01 holds to byte copies.
-const EQUAL = ['size'];
+const EQUAL = ['size', 'last-message'];
+
+const NO_FINDINGS = 'The readiness check found nothing to fix.';
+const HANDOFF = 'To hand this design to Cadence, run:\n\n/cad-new-project --brief .planning/seldon';
+// One line of each kind, in SKILL.md's "The reply" forms.
+const FINDINGS = [
+  'Requirement no epic names: CAT-01. Fixed by rerunning /seldon epics.',
+  "Epic crossing a boundary the spine didn't fix: E-02 (Loans and Repairs). Fixed by rerunning /seldon spine.",
+  'Decision left open: E-02, E-03 (how reminders are sent). Fixed by rerunning /seldon spine.',
+];
 
 const of = (kind) => FULL.filter((g) => g.kind === kind);
 
@@ -244,6 +254,22 @@ test("each trace grader fails a seeded ID on two epics' Requirements lines", asy
       assert.equal(passes(load(file), epics(lines)), false);
     });
   }
+});
+
+test('each last-message half passes the no-findings line followed by the handoff', () => {
+  for (const { file } of of('last-message')) assert.equal(passes(load(file), `${NO_FINDINGS}\n\n${HANDOFF}`), true, file);
+});
+
+test('each last-message half fails that message with any one finding line added', async (t) => {
+  for (const finding of FINDINGS) {
+    await t.test(`fails with "${finding.slice(0, finding.indexOf(':') + 1)}"`, () => {
+      for (const { file } of of('last-message')) assert.equal(passes(load(file), `${finding}\n${NO_FINDINGS}\n\n${HANDOFF}`), false, file);
+    });
+  }
+});
+
+test('each last-message half fails the handoff with no no-findings line', () => {
+  for (const { file } of of('last-message')) assert.equal(passes(load(file), HANDOFF), false, file);
 });
 
 test("every full grader's pattern uses only D-09's forms", () => {
