@@ -32,9 +32,9 @@ An independent check reads the finished design before the handoff, and Seldon en
   - the line when the check can't run
   - the handoff leaves no record
 - The README's grant paragraph says Seldon starts one agent of its own, which has Read and nothing else, and that Claude Code's grants don't limit which agent a skill may start. It names no agent entry, and no sentence says or implies the grant confines the skill to that agent (Daneel's ruling on Plan 1's report). The eval command block is unchanged.
-- The README's Evals section has one line for every case in `evals/`, 56 in all, and none for a case that's gone. `resume-later`'s line says what the case now checks.
+- The README's Evals section has one line for every case in `evals/`, 57 in all, and none for a case that's gone. `resume-later`'s line says what the case now checks.
 - `git grep "come in a later release" -- skills README.md evals` finds nothing.
-- The README's eval command, run verbatim from the repository root with only `--keep-temp` added, exits 0 with all 56 cases at 1.00 (AC7).
+- The README's eval command, run verbatim from the repository root with only `--keep-temp` added, exits 0 with all 57 cases at 1.00 on each of two full runs (AC7).
 - AC6 holds:
   - a kept session transcript from that run shows the loaded skill byte for byte equal to SKILL.md after the loader's substitutions
   - SKILL.md is at most 90,000 bytes
@@ -50,16 +50,18 @@ An independent check reads the finished design before the handoff, and Seldon en
 - **Eval runs (SECURITY):** the full-suite runs use the approval Plan 1 recorded. If none is recorded, or the recorded one doesn't cover full runs, stop at a checkpoint marked SECURITY before the run.
   - **The command:** run from `/code/seldon`, never a worktree. It's the README's command with `--keep-temp` added before `--allow-tools`.
   - **Audits:** report every Bash command and every agent start in every kept trace, on Plan 1's terms. Anything off them is a SECURITY checkpoint. On Daneel's ruling on Plan 1's report, a start of anything other than `seldon:readiness`, or any start in a case that isn't a readiness case, stops the run and goes to Daneel, in the full-suite runs as in every other.
-  - **Retries:** AC7 needs the README's full command to exit 0, so a solo `--case` run doesn't satisfy it.
-    - When a case in the first full run misses on model variance the trace shows, run the full suite once more. Two full runs is the most.
+  - **Two full runs, always (Daneel's ruling, 2026-11-18):** the full suite runs twice as a stability check, not only after a variance miss. Phase 7's `stale-spine` passed one run and failed the next on the same text, so one full pass is weak evidence. This replaces Plan 1's "a second full run only when a case in the first missed on model variance".
+    - AC7 needs the README's full command to exit 0, so a solo `--case` run doesn't satisfy it.
+    - Both runs must exit 0 with every case at 1.00. A miss in either stops at a checkpoint to Daneel with the case, its trace copy and its last message. Nothing reruns before Daneel rules.
+    - The per-case cap stays three tries. A case's tries across this plan's runs count toward it, and a fourth try comes to Daneel, who grants it when the trace shows model variance. The cap guards against passing on luck.
     - A miss caused by SKILL.md's or the agent's text is a checkpoint marked SECURITY, because the runs that follow a fix aren't in Plan 1's approval. They're in this plan's lease only so a fix Daneel rules on can land here. The checkpoint names the fix and asks Daneel to approve exactly these runs, and nothing runs before that approval is recorded:
-      - a solo rerun of each case the fix affects, named one by one, at most three tries per case, a retry only after a further ruled fix or a miss the trace shows is model variance
-      - one full run after those pass, which is this plan's second and last
-    - A third full run isn't in any approval. Needing one is a checkpoint to Daneel.
+      - a solo rerun of each case the fix affects, named one by one, within the per-case cap above
+      - two full runs after those pass, both of which must pass
+    - Any full run beyond those isn't in an approval. Needing one is a checkpoint to Daneel.
   - **Cleanup:** copy each kept trace into `evals/results/phase-8-traces/`, then remove only the folders the run printed as kept, by their exact paths.
   - **Where things are:** a kept run's session transcript is under `config/projects/` in its kept folder.
   - **No binary:** nothing is read or copied out of the Claude binary or the files it ships with.
-- **Suite size:** phase 7's 48 cases, plus eight new ones, make 56. `resume-later` was rewritten in place. The new cases are `handoff-cadence`, `handoff-named`, `readiness-not-run`, `readiness-findings`, `readiness-crossing`, `readiness-hand-off`, `readiness-fix` and `readiness-agent`.
+- **Suite size:** phase 7's 48 cases, plus nine new ones, make 57. The 48 is the count at 70a0b54: 48 directories under `evals/` in git, 47 with a `case.yaml` and `fast-path` with a `prompt.md` only. `results/` is gitignored and holds no case. `resume-later` was rewritten in place. The new cases are Plan 5's `handoff-cadence`, `handoff-named` and `readiness-not-run`, and Plan 6's `readiness-findings`, `readiness-crossing`, `readiness-hand-off`, `readiness-fix`, `readiness-fix-answer` and `readiness-agent`.
 - **Held:** no push, tag, PR or GitHub change, no install of any kind, and nothing published (D-16).
 
 ## Tasks
@@ -111,25 +113,25 @@ An independent check reads the finished design before the handoff, and Seldon en
 ### Task 3: List every case and run the full suite
 
 - **Files:** README.md, skills/seldon/SKILL.md, agents/readiness.md
-- **Reads:** README.md#Evals, .github/workflows/test.yml, .planning/phases/7/PLAN-8.md#Task 2: List every case and run the full suite, and for `resume-later` and each of the eight new cases its `evals/<case>/case.yaml` and every file under `evals/<case>/graders/`
+- **Reads:** README.md#Evals, .github/workflows/test.yml, .planning/phases/7/PLAN-8.md#Task 2: List every case and run the full suite, and for `resume-later` and each of the nine new cases its `evals/<case>/case.yaml` and every file under `evals/<case>/graders/`
 - **Decisions:** D-05, D-18, D-19
 - **Action:** SKILL.md and the agent are in the files only for a fix Daneel rules on at a checkpoint. This task otherwise writes only README.md.
   - **Add lines:** one plain line per new case, each saying what the case gives Seldon and what it checks, in the list's existing style. Each line is written from that case's `case.yaml` and graders as they stand, never from a plan.
   - **Rewrite `resume-later`'s line:** all four documents there and nothing stale, so Seldon runs the check, finds nothing, asks nothing, writes nothing and ends on `/cad-new-project --brief .planning/seldon`.
   - **Unchanged:** the other case lines, the command and the paragraph Task 2 changed.
 - **Verify:**
-  - **Testing scope:** this is the phase's regression gate, AC6 and AC7. One full run, the transcript check, the unit suite under the coverage gate and the checks below are enough, and testing stops there.
-  - (1) A `node -e` script compares the case directories under `evals/`, except `results/`, with the backticked names in the README's list. Every directory is listed once, and no listed name lacks a directory. Today the eight new names are missing.
+  - **Testing scope:** this is the phase's regression gate, AC6 and AC7. Two full runs, the transcript check, the unit suite under the coverage gate and the checks below are enough, and testing stops there.
+  - (1) A `node -e` script compares the case directories under `evals/`, except `results/`, with the backticked names in the README's list. Every directory is listed once, and no listed name lacks a directory. Today the nine new names are missing.
   - (1a) For `resume-later` and each new case, every check its README line claims is one a grader file in that case makes, shown by naming the grader beside each claim in the report.
   - (2) `git grep -n "come in a later release" -- skills README.md evals` prints nothing. It searches tracked files only. `evals/results/` is gitignored and still holds phase 7's old traces.
-  - (3) The README's eval command, run verbatim from `/code/seldon` with `--keep-temp` added before `--allow-tools`, exits 0 on the first full run, or on the second under Context's retry terms:
-    - all 56 cases score 1.00, with no `scaffold failed`
-    - the Bash audit and the agent-start audit cover every trace
-  - (4) **AC6:** in one kept session transcript from that run, the loaded skill text equals SKILL.md byte for byte after the loader's substitutions, compared the way phase 7's Plan 1 compared it. Report the lengths and `wc -c skills/seldon/SKILL.md`, which is at most 90000. A cut, or any other difference, is a checkpoint.
+  - (3) The README's eval command, run verbatim from `/code/seldon` with `--keep-temp` added before `--allow-tools`, runs twice, and each run exits 0 under Context's two-run terms:
+    - all 57 cases score 1.00 in each run, with no `scaffold failed`
+    - the Bash audit and the agent-start audit cover every trace of both runs
+  - (4) **AC6:** in one kept session transcript from the first run, the loaded skill text equals SKILL.md byte for byte after the loader's substitutions, compared the way phase 7's Plan 1 compared it. Report the lengths and `wc -c skills/seldon/SKILL.md`, which is at most 90000. A cut, or any other difference, is a checkpoint.
   - (5) These each exit 0 with their pass line: `node lib/check.mjs samples`, and `--brief`, `--prd`, `--spine`, `--epics` and `--stale` on `samples`.
   - (6) `node --test tests/skill.test.mjs` passes, so `allowed-tools` is the five pinned entries. `claude plugin validate --strict .` passes (ci: plugin-validate).
   - (7) The coverage job's command from `.github/workflows/test.yml` passes, and so do both lcov guards (ci: node-test, coverage).
-  - (8) After the run, `ls -d` fails on each exact path the run printed as kept, and the trace copies are in `evals/results/phase-8-traces/`.
+  - (8) After each run, `ls -d` fails on each exact path that run printed as kept, and the trace copies are in `evals/results/phase-8-traces/`.
   - (9) `git diff --name-only` for this plan's commits lists only `README.md`, unless a ruled fix touched SKILL.md or the agent.
 
 ## Notes

@@ -40,6 +40,18 @@ files:
   - evals/readiness-fix/graders/no-epics-write.md
   - evals/readiness-fix/graders/no-epics-edit.md
   - evals/readiness-fix/graders/ends-on-confirm.md
+  - evals/readiness-fix-answer/case.yaml
+  - evals/readiness-fix-answer/prompt.md
+  - evals/readiness-fix-answer/seed.sh
+  - evals/readiness-fix-answer/history.jsonl
+  - evals/readiness-fix-answer/graders/edits-spine.md
+  - evals/readiness-fix-answer/graders/no-spine-write.md
+  - evals/readiness-fix-answer/graders/fixes-boundary.md
+  - evals/readiness-fix-answer/graders/keeps-answer.md
+  - evals/readiness-fix-answer/graders/no-epics-write.md
+  - evals/readiness-fix-answer/graders/no-epics-edit.md
+  - evals/readiness-fix-answer/graders/ends-on-confirm.md
+  - evals/readiness-fix-answer/graders/starts-no-agent.md
   - evals/readiness-agent/case.yaml
   - evals/readiness-agent/prompt.md
   - evals/readiness-agent/seed.sh
@@ -59,7 +71,7 @@ files:
 
 ## Goal
 
-An independent check reads the finished design before the handoff, and Seldon ends with the exact Cadence command to run, proven by eval cases this phase adds. This plan proves success criteria 1 to 3: the report names what it finds by ID, the check is a separate agent that reads only the three documents, and the two answers to the question do what they say (AC1, AC2, AC3).
+An independent check reads the finished design before the handoff, and Seldon ends with the exact Cadence command to run, proven by eval cases this phase adds. This plan proves success criteria 1 to 3: the report names what it finds by ID, the check is a separate agent that reads only the three documents, and the two answers to the question do what they say (AC1, AC2, AC3). It also proves the route plan 3's fix 70a0b54 changed: the user's answer to a question a fix-started spine rerun stopped to ask (Daneel's ruling, 2026-11-18).
 
 ## Must be true when done
 
@@ -71,6 +83,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 - `readiness-agent` scores 1.00 (AC2). The skill starts exactly one agent, `seldon:readiness`, hands it the three paths and no other, and Reads none of the three itself. The agent Reads each of the three and nothing else, graded on the trace by the `parent_tool_use_id` that marks the agent's own records.
 - `readiness-fix` scores 1.00 (AC3). After a report whose one finding is E-02's crossing, a fix edits `spine.md` so that a `Kind: boundaries` decision names both loans and repairs, makes no Write or Edit to `epics.md`, and ends on the spine confirm question. Its workspace then reads the epics as stale.
 - `readiness-hand-off` scores 1.00 (AC3). After that same report, a hand-off makes no Write and no Edit and ends on `/cad-new-project --brief .planning/seldon`.
+- `readiness-fix-answer` scores 1.00. On a project under Cadence, after that same report and a fix whose spine rerun stopped to ask the who-relies question, the user's answer changes `spine.md` with Edit and never a fresh Write. The changed spine holds both the finding's boundary between loans and repairs and the answer's words on a `> ` line in an S- decision. It makes no Write or Edit to `epics.md`, starts no agent, and ends on the spine confirm question.
 - Every kept trace passed the Bash audit and the agent-start audit, and `node --test tests/scaffold.test.mjs` passes.
 
 ## Context
@@ -80,19 +93,22 @@ An independent check reads the finished design before the handoff, and Seldon en
   - `readiness-findings`: `samples/brief.md`, `samples/readiness/prd.md`, `samples/readiness/spine.md` and `samples/readiness-uncovered/epics.md` into `.planning/seldon/`
   - `readiness-crossing`, `readiness-fix` and `readiness-hand-off`: `samples/brief.md` and `samples/readiness/`'s three files
   - `readiness-agent`: `evals/resume-later/seed.sh`'s lines
+  - `readiness-fix-answer`: `readiness-fix`'s lines plus `cp -R "$repo/samples/cadence-project/planning/." .planning/`, the line `evals/spine-who-relies/seed.sh` uses, so the project is under Cadence and a spine rerun always asks the who-relies question (SKILL.md:1083-1084 and :1128-1133). It copies no code and no `.env`, so it needs no no-secret grader (Daneel's term D).
 - **Histories (D-19):** `readiness-fix` and `readiness-hand-off` replay one exchange the skill at HEAD produced from their seed, which Task 2's `readiness-crossing` run shows live:
   - the user runs `/seldon`
   - Seldon's reply is the crossed-boundary line for E-02, across Loans and Repairs, then the readiness question. Both are copied from the last message of `readiness-crossing`'s passing trace, and checked against SKILL.md's forms.
 
   No history is written before that run has passed. If the real agent reports anything other than that one finding, the fixture or the agent's rules are wrong: stop at a checkpoint to Daneel, and never write the replays around it (Daneel's ruling).
 
+  `readiness-fix-answer` replays that exchange, then a second one the skill at HEAD produces live from its own seed: the user's fix, and the spine rerun stopping to ask the who-relies question. Task 5's capture run produces it, and nothing is written around a capture run that doesn't end on that question alone, in the same way.
+
   A history is text-only user and assistant lines with chained `parentUuid`, a fresh `sessionId` and `cwd` set to `/tmp/seldon-<case>`, like `evals/epics-confirm/history.jsonl`. Its user words are invented, never the owner's.
 - **Case rules:**
   - Every case here has `allowed_tools: [Skill, Read, Glob, Grep]`, with no Agent entry (D-18, as Daneel ruled on Plan 1's report: run 3 showed a start needs none). Only Plan 5's `readiness-not-run` withholds the agent, with `disallowed_tools`.
-  - `readiness-findings`, `readiness-crossing` and `readiness-agent` take `resume-later`'s `max_turns` and `timeout_seconds`. `readiness-fix` edits, so it takes 20 and 600. `readiness-hand-off` writes nothing and starts no agent, so it takes 10 and 300.
+  - `readiness-findings`, `readiness-crossing` and `readiness-agent` take `resume-later`'s `max_turns` and `timeout_seconds`. `readiness-fix` and `readiness-fix-answer` edit, so they take 20 and 600. `readiness-hand-off` writes nothing and starts no agent, so it takes 10 and 300.
   - No line of a `case.yaml` or `prompt.md` says "scaffold" except `scaffold_script: seed.sh`, and none holds a double-quoted backslash.
 - **Fixed words:** every line a grader or a history matches is copied from SKILL.md, never from a plan.
-- **Shared graders:** `no-write` and `no-edit` are byte copies of `resume-later`'s. `readiness-hand-off`'s `ends-on-new-project` is too. So is `no-other-agent`, in each case here that expects the start: `readiness-findings`, `readiness-crossing` and `readiness-agent` (Daneel's ruling on Plan 1's report). `readiness-fix`'s `ends-on-confirm` is a byte copy of `evals/stale-spine/graders/ends-on-confirm.md`. `cmp` shows each.
+- **Shared graders:** `no-write` and `no-edit` are byte copies of `resume-later`'s. `readiness-hand-off`'s `ends-on-new-project` is too. So is `no-other-agent`, in each case here that expects the start: `readiness-findings`, `readiness-crossing` and `readiness-agent` (Daneel's ruling on Plan 1's report). `readiness-fix`'s `ends-on-confirm` is a byte copy of `evals/stale-spine/graders/ends-on-confirm.md`. `readiness-fix-answer`'s `edits-spine`, `fixes-boundary`, `no-epics-write`, `no-epics-edit` and `ends-on-confirm` are byte copies of `readiness-fix`'s. `cmp` shows each.
 - **D-21:** every new grader must fail when the behavior it claims is missing. Check that with a `node -e` script that reads each pattern from its grader file, over hand-made inputs kept in the scratch area and never committed. For trace graders, model the inputs on the trace copies in `evals/results/phase-8-traces/`.
 - **Eval runs (SECURITY):** on Plan 1's recorded approval and terms. If none is recorded, stop at a checkpoint marked SECURITY before the first run.
   - **Seed vet:** each new `seed.sh` is vetted at a checkpoint quoting it before its first run (D-04 e).
@@ -193,7 +209,42 @@ An independent check reads the finished design before the handoff, and Seldon en
   - (4) The run exits 0 at 1.00, and both audits are reported.
   - (5) Before the kept folder is removed, `node lib/check.mjs --stale <kept workspace>/.planning/seldon` prints `stale: epics.md was built from an earlier spine.md` and no other stale line. That's the epics left for the next bare `/seldon`, as D-10 says.
 
-### Task 5: Add the readiness-agent case
+### Task 5: Add the readiness-fix-answer case
+
+- **Files:** evals/readiness-fix-answer/case.yaml, evals/readiness-fix-answer/prompt.md, evals/readiness-fix-answer/seed.sh, evals/readiness-fix-answer/history.jsonl, evals/readiness-fix-answer/graders/edits-spine.md, evals/readiness-fix-answer/graders/no-spine-write.md, evals/readiness-fix-answer/graders/fixes-boundary.md, evals/readiness-fix-answer/graders/keeps-answer.md, evals/readiness-fix-answer/graders/no-epics-write.md, evals/readiness-fix-answer/graders/no-epics-edit.md, evals/readiness-fix-answer/graders/ends-on-confirm.md, evals/readiness-fix-answer/graders/starts-no-agent.md
+- **Reads:** evals/readiness-fix/seed.sh, evals/readiness-fix/history.jsonl, evals/readiness-fix/graders/fixes-boundary.md, evals/spine-who-relies/seed.sh, evals/spine-who-relies/graders/asks-who-relies.md, evals/spine-answers/graders/carries-answer.md, samples/cadence-project/planning/PROJECT.md, skills/seldon/SKILL.md#1. Where the conversation stands, skills/seldon/SKILL.md#15. The spine step, skills/seldon/SKILL.md#16. The spine draft
+- **Decisions:** D-10, D-19
+- **Pins:** tests/scaffold.test.mjs
+- **Action:** This case proves the route plan 3's fix 70a0b54 changed (Daneel's ruling, 2026-11-18). A fix at the readiness question starts a spine rerun. On a project under Cadence that rerun always stops to ask the who-relies question (SKILL.md:1083-1084 and :1128-1133), and the user's answer goes through "Who-relies question answered" (SKILL.md:231-240) back into the rerun, finding lines and all.
+  - **`seed.sh`:** Context's lines for this case.
+  - **The capture run (D-19).** The history's second exchange has to be one the skill at HEAD produced from this seed, so it's captured live first, and nothing in the case is committed in its capture state:
+    - the case folder holds `case.yaml`, `seed.sh`, a `history.jsonl` that is `readiness-fix`'s turns with only `sessionId`, `cwd` and the uuids changed, and a `prompt.md` with `readiness-fix`'s fix words
+    - its capture graders are byte copies of `evals/spine-who-relies/graders/`'s `asks-who-relies`, `no-trust-question`, `no-unattended-question`, `no-failure-question`, `no-write` and `no-edit`, plus this task's `starts-no-agent`
+    - the seed is vetted at a checkpoint before the first capture run
+    - the capture run is the per-case command, an approved run under Plan 1's terms with both audits. It has three tries of its own, separate from the case's three below. A retry comes only after a fix or a miss the trace shows is model variance.
+    - it passes only when it exits 0 at 1.00: the last message ends on the who-relies question, asks no other spine question, writes and edits nothing, and starts no agent. A try that ends anywhere else stops at a checkpoint to Daneel with the last message, as Task 2's (5) does, and no history is written around it.
+    - copy its trace into `evals/results/phase-8-traces/` as `readiness-fix-answer-capture-try-<n>.trace.jsonl`, and quote its last message in the report
+  - **`history.jsonl`:** `readiness-fix`'s turns, then the fix words as a user line and the passing capture run's last message, byte for byte, as the assistant line. `sessionId`, `cwd` and the uuids are fresh, and `parentUuid` is chained. Then the capture graders are deleted and the graders below added.
+  - **`prompt.md`:** the user's answer to the who-relies question, in invented words, naming one part this design builds, the reminders: `/seldon The county volunteer centre relies on the reminder emails, they copy the overdue list from them every Monday.` By SKILL.md's rule for who-relies answers, it goes into the reminders decision, word for word, on a `> ` line.
+  - **`case.yaml`:** the description says a project under Cadence, a readiness report with one finding, E-02 crossing Loans and Repairs, a fix whose spine rerun stopped to ask who relies on what, and this turn's answer. Seldon has to carry the rerun on with Edit, keep the finding's boundary and the answer in `spine.md`, leave `epics.md` alone, start no agent and end on the spine confirm question.
+  - **Graders:**
+    - **`edits-spine`**, **`fixes-boundary`**, **`no-epics-write`**, **`no-epics-edit`** and **`ends-on-confirm`:** byte copies of `readiness-fix`'s
+    - **`no-spine-write`:** `tool_used` Write, `input_match: '"file_path"\s*:\s*"[^"]*\.planning/seldon/spine\.md"'`, `max: 0`. The rerun changes a `spine.md` that's there, so a fresh Write over it fails.
+    - **`keeps-answer`:** a `regex` on the file `.planning/seldon/spine.md`, in `evals/spine-answers/graders/carries-answer.md`'s form, with `flags: m`: `'^## S-\d{2,}:(?=[^\n]*(?:\n(?!## )[^\n]*)*?\n[ \t]*> [^\n]*county volunteer centre relies on the reminder emails)'`. It matches an S- decision, heading to the next heading, with the answer's words on a `> ` line.
+    - **`starts-no-agent`:** `tool_used` Agent, `min: 0`, `max: 0`. Neither the rerun nor the answer runs the readiness check: that runs only on a bare `/seldon` with empty arguments (SKILL.md:427), and this turn's arguments are the answer.
+  - **The open item it closes:** `.planning/phases/8/records/reports/plan-3.md:48` carries "no eval case covers the route where the user answers a question a fix-started spine rerun stopped to ask" for the phase summary. Don't edit that report. The phase summary marks the item covered by `readiness-fix-answer`.
+- **Verify:**
+  - **Testing scope:** the outcome is the answer route 70a0b54 fixed, end to end on a fix the readiness question started. The capture run, three new graders with their D-21 checks, one run and the stale check in (6) are the evidence, and testing stops there.
+  - (1) `node --test tests/scaffold.test.mjs` passes, the history parses with `parentUuid` chained, and `cmp` shows the five copied graders equal to `readiness-fix`'s.
+  - (2) A `node -e` check shows the history's first exchange equals `readiness-fix`'s in every field but `sessionId`, `cwd` and the uuids, and its second assistant line equals the passing capture run's last message byte for byte.
+  - (3) **D-21:**
+    - `no-spine-write`'s `input_match` matches a Write input to `.planning/seldon/spine.md`, and doesn't match one to `epics.md` or to `spine.md.bak`
+    - `keeps-answer` fails on the unchanged `samples/readiness/spine.md`, on a copy with the answer's words on a line without `> `, and on a copy with them on a `> ` line above the first `## S-` heading. It passes on a copy with them on a `> ` line under the reminders decision.
+  - (4) The seed is vetted before the capture run. This is a checkpoint.
+  - (5) The run exits 0 at 1.00, and both audits are reported. It has at most three tries, a retry only after a fix or a miss the trace shows is model variance.
+  - (6) Before the kept folder is removed, `node lib/check.mjs --stale <kept workspace>/.planning/seldon` prints `stale: epics.md was built from an earlier spine.md` and no other stale line, as `readiness-fix`'s (5) does.
+
+### Task 6: Add the readiness-agent case
 
 - **Files:** evals/readiness-agent/case.yaml, evals/readiness-agent/prompt.md, evals/readiness-agent/seed.sh, evals/readiness-agent/graders/one-agent.md, evals/readiness-agent/graders/starts-readiness.md, evals/readiness-agent/graders/hands-three-paths.md, evals/readiness-agent/graders/no-other-path.md, evals/readiness-agent/graders/no-skill-read.md, evals/readiness-agent/graders/agent-reads-three.md, evals/readiness-agent/graders/agent-reads-nothing-else.md, evals/readiness-agent/graders/no-other-agent.md
 - **Reads:** evals/stale-epics/graders/no-read-outside.md, evals/stale-epics/graders/says-stale-line.md, evals/full-walk/graders/names-spine-first.md, evals/results/phase-8-traces/readiness-probe-run-4.trace.jsonl, skills/seldon/SKILL.md#22. The readiness check
