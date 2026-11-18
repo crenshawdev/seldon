@@ -1582,4 +1582,42 @@ Decision left open: <epic IDs, comma-separated> (<the choice, in a few words>). 
   The design was not checked before this handoff.
   ```
 
+## 23. The handoff
+
+"The readiness check" and a hand-off answer to its question end here. Ask
+whether `.planning/PROJECT.md` exists with Glob, never Read, as "The spine
+step" does. That Glob comes before the handoff's first line, and before any
+report line when the readiness check leads here. No tool call follows the
+lead-in. Read none of Cadence's files to decide anything.
+
+Say the lead-in on a line of its own, then the command on a line of its own:
+
+```
+To hand this design to Cadence, run:
+```
+
+- **No `.planning/PROJECT.md`:** the command is the last line of the turn:
+
+  ```
+  /cad-new-project --brief .planning/seldon
+  ```
+
+- **`.planning/PROJECT.md` there:** the command, then the already-built
+  sentence on a line of its own as the last thing in the turn, for a named
+  design too:
+
+  ```
+  /cad-phase add --brief .planning/seldon
+  ```
+
+  ```
+  If Cadence has already built this design, there's nothing to hand off.
+  ```
+
+With a named design both commands name `.planning/seldon/<name>`, unquoted and
+with no trailing slash, as "Designs and the working folder" says.
+
+The handoff writes and edits nothing and leaves no record, so a later bare
+`/seldon` on the same documents checks again and prints the command again.
+
 </process>
