@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 6,
-    "status": "executed",
-    "next": "/cad-verify 6",
+    "status": "phase complete",
+    "next": "/cad-context 7",
     "updated": "2026-11-18"
   },
   "phases": [
@@ -156,7 +156,7 @@
       "n": 6,
       "name": "Existing projects and design folders",
       "description": "Design the next body of work under Cadence in its own folder, with the spine reading the existing code",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -308,12 +308,12 @@
     {
       "id": "FLOW-05",
       "phase": 6,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "ARCH-03",
       "phase": 6,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }

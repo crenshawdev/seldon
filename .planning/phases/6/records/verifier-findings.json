@@ -1,0 +1,122 @@
+{
+  "status": "delivered",
+  "score": "11/11",
+  "truths": [
+    {
+      "n": 1,
+      "truth": "On a project under Cadence with no .planning/seldon/, confirming the fast path on a dump writes .planning/seldon/brief.md, which passes --brief, with no Write outside .planning/seldon/ and no Edit, and PROJECT.md, ROADMAP.md and STATE.md stay byte-identical (AC1, success criterion 1)",
+      "status": "VERIFIED",
+      "uat_item": 1,
+      "evidence": "Final recorded run is plan 8's full suite at c614806 (evals/results/2026-11-18T08-24-30-455Z/aggregate-result.json, run start 08:24:30Z; c614806 committed 08:23:34Z, 93fef3e 08:35:13Z): cadence-project 1.00, 5/5 graders (check-passes matched, no-edit 0x, no-write-outside 0x, runs-check 1x, writes-brief exists). The replay session that run wrote beside the history, evals/cadence-project/60da8477-35ed-474f-a9ff-4724d3a72d24.jsonl (trace /tmp/claude-eval-kXnikp, the aggregate's tracePath), holds after 08:24Z exactly one Glob, one Write to .planning/seldon/brief.md and one Bash `node /code/seldon/lib/check.mjs --brief .planning/seldon` printing `seldon check: brief.md conforms`. I rebuilt that brief from the Write input and `node lib/check.mjs --brief` on it exits 0. With no other Write, no Edit and only the read-only check through Bash, the seeded Cadence files (evals/cadence-project/seed.sh: mkdir -p .planning, cp -R samples/cadence-project/planning/., no seldon/) cannot change. Plan 2's report, Task 3, also cmp'd all three against the fixture (exit 0) on the per-case run. SKILL.md:280-290 is the rule: under Cadence = .planning/PROJECT.md via Glob, Cadence's files don't change where a run starts, and the brief and PRD steps read none of them. git diff --name-only c614806 HEAD outside .planning/ lists README.md only, so the case, graders, fixtures and SKILL.md are what ran."
+    },
+    {
+      "n": 2,
+      "truth": "A dump on a project under Cadence starts a walk instead of refusing: Seldon recommends the fast path on a line of its own and writes and edits nothing (FLOW-05, success criterion 1)",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "In the final run (aggregate-result.json, 2026-11-18T08-24-30-455Z), cadence-dump scored 1.00, 3/3: recommends-fast-path matched `Recommended path:[\\s*_`]*fast path`, Write 0x and Edit 0x. Its seed (evals/cadence-dump/seed.sh, the same blob as cadence-project's) seeds PROJECT.md, ROADMAP.md and STATE.md with no .planning/seldon/, and prompt.md is the repair-log dump. Plan 2's report, Task 4, shows the kept workspace's three Cadence files cmp-identical, with no .planning/seldon/ created."
+    },
+    {
+      "n": 3,
+      "truth": "With Cadence's files and a top-level design, a dump for new work asks for a folder name in the fixed words and writes nothing. Answering with a name writes .planning/seldon/<name>/brief.md, which passes --brief on that folder, with no Write or Edit elsewhere, and the top-level design stays byte-identical (AC2, success criterion 3)",
+      "status": "VERIFIED",
+      "uat_item": 2,
+      "evidence": "In the final run, new-design-name scored 1.00, 3/3: asks-for-name matched the name line on a line of its own, Write 0x and Edit 0x. That grader literal is the one whole line at SKILL.md:359. My spot check: it rejects the line when run into a sentence. new-design-brief scored 1.00, 5/5: runs-check 1x on `--brief .planning/seldon/repair-log`, no-write-outside 0x, no-edit-outside 0x, writes-brief exists. Its replay session evals/new-design-brief/66de7836-d8a5-4d67-9ea8-5a668bed6024.jsonl (trace djUUUc) holds two Globs, one Write to .planning/seldon/repair-log/brief.md and one check call printing conforms. I rebuilt the brief and `node lib/check.mjs --brief <scratch>/.planning/seldon/repair-log` exits 0. No other write path, so the seeded samples/brief.md, prd.md, spine.md, epics.md and Cadence's three files are untouched. Plan 4's report, Task 2, also cmp'd all seven, exit 0."
+    },
+    {
+      "n": 4,
+      "truth": "With a top-level design and one named design, a bare /seldon asks which design in the fixed words and writes nothing, an answer naming a design goes on with that design's next step, and the single-design cases still pass, so one design never asks (AC3)",
+      "status": "VERIFIED",
+      "uat_item": 3,
+      "evidence": "In the final run, which-design scored 1.00, 3/3: asks-which-design matched a message ending on `Which design do you want to work on?` (SKILL.md:395), Write 0x and Edit 0x. which-design-answer scored 1.00, 2/2. Its replay session evals/which-design-answer/2d16a2e1-8bce-4b3d-816c-c975e2c75363.jsonl (trace auX2lM) shows, in order: a Glob of .planning/seldon/sowlist/*.md, then the assistant text `I'm building the PRD from .planning/seldon/sowlist/brief.md, the brief that's already there. ...`, then a Read of sowlist/brief.md, then a Write to .planning/seldon/sowlist/prd.md, then `check.mjs --prd .planning/seldon/sowlist` printing conforms. I rebuilt the PRD and --prd on it exits 0. resume, existing-brief, spine-from-prd and the other 29 pre-phase cases all scored 1.00 in the same run (40/40)."
+    },
+    {
+      "n": 5,
+      "truth": "On a project under Cadence the spine step asks who relies on what in its fixed words, and answering it writes a spine that passes --spine. In that spine the token found only in the seeded code sits on a `> ` line under an `## S-NN:` heading, with `(src/tools.mjs)` on the next line, and the answer is quoted in the decision for the part it names (AC4, success criterion 2, ARCH-03)",
+      "status": "VERIFIED",
+      "uat_item": 4,
+      "evidence": "In the final run, spine-who-relies scored 1.00, 7/7: asks-who-relies matched SKILL.md:963's line on a line of its own, no-trust-, no-unattended- and no-failure-question were absent, no-write 0x, no-edit 0x, no-secret matched. spine-conventions scored 1.00, 5/5: check-passes, no-secret, quotes-code, records-who-relies, writes-spine. Its replay session evals/spine-conventions/cb5abfcc-1f9e-4b7b-9434-2adabad26685.jsonl (trace p0Mh4V) Reads the brief, the PRD, server.mjs, src/tools.mjs, src/catalog.mjs and fly.toml, then Writes spine.md. In it, S-03 (Kind: who owns shared data) quotes `// Only this plinkward module changes a tool's record; everything else reads them.`, then `(src/tools.mjs)`, then `> The parish newsletter copies the tool records every Sunday night ...`. S-01 (stack) and S-02 (hosting) quote server.mjs and fly.toml with their paths, and no decision carries [ASSUMPTION]. I rebuilt that spine: `node lib/check.mjs --spine` exits 0, and the quotes-code and records-who-relies patterns read from the HEAD grader files both match it. Spot check: quotes-code fails with the path line missing, the wrong path or the token in prose only, and records-who-relies fails with the answer under a decision that doesn't name tool records. git grep: plinkward is only in samples/spine-conventions/code/src/tools.mjs and evals/spine-conventions/graders/quotes-code.md. The skill text that run loaded is string-equal to HEAD's SKILL.md body with the loader's substitutions (66879 chars)."
+    },
+    {
+      "n": 6,
+      "truth": "The README's eval command passes all 40 cases at 1.00, node lib/check.mjs passes samples/ in each mode, allowed-tools is still the pinned five, and the unit suite passes under the coverage gate (AC5)",
+      "status": "VERIFIED",
+      "uat_item": 5,
+      "evidence": "Per evals/results/2026-11-18T08-24-30-455Z/aggregate-result.json (root /code/seldon, ablation none, threshold 1, partial false), casesTotal is 40, casesPassed 40 and overallScore 1. Every recorded grader config matches its grader file at HEAD: 379 fields across all 40 cases, 0 mismatches, and every case directory under evals/ is in the run. Checks I ran: `node lib/check.mjs samples` plus --brief, --prd, --spine and --epics all exit 0 with their conforms lines. The one suite run used CI's coverage-gate form of `node --test tests/*.test.mjs` (.github/workflows/test.yml:41-52, Node v26.13.1, lcov to scratch): exit 0, 88/88 pass. lib/check.mjs covers 99.27% of lines and 97.50% of branches against the 85/85 gate, and both lcov guards pass. That run included `allowed-tools grants exactly D-02's five entries` (tests/skill.test.mjs), which passed against SKILL.md:5-10. `claude plugin validate --strict .` prints `Validation passed`, exit 0. git diff 6757b36 HEAD -- lib/ tests/ .claude-plugin/ is empty."
+    },
+    {
+      "n": 7,
+      "truth": "In the spine-who-relies and spine-conventions runs, FAKE-not-a-secret appears nowhere in the trace, both no-secret graders pass, and the value reaches no file under .planning/seldon/",
+      "status": "VERIFIED",
+      "uat_item": 6,
+      "evidence": "In the final run both no-secret graders passed, with the pattern anchored to the trace's first character that is identical in both files at HEAD. Spot check: the pattern is true on clean text and false on a trace holding the value mid-file, both with no flag and with the m flag. spine-who-relies wrote and edited nothing (0x each). The spine-conventions session holds FAKE-not-a-secret 0 times, its spine.md Write input included, and it never Reads or Greps .env (a `**/*` Glob listed it by name only). samples/spine-conventions/code/.env is the one line `TOOLSHED_ADMIN_TOKEN=FAKE-not-a-secret`. Per git grep, the value appears only there and in the two no-secret graders. Known, and not an acceptance criterion: in its final run spine-who-relies ran `ls -la` on its own workspace despite SKILL.md:855 `never a shell command` (plan 8 report). The listing showed .env by name only. The owner declined that finding (.planning/records/DECLINED.md:31-32), and it is a phase 9 todo (.planning/CAPTURE.md:9)."
+    },
+    {
+      "n": 8,
+      "truth": "README.md's 'What it writes' names .planning/seldon/<name>/. 'Using it' covers /seldon on a project under Cadence, the folder name, the which-design question and the spine reading code and asking who relies on what. The Evals list has one line per directory under evals/ and none for a missing one",
+      "status": "VERIFIED",
+      "uat_item": 7,
+      "evidence": "README.md:24 names `.planning/seldon/<name>/`. :45 covers the new-design folder name (lowercase letters, digits and hyphens) and the which-design ask for a bare run or a step name. :47 covers a project under Cadence: `.planning/PROJECT.md`, Cadence's files never written, and the brief and PRD never reading them. :51 says the spine reads the code, records conventions quoting the code with its file, skips stack and host questions the code settles, and always asks who relies on what. A node comparison of the `## Evals` list against evals/ subdirectories other than results/ finds 40 listed and 40 directories, with none missing, extra or duplicated. The eight new cases are at :103-110."
+    },
+    {
+      "n": 9,
+      "truth": "docs/FORMAT.md gives each later body of work a named design in .planning/seldon/<name>/ under the same rules, lets the check take a named design's folder, and names the code as the spine's third quote source with a (path) line. Its example passes --spine, and lib/check.mjs is unchanged (Plan 1, D-07)",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "docs/FORMAT.md:5-18 keeps the first design at the top of .planning/seldon/, gives each later body of work `.planning/seldon/<name>/` with the same four files, allows lowercase letters, digits and hyphens in names, and says it writes nothing outside `.planning/seldon/`. :363 lets `<dir>` be a named design's folder. :332-338 lists three quote sources, the code with its `(path)` line, untagged. The S-02 example (:350-355), put under `# Tally - architecture spine` in a scratch folder, passes `node lib/check.mjs --spine`, exit 0. `git diff 6757b36 HEAD -- lib/` is empty."
+    },
+    {
+      "n": 10,
+      "truth": "SKILL.md defines a project under Cadence and settles a run's working folder: top-level versus named designs, the name line on a dump beside a design, name fit/taken handling, and the which-design question for a bare run or a step name with several designs, routed back to the run that asked (Plans 2 and 3)",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "SKILL.md:280-290 defines Cadence and its starting rule. :257-278 covers designs found by Glob, the working folder, and fixed lines and check commands naming `.planning/seldon/<name>/` for a named design. :352-375 covers a dump with a design there: nothing written, the name line then the documents question with one design, the name line alone with more. :205-216 and :377-383 cover a name that fits and isn't taken, and the retry when it doesn't fit or is taken. :60-64, :196-204 and :292-297 cover which-design for bare runs and step names and the `Design chosen` route back. The eval cases in truths 3 and 4 prove the AC2/AC3 paths at runtime. The rejected or taken name retry, a dump with several designs, and a step name with several designs are instructed here, but no eval case exercises them. They are plan detail outside AC2/AC3's agreed coverage, so under the completion rule they are not uncovered acceptance requirements."
+    },
+    {
+      "n": 11,
+      "truth": "SKILL.md's spine step, on a project under Cadence, reads the code outside .planning/ and keeps secret files out. It records conventions only as the six kinds, for parts this work builds or project-wide, each quoted with its (path) and untagged, and treats a stack or host the code settles as settled. It always asks who relies on what, a rerun included, through its own route, and records each answer under the part it names (Plan 6)",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "SKILL.md:851-873 covers the code read under Cadence with Read, Glob and Grep, the secret-file rule and folder-wide Grep exclusions. :899-904 limits conventions to the six kinds and to parts this work builds or the whole project. :1058-1061 and :1066 cover the code quote, its path line and no tag. :917-921 treats a stack or host the code settles as settled. :923-924 and :958-966 cover the who-relies question in fixed words, and :972-973 and :1001-1003 ask it on a rerun too. :171-176 is the `Who-relies question answered` route. :1086-1094 records an answer under the part it names, and one naming no part is said back and recorded nowhere. Runtime proof is truth 5. In that final run, the answer's second sentence, `Nothing else outside this repository relies on Toolshed.`, went into no decision. A spine rerun under Cadence has no eval case, which is outside AC4."
+    }
+  ],
+  "passes": [
+    {
+      "k": 1,
+      "name": "A dump on a project under Cadence leaves Cadence's files untouched",
+      "evidence": "Plan 8's final full-suite run at c614806 (evals/results/2026-11-18T08-24-30-455Z/aggregate-result.json): cadence-project 1.00, 5/5. Its replay session shows one Write, to .planning/seldon/brief.md, and one check call. The brief, rebuilt from that Write, passes `node lib/check.mjs --brief` (exit 0). No Edit and no other write path, so PROJECT.md, ROADMAP.md and STATE.md can't change (plan 2 also cmp'd all three, exit 0). Case files are unchanged since c614806 per git."
+    },
+    {
+      "k": 2,
+      "name": "A dump that lands on a design asks for a folder name, and the answer writes the brief there",
+      "evidence": "Final run: new-design-name 3/3, the name line from SKILL.md:359 on a line of its own, Write and Edit 0x. new-design-brief 5/5. Its session shows a single Write, to .planning/seldon/repair-log/brief.md, and the rebuilt brief passes --brief on that folder (exit 0). No other Write or Edit, so the top-level design is untouched (plan 4 cmp of all seven seeded files, exit 0)."
+    },
+    {
+      "k": 3,
+      "name": "With two designs, a bare /seldon asks which design, and the answer goes on with that one",
+      "evidence": "Final run: which-design 3/3, ending on `Which design do you want to work on?`, with Write and Edit 0x. which-design-answer 2/2. Its session says the sowlist PRD resume line before it Reads and then Writes .planning/seldon/sowlist/prd.md, and the rebuilt PRD passes --prd (exit 0). resume, existing-brief and every other single-design case scored 1.00 in the same 40/40 run."
+    },
+    {
+      "k": 4,
+      "name": "The spine step on a project under Cadence asks who relies on what, and records the code's convention",
+      "evidence": "Final run: spine-who-relies 7/7 and spine-conventions 5/5. The rebuilt spine.md passes --spine (exit 0). Its S-03 quotes the plinkward line with `(src/tools.mjs)` on the next line, then the newsletter answer, and the HEAD quotes-code and records-who-relies patterns match it. plinkward appears only in code/src/tools.mjs and the quotes-code grader."
+    },
+    {
+      "k": 5,
+      "name": "The whole suite, the checks, the pinned tools and the coverage gate pass",
+      "evidence": "aggregate-result.json: 40/40 cases at 1.00. The recorded grader configs match HEAD's grader files (379 fields, 0 mismatches). `node lib/check.mjs samples` passes in all modes (exit 0). The coverage-gate run of tests/*.test.mjs passes 88/88 with lib/check.mjs at 99.27% lines and 97.50% branches, and both guards pass. The skill.test pin on allowed-tools' five entries passes. strict validate exits 0."
+    },
+    {
+      "k": 6,
+      "name": "The spine step never reads the fake credential",
+      "evidence": "Both no-secret graders passed in the final run, and their patterns are identical at HEAD. Spot check: each fails a leaked trace with or without the m flag. The spine-conventions session holds the value 0 times, the spine.md Write included, and never Reads .env. spine-who-relies wrote nothing. The value appears only in code/.env and the two graders."
+    },
+    {
+      "k": 7,
+      "name": "The README describes projects under Cadence, named designs and every case",
+      "evidence": "README.md:24, :45, :47 and :51 cover named folders, the folder name, which-design, projects under Cadence and the spine reading code and asking who relies on what. Evals list: 40 entries for 40 case directories, none missing, extra or duplicated."
+    }
+  ],
+  "gaps": [],
+  "human_checks": []
+}
