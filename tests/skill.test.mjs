@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const skillPath = join(root, 'skills', 'seldon', 'SKILL.md');
+const agentPath = join(root, 'agents', 'readiness.md');
 
 // D-02's grant, in full. Anything that writes and isn't on this list is a security change, not a tidy-up.
 const GRANT = [
@@ -50,6 +51,22 @@ test('allowed-tools grants exactly D-02\'s five entries', () => {
   for (const entry of GRANT) {
     assert.ok(entries.includes(entry), `allowed-tools is missing D-02's entry: ${entry}`);
   }
+});
+
+// The skill's grant doesn't limit which agent it starts, so the agent's own frontmatter is the only thing keeping it to Read.
+test('the readiness agent gets Read and nothing that writes or runs a command', () => {
+  const lines = readFileSync(agentPath, 'utf8').replace(/\r\n/g, '\n').split('\n');
+  assert.equal(lines[0], '---', 'agents/readiness.md does not open with frontmatter');
+  const end = lines.indexOf('---', 1);
+  assert.ok(end > 0, 'agents/readiness.md frontmatter is never closed');
+  const front = lines.slice(1, end);
+  const field = (name) => {
+    const found = front.filter((line) => line.startsWith(`${name}:`));
+    assert.equal(found.length, 1, `agents/readiness.md has ${found.length} ${name} lines, not 1`);
+    return found[0].slice(name.length + 1).trim();
+  };
+  assert.equal(field('tools'), 'Read', 'the readiness agent\'s tools are not exactly Read');
+  assert.equal(field('disallowedTools'), 'Write, Edit, Bash', 'the readiness agent\'s disallowedTools are not exactly Write, Edit, Bash');
 });
 
 // If the body's command drifts from the grant, the check prompts or gets refused mid-run.
