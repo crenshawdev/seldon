@@ -52,12 +52,12 @@ function listProblems(names, folders) {
   return problems;
 }
 
-// The runner globs <eval dir>/**/case.yaml and prompt.md, so one below a case folder would run without a bullet.
+// The runner globs <eval dir>/**/case.yaml and prompt.md, so one anywhere but <case>/<file> would run without a bullet.
 function nestedCaseFiles(paths) {
   return paths
     .map((path) => path.split('/'))
-    .filter((parts) => parts.length > 2 && parts[0] !== 'results' && ['case.yaml', 'prompt.md'].includes(parts.at(-1)))
-    .map((parts) => `evals/${parts.join('/')}: a case file below a case folder, which the README's list can't name`);
+    .filter((parts) => parts.length !== 2 && parts[0] !== 'results' && ['case.yaml', 'prompt.md'].includes(parts.at(-1)))
+    .map((parts) => `evals/${parts.join('/')}: a case file outside <case>/<file>, which the README's list can't name`);
 }
 
 // experimental.evals moves the eval dir off evals/, and then the folders compared here aren't the ones that run.
@@ -121,9 +121,12 @@ test('the runner finds its cases in the top-level folders of evals/ and nowhere 
   assert.deepEqual(manifestProblems(manifest), []);
 });
 
-test('a case file below a case folder, or a manifest eval dir, is flagged by name', () => {
+test('a case file outside <case>/<file>, or a manifest eval dir, is flagged by name', () => {
   assert.deepEqual(nestedCaseFiles([...evalPaths, 'fast-path/sub/case.yaml', 'results/run/fast-path/prompt.md']), [
-    "evals/fast-path/sub/case.yaml: a case file below a case folder, which the README's list can't name",
+    "evals/fast-path/sub/case.yaml: a case file outside <case>/<file>, which the README's list can't name",
+  ]);
+  assert.deepEqual(nestedCaseFiles([...evalPaths, 'case.yaml']), [
+    "evals/case.yaml: a case file outside <case>/<file>, which the README's list can't name",
   ]);
   const moved = JSON.stringify({ ...JSON.parse(manifest), experimental: { evals: 'other' } });
   assert.deepEqual(manifestProblems(moved), [
