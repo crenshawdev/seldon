@@ -14,10 +14,13 @@ const MODEL_KEY = /ANTHROPIC_API_KEY/gi;
 const SECRETS = /\bsecrets\b/gi;
 // Expression contexts ignore case, so secrets.github_token is the same token.
 const GITHUB_TOKEN = /^\s*(?:\.\s*GITHUB_TOKEN\b|\[\s*(['"])GITHUB_TOKEN\1\s*\])/i;
+// \x, \u and \U are YAML's only escapes that spell any character, so banning them beats decoding YAML.
+const ESCAPE = /\\[xuU]/g;
 
 function workflowProblems(text) {
   const problems = [];
   const lineOf = (index) => text.slice(0, index).split('\n').length;
+  for (const m of text.matchAll(ESCAPE)) problems.push({ line: lineOf(m.index), why: 'a YAML escape that can spell a hidden name' });
   for (const m of text.matchAll(EVAL)) problems.push({ line: lineOf(m.index), why: 'runs claude plugin eval' });
   for (const m of text.matchAll(MODEL_KEY)) problems.push({ line: lineOf(m.index), why: 'names ANTHROPIC_API_KEY' });
   for (const m of text.matchAll(SECRETS)) {
@@ -47,6 +50,10 @@ test('the eval command, a model key and any secret but GITHUB_TOKEN are each fla
     ['env:\n  KEY: ${{ secrets.MODEL_KEY }}\n', 2, 'reaches a secret other than GITHUB_TOKEN'],
     ["env:\n  KEY: ${{ secrets['CLAUDE_CODE_OAUTH_TOKEN'] }}\n", 2, 'reaches a secret other than GITHUB_TOKEN'],
     ['env:\n  KEY: ${{ secrets.SONAR_TOKEN }}\n', 2, 'reaches a secret other than GITHUB_TOKEN'],
+    // \\ so a real backslash reaches the guard; a bare \x73 would be JS spelling "s" before the test sees it.
+    ['run: "${{ \\x73ecrets.MODEL_KEY }}"\n', 1, 'a YAML escape that can spell a hidden name'],
+    ['env:\n  K: "\\u0041NTHROPIC_API_KEY"\n', 2, 'a YAML escape that can spell a hidden name'],
+    ['"\\U00000073ecrets"\n', 1, 'a YAML escape that can spell a hidden name'],
   ];
   for (const [text, line, why] of flagged) assert.deepEqual(workflowProblems(text), [{ line, why }], JSON.stringify(text));
   const clean = [
