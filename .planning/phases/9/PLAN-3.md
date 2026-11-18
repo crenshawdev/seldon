@@ -13,6 +13,7 @@ files:
   - tests/graders.test.mjs
   - evals/stale-spine/history.jsonl
   - evals/results/phase-9-traces/
+  - README.md
 ---
 
 # Phase 9: The full graders - Plan 3: The spine confirm form and stale-spine's back-story
@@ -92,3 +93,4 @@ The full graders check every run that writes what they grade, and a unit test pr
   - **This plan:** (1) prd-conflict-apply, the capture for stale-spine's history. (2) stale-spine, the history change's run and its solo run for Task 1. (3 to 8) spine-from-prd, spine-answers, spine-conventions, spine-rerun, readiness-fix and readiness-fix-answer.
   - **Plan 4:** (9) full-walk, for the trace and size graders. (10) readiness-agent, for both halves of readiness-passes.
 - **Daneel's rulings on this plan:** readiness-fix and readiness-fix-answer get byte copies of stale-spine's new grader, a deviation from D-13 (Task 1). Without them SKILL.md would allow a form two graders fail. This also settles finding 3 of REVIEW-plan-plan-dae9e98.md. Finding 4 is fixed by Task 2's prd.md rebuild check, on Daneel's ruling; he rebuilt the kept full-run-3 capture's prd.md over samples/prd.md and it equals samples/spine-rerun/prd.md byte for byte. The executor stops once, before the capture run, with Task 1's commit for Daneel (Task 2). Plan 4's two runs need no stop. The solo-run list stands as written (Task 3).
+- **Deviation, diff review finding 1 (REVIEW-diff-4cfa959-af0c7bc.md, low, README.md:61):** on Daneel's ruling, README.md joins this plan's files for one sentence only, against "Out: the README". "The spine's confirm question names the command so you know it's there, and nothing else ever writes the document." becomes "Just before the spine's confirm question, Seldon names the command so you know it's there, and nothing else ever writes the document." Nothing else in the README changes, and no eval runs for it.
