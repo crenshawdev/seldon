@@ -203,7 +203,10 @@ these in order:
     that first showed the name line. Go to "The design folder" with it, and
     the walk goes on in that folder as any new run's does.
   - **Doesn't fit, or is taken:** write nothing, say why in one sentence, and
-    end on the name line alone, on a line of its own, with nothing after it.
+    show the name line again, on a line of its own. With one design the
+    documents question follows it, as in the dump's turn, on a line of its own
+    with nothing after it. With more than one design end on the name line
+    alone, with nothing after it.
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
   - **Rerun the brief:** the user chose the rerun in their own words. The text
