@@ -16,11 +16,14 @@ const SECRETS = /\bsecrets\b/gi;
 const GITHUB_TOKEN = /^\s*(?:\.\s*GITHUB_TOKEN\b|\[\s*(['"])GITHUB_TOKEN\1\s*\])/i;
 // \x, \u and \U are YAML's only escapes that spell any character, so banning them beats decoding YAML.
 const ESCAPE = /\\[xuU]/g;
+// An OIDC token logs a job into Bedrock or Vertex, and that reaches a model with no key to grep for.
+const ID_TOKEN = /\bid-token['"]?\s*:/g;
 
 function workflowProblems(text) {
   const problems = [];
   const lineOf = (index) => text.slice(0, index).split('\n').length;
   for (const m of text.matchAll(ESCAPE)) problems.push({ line: lineOf(m.index), why: 'a YAML escape that can spell a hidden name' });
+  for (const m of text.matchAll(ID_TOKEN)) problems.push({ line: lineOf(m.index), why: 'a cloud login that can reach a model without a key' });
   for (const m of text.matchAll(EVAL)) problems.push({ line: lineOf(m.index), why: 'runs claude plugin eval' });
   for (const m of text.matchAll(MODEL_KEY)) problems.push({ line: lineOf(m.index), why: 'names ANTHROPIC_API_KEY' });
   for (const m of text.matchAll(SECRETS)) {
@@ -66,6 +69,7 @@ test('the eval command, a model key and any secret but GITHUB_TOKEN are each fla
     ['run: "${{ \\x73ecrets.MODEL_KEY }}"\n', 1, 'a YAML escape that can spell a hidden name'],
     [ESCAPED_KEY, 2, 'a YAML escape that can spell a hidden name'],
     ['"\\U00000073ecrets"\n', 1, 'a YAML escape that can spell a hidden name'],
+    ['permissions:\n  id-token: write\n', 2, 'a cloud login that can reach a model without a key'],
   ];
   for (const [text, line, why] of flagged) assert.deepEqual(workflowProblems(text), [{ line, why }], JSON.stringify(text));
   const clean = [
