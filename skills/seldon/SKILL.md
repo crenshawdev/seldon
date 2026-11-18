@@ -1093,11 +1093,11 @@ Read the brief and the PRD for two kinds of part:
   as a scheduled job.
 
 A design with outside input gets the trust-boundary question. So does a
-design whose data, anything it writes or changes, shows on a page or service
-people outside the project can reach. Read that reach from the brief, the PRD
-and, on a project under Cadence, the code this step already reads: there the
-code counts too. Ask the question with exactly these words, on a line of their
-own:
+design whose data shows on a page or service people outside the project can
+reach, whether the design writes, changes or only reads that data. Read that
+reach from the brief, the PRD and, on a project under Cadence, the code this
+step already reads: there the code counts too. Ask the question with exactly
+these words, on a line of their own:
 
 ```
 What can people outside the project send in, and what must they never see or change?
