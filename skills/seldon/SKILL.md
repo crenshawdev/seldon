@@ -858,7 +858,9 @@ those two files and nothing more. Either way, never read `docs/design/` or any
 other design folder, anything in `.planning/` but this design's brief, PRD and
 spine, the dump, or the earlier conversation, whatever it holds. In the code,
 never read inside a `.env*` file or a key or credential file with any tool or
-command: skip it by name, even where Glob lists it. Never quote a line elsewhere that holds a password, token, key,
+command: skip it by name, even where Glob lists it. Any Grep not scoped to a
+named source file excludes them with its glob, such as `!**/.env*`, `!**/*.pem`
+and `!**/*.key`. Never quote a line elsewhere that holds a password, token, key,
 or a connection string with credentials. A fact from a design folder
 reaches the spine only through a quote the brief already carries. A stack or
 hosting word the user said reaches it only through the brief's `> ` quotes,
