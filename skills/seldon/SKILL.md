@@ -212,6 +212,22 @@ these in order:
 
   - **Anything else:** write nothing, and end on the conflict question again,
     on a line of its own, with nothing after it.
+- **Readiness question answered:** your last turn ended on the readiness
+  question in "The readiness check", and this run's arguments answer it. A
+  bare `/seldon`, with this run's arguments empty, isn't an answer: it's a new
+  run, and the check runs again.
+  - **Fix:** in this same turn, rerun the earliest step any finding in that
+    report names: the spine when any finding line ends naming `/seldon spine`,
+    otherwise the epics. Go to "The spine rerun" in "The spine draft" or "The
+    epics rerun" in "The epics draft", in the working folder the check ran in.
+    The report's finding lines are that rerun's change. That's the one
+    exception to "never the earlier conversation", and those lines are all it
+    takes from it. It runs one step: after a spine rerun the epics are stale,
+    and the next bare `/seldon` reruns them before the check runs again.
+  - **Hand off as it is:** write and edit nothing, and give the handoff as
+    "The handoff" says, with no not-checked line.
+  - **Anything else:** write nothing, and end on the readiness question again,
+    on a line of its own, with nothing after it.
 - **Who-relies question answered:** your last turn asked the who-relies
   question in "The spine's questions", alone or with the spine's other
   questions, and the user answered. Carry the step on with those answers just
@@ -1004,17 +1020,18 @@ or a connection string with credentials. A fact from a design folder
 reaches the spine only through a quote the brief already carries. A stack or
 hosting word the user said reaches it only through the brief's `> ` quotes,
 since the PRD leaves those words out. On a project under Cadence the code can
-settle a stack or hosting choice too, as "Stack and hosting" below says. The
-one thing it takes from the conversation is the user's answers to this step's
-own questions: the ones "The spine's questions" below asks, and the confirm
-question "The spine check" ends on. The one other `.planning/` file a spine
+settle a stack or hosting choice too, as "Stack and hosting" below says. From
+the conversation it takes only the user's answers to this step's own
+questions, the ones "The spine's questions" below asks and the confirm question
+"The spine check" ends on, and, on a fix from the readiness question, the
+finding lines that name the spine. The one other `.planning/` file a spine
 step reads is the `spine.md` a rerun updates, as "The spine rerun" says.
 
 The brief and the PRD on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
 the brief. Build from the files as they stand. Don't point out the difference,
-don't ask which is right, and carry nothing from the conversation into the
-spine.
+don't ask which is right, and carry nothing else from the conversation into
+the spine.
 
 Running this step is the go-ahead. Recommend no path and ask for no
 confirmation first. The brief and the PRD count as answered, their
@@ -1117,8 +1134,9 @@ create a spine that isn't there yet. Never Write over a `spine.md` that's
 there: one that's there changes only with Edit, never a fresh Write, through
 these routes:
 
-- A rerun, from `/seldon spine` or from a bare `/seldon` whose stale check
-  found `spine.md` stale, as "The spine rerun" below says. It's the only
+- A rerun, from `/seldon spine`, from a bare `/seldon` whose stale check
+  found `spine.md` stale, or from a fix at the readiness question, as "The
+  spine rerun" below says. It's the only
   route into the spine step that updates a spine that's there.
 - "Spine questions answered" or "Who-relies question answered" in "Where the
   conversation stands", when the turn that asked those questions was such a
@@ -1131,14 +1149,19 @@ these routes:
 
 Each of these keeps the stamp line current, as "Stamps and stale links" says.
 
-**The spine rerun.** A `/seldon spine` that finds `spine.md` there, or a bare
-`/seldon` whose stale check found `spine.md` stale, brings it in line with the
+**The spine rerun.** A `/seldon spine` that finds `spine.md` there, a bare
+`/seldon` whose stale check found `spine.md` stale, or a fix at the readiness
+question, brings it in line with the
 brief and the PRD as they stand now. Read `spine.md` first,
 the previous version of this document, then `brief.md` and `prd.md`, plus the
 code on a project under Cadence as "The spine step" says, and nothing else:
 not a design folder, not the dump, and not the conversation.
 The one thing it takes from the conversation is the user's answers to its own
-questions, when the rerun stopped to ask them as "The spine step" says. Every
+questions, when the rerun stopped to ask them as "The spine step" says, except
+on a fix from the readiness question: then the finding lines that name the
+spine are its change too. It adds or changes the decisions those lines need,
+tags a new decision with no source words `[ASSUMPTION]` as any guess is, and
+asks only what "The spine's questions" allows. Every
 decision in that `spine.md` counts as answered, its `[ASSUMPTION]` guesses
 included, so the rerun asks only about what it doesn't decide yet, except the
 who-relies question: on a project under Cadence the rerun always asks it, as
@@ -1289,8 +1312,9 @@ stands" first, like any step name.
 The epics are built from `.planning/seldon/prd.md` and
 `.planning/seldon/spine.md` and nothing else. Read those two files and nothing
 more for it: never the brief, never `docs/design/` or any other design folder,
-never the dump, and never the earlier conversation, whatever it holds. The one
-other file an epics step reads is the `epics.md` a rerun updates, as "The
+never the dump, and never the earlier conversation, whatever it holds, except
+the finding lines that name the epics on a fix from the readiness question.
+The one other file an epics step reads is the `epics.md` a rerun updates, as "The
 epics rerun" says.
 
 The PRD and the spine on disk are the confirmed ones, even where they differ
@@ -1334,8 +1358,9 @@ create an `epics.md` that isn't there yet. Never Write over an `epics.md`
 that's there: one that's there changes only with Edit, never a fresh Write,
 through these routes:
 
-- A rerun, from `/seldon epics` or from a bare `/seldon` whose stale check
-  found `epics.md` stale, as "The epics rerun" below says. It's the only
+- A rerun, from `/seldon epics`, from a bare `/seldon` whose stale check
+  found `epics.md` stale, or from a fix at the readiness question, as "The
+  epics rerun" below says. It's the only
   route into the epics step that updates an `epics.md` that's there.
 - "Names changes" in "Where the conversation stands", when the user answers
   the epics confirm question with changes. Make those changes in `epics.md`
@@ -1343,11 +1368,14 @@ through these routes:
 
 Each of these keeps the stamp line current, as "Stamps and stale links" says.
 
-**The epics rerun.** A `/seldon epics` that finds `epics.md` there, or a bare
-`/seldon` whose stale check found `epics.md` stale, brings it in line with
-the PRD and the spine as they stand now. Read `epics.md` first, the previous
-version of this document, then `prd.md` and `spine.md`, and nothing else,
-however the rerun was reached. It asks no question. Change the epics with Edit only, never a
+**The epics rerun.** A `/seldon epics` that finds `epics.md` there, a bare
+`/seldon` whose stale check found `epics.md` stale, or a fix at the readiness
+question, brings it in line with the PRD and the spine as they stand now. Read
+`epics.md` first, the previous version of this document, then `prd.md` and
+`spine.md`, and nothing else, however the rerun was reached. On a fix from
+the readiness question, the finding lines that name the epics are its change:
+it adds or changes the epics those lines need, and takes nothing else from the
+conversation. It asks no question. Change the epics with Edit only, never a
 fresh Write over them, so a line the change doesn't touch is never typed
 again:
 
