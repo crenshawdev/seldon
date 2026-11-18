@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: readiness-not-run
+description: A bare /seldon in a fresh session where all four documents are already at .planning/seldon/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md, and none is stale, with the agent tool withheld, so the readiness check can't start and Seldon has to say its did-not-run line with a reason, never its no-findings line, ask nothing, and end on the not-checked line and the new-project handoff command.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
+  disallowed_tools: [Agent]
