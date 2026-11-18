@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -52,10 +52,27 @@ function listProblems(names, folders) {
   return problems;
 }
 
+// The runner globs <eval dir>/**/case.yaml and prompt.md, so one below a case folder would run without a bullet.
+function nestedCaseFiles(paths) {
+  return paths
+    .map((path) => path.split('/'))
+    .filter((parts) => parts.length > 2 && parts[0] !== 'results' && ['case.yaml', 'prompt.md'].includes(parts.at(-1)))
+    .map((parts) => `evals/${parts.join('/')}: a case file below a case folder, which the README's list can't name`);
+}
+
+// experimental.evals moves the eval dir off evals/, and then the folders compared here aren't the ones that run.
+function manifestProblems(text) {
+  return JSON.parse(text).experimental?.evals === undefined
+    ? []
+    : ['.claude-plugin/plugin.json sets experimental.evals, so the cases may not come from evals/'];
+}
+
 // results/ is run output git ignores, not a case.
 const folders = readdirSync(join(root, 'evals'), { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name !== 'results')
   .map((entry) => entry.name);
+const evalPaths = readdirSync(join(root, 'evals'), { recursive: true }).map((path) => String(path).split(sep).join('/'));
+const manifest = readFileSync(join(root, '.claude-plugin', 'plugin.json'), 'utf8');
 const section = evalsSection(readme);
 
 test("the README's eval command carries no case filter", () => {
@@ -97,4 +114,19 @@ test('a missing, invented or repeated case name is flagged by name', () => {
     'made-up-case: listed in the README but has no folder under evals/',
   ]);
   assert.deepEqual(listProblems([...names, 'fast-path'], folders), ['fast-path: listed more than once']);
+});
+
+test('the runner finds its cases in the top-level folders of evals/ and nowhere else', () => {
+  assert.deepEqual(nestedCaseFiles(evalPaths), []);
+  assert.deepEqual(manifestProblems(manifest), []);
+});
+
+test('a case file below a case folder, or a manifest eval dir, is flagged by name', () => {
+  assert.deepEqual(nestedCaseFiles([...evalPaths, 'fast-path/sub/case.yaml', 'results/run/fast-path/prompt.md']), [
+    "evals/fast-path/sub/case.yaml: a case file below a case folder, which the README's list can't name",
+  ]);
+  const moved = JSON.stringify({ ...JSON.parse(manifest), experimental: { evals: 'other' } });
+  assert.deepEqual(manifestProblems(moved), [
+    '.claude-plugin/plugin.json sets experimental.evals, so the cases may not come from evals/',
+  ]);
 });
