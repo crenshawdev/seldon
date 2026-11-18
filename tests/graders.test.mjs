@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { basename, dirname, join, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -157,6 +157,45 @@ function formProblems(pattern, flags) {
     }
   }
   return bad;
+}
+
+// AC2's graders: the recommendation graders aren't held to their cases.
+const PLACED = ['size', 'trace', 'last-message', 'agent-result'];
+
+// Every file in every case folder, as { case, path inside the case, bytes }; results/ is run output.
+function evalLayout() {
+  const layout = [];
+  for (const entry of readdirSync(join(root, 'evals'), { recursive: true })) {
+    const parts = String(entry).split(sep);
+    if (parts.length < 2 || parts[0] === 'results') continue;
+    const file = join(root, 'evals', String(entry));
+    if (statSync(file).isFile()) layout.push({ case: parts[0], path: parts.slice(1).join('/'), bytes: readFileSync(file) });
+  }
+  return layout;
+}
+
+// A placed grader missing from its case, its name in a case the table doesn't give it, or its bytes there under any name.
+function misplaced(layout, table) {
+  const problems = [];
+  const placed = table.filter((g) => PLACED.includes(g.kind));
+  for (const g of placed) {
+    if (!layout.some((f) => `evals/${f.case}/${f.path}` === g.file)) problems.push(`${g.file}: missing from its case`);
+  }
+  const casesFor = (keep) => new Set(placed.filter(keep).map((g) => g.case));
+  for (const f of layout) {
+    const shown = `evals/${f.case}/${f.path}`;
+    const name = basename(f.path);
+    const named = casesFor((g) => basename(g.file) === name);
+    if (named.size && !named.has(f.case)) problems.push(`${shown}: ${name} belongs only in ${[...named].join(', ')}`);
+    for (const kind of EQUAL) {
+      const first = placed.find((g) => g.kind === kind);
+      const original = layout.find((x) => `evals/${x.case}/${x.path}` === first.file);
+      if (original && f.bytes.equals(original.bytes) && !casesFor((g) => g.kind === kind).has(f.case)) {
+        problems.push(`${shown}: a byte copy of the ${kind} grader outside its cases`);
+      }
+    }
+  }
+  return problems;
 }
 
 // Names every copy whose bytes differ from the first one's.
@@ -365,6 +404,28 @@ test('the copies of each held grader are equal bytes', () => {
     assert.ok(copies.length > 1, `${kind}: fewer than two copies`);
     assert.deepEqual(unequal(copies), [], `${kind} copies differ from ${copies[0].name}`);
   }
+});
+
+test('every size, trace and readiness-passes grader sits in its own cases and nowhere else', () => {
+  const problems = misplaced(evalLayout(), FULL);
+  assert.deepEqual(problems, [], `\n${problems.join('\n')}`);
+});
+
+test('the placement check flags a size-grader copy in another case and a renamed byte copy of a half', () => {
+  const planted = FULL.map((g) => ({ case: g.case, path: g.file.split('/').slice(2).join('/'), bytes: readFileSync(join(root, g.file)) }));
+  assert.deepEqual(misplaced(planted, FULL), []);
+  const size = planted.find((f) => f.path === 'graders/at-most-five-ids.md').bytes;
+  const half = planted.find((f) => f.path === 'graders/says-no-findings.md').bytes;
+  assert.deepEqual(misplaced([...planted, { case: 'spine-from-prd', path: 'graders/at-most-five-ids.md', bytes: size }], FULL), [
+    'evals/spine-from-prd/graders/at-most-five-ids.md: at-most-five-ids.md belongs only in epics-split, full-walk, epics-from-spine',
+    'evals/spine-from-prd/graders/at-most-five-ids.md: a byte copy of the size grader outside its cases',
+  ]);
+  assert.deepEqual(misplaced([...planted, { case: 'stale-epics', path: 'graders/readiness-ok.md', bytes: half }], FULL), [
+    'evals/stale-epics/graders/readiness-ok.md: a byte copy of the last-message grader outside its cases',
+  ]);
+  assert.deepEqual(misplaced(planted.filter((f) => f.case !== 'readiness-agent' || f.path !== 'graders/agent-finds-nothing.md'), FULL), [
+    'evals/readiness-agent/graders/agent-finds-nothing.md: missing from its case',
+  ]);
 });
 
 test('the equal-copy check flags a planted pair one byte apart', () => {
