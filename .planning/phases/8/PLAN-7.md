@@ -17,6 +17,7 @@ files:
   - evals/spine-conventions/prompt.md
   - evals/spine-conventions/history.jsonl
   - evals/spine-conventions/graders/records-trust.md
+  - tests/scaffold.test.mjs
 ---
 
 # Phase 8: Readiness check and handoff - Plan 7: The README and the full suite
@@ -75,6 +76,10 @@ An independent check reads the finished design before the handoff, and Seldon en
   - `spine-who-relies`: `no-trust-question.md` is deleted and `asks-trust.md` added, a byte copy of `evals/spine-outside-input/graders/asks-trust.md`. Its `case.yaml` description and README.md:117 say it asks the trust and who-relies questions.
   - `spine-conventions`: its history is recaptured live under D-19 on its vetted seed (55908ad2, no new vet). The capture is the per-case command with both audits and three tries of its own. A try that doesn't end on both the trust question and the who-relies question stops at a checkpoint to Daneel with its last message, and no history is written around it. Its new `prompt.md` answers both questions in invented words, naming no secret value. It gains `records-trust.md`, in `records-who-relies.md`'s form, requiring the trust answer on a `> ` line in an S- decision. README.md:118 changes only if the new prompt makes it untrue.
   - The executor writes all of this and stops at a checkpoint with the diff before any run. Then come solo runs of `spine-who-relies`, `spine-conventions`, `spine-job` and `spine-outside-input`, each within the per-case cap, then two full runs, both at 1.00. A miss in any of them stops and comes to Daneel.
+- **The readiness agent's open-decision rule (Daneel's ruling after full run 2):** full run 2 missed `resume-later`, `handoff-cadence` and `handoff-named` because the agent reported "Decision left open: E-02, E-03" about who owns the failed-reminder record, which only the spine mentions (samples/spine.md:19, tagged `[ASSUMPTION]`). That finding broke three of the agent's own rules. Before full run 3, recorded as a deviation:
+  - `agents/readiness.md`: one or two sentences in the decision-left-open bullets saying the choice has to come from what an epic's Outcome, Boundaries, Done-when items or requirements, or the PRD, need; a detail only the spine mentions can't raise this finding; and a spine line tagged `[ASSUMPTION]` settles the choice it states. Nothing else in the file changes, and the frontmatter pin stays green.
+  - `tests/scaffold.test.mjs`: a test, named for what it checks, that fails when a case.yaml string-valued key (such as `name` or `description`) has an unquoted plain value that contains `: ` or ` #` or starts with a YAML indicator character. It leaves flow collections such as `allowed_tools: [...]` alone. It isn't a full YAML parse. It must pass on every case.yaml in the tree before one planted failure, restored afterwards. This is the class 900d872 hit.
+  - The executor writes both and stops at a checkpoint with both diffs before any run. Then come solo runs of `resume-later`, `handoff-cadence`, `handoff-named`, `readiness-findings`, `readiness-crossing` and `readiness-agent`, then two full runs, all at 1.00. Those six cases' try counts restart at the fix. A miss in any run stops and comes to Daneel.
 
 ## Tasks
 
