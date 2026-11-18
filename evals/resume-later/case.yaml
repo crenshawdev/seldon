@@ -1,10 +1,10 @@
 schema_version: "1.1"
 name: resume-later
-description: A bare /seldon in a fresh session where all four documents are already at .planning/seldon/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md, so Seldon has to write and edit nothing and end on the fixed line saying the readiness check and the handoff to Cadence come in a later release, rather than rewriting the epics.
+description: A bare /seldon in a fresh session where all four documents are already at .planning/seldon/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md, and none is stale, so Seldon has to run the readiness check, say its no-findings line, ask nothing, write and edit nothing, and end on the new-project handoff command, rather than rewriting the epics.
 runs: 1
 context:
   scaffold_script: seed.sh
 execution:
-  max_turns: 10
-  timeout_seconds: 300
+  max_turns: 20
+  timeout_seconds: 600
   allowed_tools: [Skill, Read, Glob, Grep]
