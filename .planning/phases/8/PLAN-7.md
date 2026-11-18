@@ -19,7 +19,7 @@ files:
 An independent check reads the finished design before the handoff, and Seldon ends with the exact Cadence command to run, proven by eval cases this phase adds. This plan does three things:
 
 - the README says what the readiness check, the question and the handoff do
-- the README's grant sentence and case list match what the phase built
+- the README's grant paragraph and case list match what the phase built
 - the whole suite passes with the README's own command, and a kept transcript shows the skill loaded whole at its final size
 
 ## Must be true when done
@@ -31,14 +31,14 @@ An independent check reads the finished design before the handoff, and Seldon en
   - the handoff command on a new project and under Cadence, a named design's folder included
   - the line when the check can't run
   - the handoff leaves no record
-- The README's grant sentence names the one agent entry beside the two `--allow-tools` rules. The eval command block is unchanged.
+- The README's grant paragraph says Seldon starts one agent of its own, which has Read and nothing else, and that Claude Code's grants don't limit which agent a skill may start. It names no agent entry, and no sentence says or implies the grant confines the skill to that agent (Daneel's ruling on Plan 1's report). The eval command block is unchanged.
 - The README's Evals section has one line for every case in `evals/`, 56 in all, and none for a case that's gone. `resume-later`'s line says what the case now checks.
 - `git grep "come in a later release" -- skills README.md evals` finds nothing.
 - The README's eval command, run verbatim from the repository root with only `--keep-temp` added, exits 0 with all 56 cases at 1.00 (AC7).
 - AC6 holds:
   - a kept session transcript from that run shows the loaded skill byte for byte equal to SKILL.md after the loader's substitutions
   - SKILL.md is at most 90,000 bytes
-  - `allowed-tools` is the six pinned entries
+  - `allowed-tools` is the five pinned entries
   - `claude plugin validate --strict .` passes
   - the unit suite passes under the coverage gate
 
@@ -49,7 +49,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 - **Words:** a new body of work's folder is "its own folder", never a bare "design folder", as the README already says. Keep the "inspired by BMad" credit.
 - **Eval runs (SECURITY):** the full-suite runs use the approval Plan 1 recorded. If none is recorded, or the recorded one doesn't cover full runs, stop at a checkpoint marked SECURITY before the run.
   - **The command:** run from `/code/seldon`, never a worktree. It's the README's command with `--keep-temp` added before `--allow-tools`.
-  - **Audits:** report every Bash command and every agent start in every kept trace, on Plan 1's terms. Anything off them is a SECURITY checkpoint.
+  - **Audits:** report every Bash command and every agent start in every kept trace, on Plan 1's terms. Anything off them is a SECURITY checkpoint. On Daneel's ruling on Plan 1's report, a start of anything other than `seldon:readiness`, or any start in a case that isn't a readiness case, stops the run and goes to Daneel, in the full-suite runs as in every other.
   - **Retries:** AC7 needs the README's full command to exit 0, so a solo `--case` run doesn't satisfy it.
     - When a case in the first full run misses on model variance the trace shows, run the full suite once more. Two full runs is the most.
     - A miss caused by SKILL.md's or the agent's text is a checkpoint marked SECURITY, because the runs that follow a fix aren't in Plan 1's approval. They're in this plan's lease only so a fix Daneel rules on can land here. The checkpoint names the fix and asks Daneel to approve exactly these runs, and nothing runs before that approval is recorded:
@@ -92,21 +92,21 @@ An independent check reads the finished design before the handoff, and Seldon en
   - (3) Every fixed line or command the new text quotes appears in SKILL.md, as `grep -F` shows, and `grep -c 'cad-milestone' README.md` prints 0.
   - (4) `git diff README.md` changes no line under `## Evals`.
 
-### Task 2: Name the agent entry in the grant sentence
+### Task 2: Say what the grant doesn't limit
 
 - **Files:** README.md
-- **Reads:** README.md#Evals, skills/seldon/SKILL.md, evals/resume-later/case.yaml, evals/readiness-not-run/case.yaml
+- **Reads:** README.md#Evals, skills/seldon/SKILL.md, agents/readiness.md, evals/resume-later/case.yaml, evals/readiness-not-run/case.yaml
 - **Decisions:** D-02, D-18
-- **Action:** The paragraph under the eval command opens by calling the two `--allow-tools` rules the whole grant. That changes with D-02:
-  - the readiness cases also allow, in their own `allowed_tools`, the one entry that lets Seldon start its readiness agent, and `readiness-not-run` withholds it
-  - Seldon can write only inside `.planning/seldon/`, run its own check and start that one agent, which can only read
-  - the skill's `allowed-tools` carries that same entry
+- **Action:** The paragraph under the eval command opens by calling the two `--allow-tools` rules the whole grant. That stays true: D-02 is settled as no grant change in phase 8 (Daneel's ruling on Plan 1's report). The paragraph gains what Plan 1's runs showed about the readiness agent, and no sentence may say or imply the grant confines the skill to that agent. Replace the paragraph whole with this text, which Daneel shows John before it's written:
 
-  Name the entry exactly as SKILL.md's `allowed-tools` spells it. The command block, the rest of the paragraph and every case line stay word for word.
+  > The two `--allow-tools` rules are the whole grant. Seldon can write only inside `.planning/seldon/` and run its own check, though Claude Code may still let a read-only shell command, such as a file listing, through. Run from the root, `$PWD` is this repository, so the rule names the same `lib/check.mjs` the skill runs. For the readiness check, Seldon also starts one agent of its own, `seldon:readiness`, which has Read and nothing else by its own definition in `agents/readiness.md`. Claude Code's grants don't limit which agent a skill may start, so Seldon starting only that one rests on its instructions, and every case that expects the check fails a run that starts any other agent. `readiness-not-run` keeps the agent out with `disallowed_tools` in its `case.yaml`, to check what Seldon says when the check can't run. `--scaffold` runs the case scripts that copy fixtures from `samples/` into the run, and `tests/scaffold.test.mjs` allows them nothing more. Apart from the shebang, `set -euo pipefail` and the line that finds the repository, every line must be `mkdir -p` or `cp [-R]` from `"$repo/samples/..."`, with targets inside the run. Any other line fails the test. So does a `case.yaml` that names its scaffold in a form the test can't read.
+
+  If Daneel or John changes the wording, write theirs. The command block and every case line stay word for word.
 - **Verify:**
-  - **Testing scope:** documentation of D-02's grant. These checks are enough, and testing stops there.
-  - (1) `grep -cF '<the entry>' README.md` prints at least 1. It prints 0 today.
-  - (2) `git diff README.md` changes only that paragraph's opening sentences, and no line of the command block.
+  - **Testing scope:** documentation of D-02's outcome and the agent's limit. These checks are enough, and testing stops there.
+  - (1) `grep -c 'Agent(' README.md` prints 0, and `grep -cF 'seldon:readiness' README.md` prints at least 1. The second prints 0 today.
+  - (2) Every claim the new sentences make holds in the tree: `agents/readiness.md` has `tools: Read`, every case that expects the check has `no-other-agent.md`, and `evals/readiness-not-run/case.yaml` has `disallowed_tools: [Agent]`.
+  - (3) `git diff README.md` changes only that paragraph, and no line of the command block.
 
 ### Task 3: List every case and run the full suite
 
@@ -127,7 +127,7 @@ An independent check reads the finished design before the handoff, and Seldon en
     - the Bash audit and the agent-start audit cover every trace
   - (4) **AC6:** in one kept session transcript from that run, the loaded skill text equals SKILL.md byte for byte after the loader's substitutions, compared the way phase 7's Plan 1 compared it. Report the lengths and `wc -c skills/seldon/SKILL.md`, which is at most 90000. A cut, or any other difference, is a checkpoint.
   - (5) These each exit 0 with their pass line: `node lib/check.mjs samples`, and `--brief`, `--prd`, `--spine`, `--epics` and `--stale` on `samples`.
-  - (6) `node --test tests/skill.test.mjs` passes, so `allowed-tools` is the six pinned entries. `claude plugin validate --strict .` passes (ci: plugin-validate).
+  - (6) `node --test tests/skill.test.mjs` passes, so `allowed-tools` is the five pinned entries. `claude plugin validate --strict .` passes (ci: plugin-validate).
   - (7) The coverage job's command from `.github/workflows/test.yml` passes, and so do both lcov guards (ci: node-test, coverage).
   - (8) After the run, `ls -d` fails on each exact path the run printed as kept, and the trace copies are in `evals/results/phase-8-traces/`.
   - (9) `git diff --name-only` for this plan's commits lists only `README.md`, unless a ruled fix touched SKILL.md or the agent.

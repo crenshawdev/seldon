@@ -14,6 +14,7 @@ files:
   - evals/readiness-findings/graders/ends-on-question.md
   - evals/readiness-findings/graders/no-write.md
   - evals/readiness-findings/graders/no-edit.md
+  - evals/readiness-findings/graders/no-other-agent.md
   - evals/readiness-crossing/case.yaml
   - evals/readiness-crossing/prompt.md
   - evals/readiness-crossing/seed.sh
@@ -22,6 +23,7 @@ files:
   - evals/readiness-crossing/graders/ends-on-question.md
   - evals/readiness-crossing/graders/no-write.md
   - evals/readiness-crossing/graders/no-edit.md
+  - evals/readiness-crossing/graders/no-other-agent.md
   - evals/readiness-hand-off/case.yaml
   - evals/readiness-hand-off/prompt.md
   - evals/readiness-hand-off/seed.sh
@@ -48,6 +50,7 @@ files:
   - evals/readiness-agent/graders/no-skill-read.md
   - evals/readiness-agent/graders/agent-reads-three.md
   - evals/readiness-agent/graders/agent-reads-nothing-else.md
+  - evals/readiness-agent/graders/no-other-agent.md
   - skills/seldon/SKILL.md
   - agents/readiness.md
 ---
@@ -65,7 +68,7 @@ An independent check reads the finished design before the handoff, and Seldon en
   - names E-02 on a crossed-boundary line with `/seldon spine`
   - makes no Write and no Edit, and ends on the readiness question with nothing after its question mark
 - `readiness-crossing` scores 1.00. Over the crossing design, a bare `/seldon` reports exactly one finding, E-02's crossed boundary, and ends on the readiness question. This is the live report the two replays below copy.
-- `readiness-agent` scores 1.00 (AC2). The skill starts exactly one agent, `seldon:readiness`, hands it the three paths and no other, and Reads none of the three itself. The agent's own reads are graded as Daneel ruled on Plan 1's report.
+- `readiness-agent` scores 1.00 (AC2). The skill starts exactly one agent, `seldon:readiness`, hands it the three paths and no other, and Reads none of the three itself. The agent Reads each of the three and nothing else, graded on the trace by the `parent_tool_use_id` that marks the agent's own records.
 - `readiness-fix` scores 1.00 (AC3). After a report whose one finding is E-02's crossing, a fix edits `spine.md` so that a `Kind: boundaries` decision names both loans and repairs, makes no Write or Edit to `epics.md`, and ends on the spine confirm question. Its workspace then reads the epics as stale.
 - `readiness-hand-off` scores 1.00 (AC3). After that same report, a hand-off makes no Write and no Edit and ends on `/cad-new-project --brief .planning/seldon`.
 - Every kept trace passed the Bash audit and the agent-start audit, and `node --test tests/scaffold.test.mjs` passes.
@@ -85,15 +88,16 @@ An independent check reads the finished design before the handoff, and Seldon en
 
   A history is text-only user and assistant lines with chained `parentUuid`, a fresh `sessionId` and `cwd` set to `/tmp/seldon-<case>`, like `evals/epics-confirm/history.jsonl`. Its user words are invented, never the owner's.
 - **Case rules:**
-  - Every case here has `allowed_tools: [Skill, Read, Glob, Grep, "<the entry Plan 1 recorded>"]` (D-18). Only Plan 5's `readiness-not-run` withholds it.
+  - Every case here has `allowed_tools: [Skill, Read, Glob, Grep]`, with no Agent entry (D-18, as Daneel ruled on Plan 1's report: run 3 showed a start needs none). Only Plan 5's `readiness-not-run` withholds the agent, with `disallowed_tools`.
   - `readiness-findings`, `readiness-crossing` and `readiness-agent` take `resume-later`'s `max_turns` and `timeout_seconds`. `readiness-fix` edits, so it takes 20 and 600. `readiness-hand-off` writes nothing and starts no agent, so it takes 10 and 300.
   - No line of a `case.yaml` or `prompt.md` says "scaffold" except `scaffold_script: seed.sh`, and none holds a double-quoted backslash.
 - **Fixed words:** every line a grader or a history matches is copied from SKILL.md, never from a plan.
-- **Shared graders:** `no-write` and `no-edit` are byte copies of `resume-later`'s. `readiness-hand-off`'s `ends-on-new-project` is too. `readiness-fix`'s `ends-on-confirm` is a byte copy of `evals/stale-spine/graders/ends-on-confirm.md`. `cmp` shows each.
+- **Shared graders:** `no-write` and `no-edit` are byte copies of `resume-later`'s. `readiness-hand-off`'s `ends-on-new-project` is too. So is `no-other-agent`, in each case here that expects the start: `readiness-findings`, `readiness-crossing` and `readiness-agent` (Daneel's ruling on Plan 1's report). `readiness-fix`'s `ends-on-confirm` is a byte copy of `evals/stale-spine/graders/ends-on-confirm.md`. `cmp` shows each.
 - **D-21:** every new grader must fail when the behavior it claims is missing. Check that with a `node -e` script that reads each pattern from its grader file, over hand-made inputs kept in the scratch area and never committed. For trace graders, model the inputs on the trace copies in `evals/results/phase-8-traces/`.
 - **Eval runs (SECURITY):** on Plan 1's recorded approval and terms. If none is recorded, stop at a checkpoint marked SECURITY before the first run.
   - **Seed vet:** each new `seed.sh` is vetted at a checkpoint quoting it before its first run (D-04 e).
   - **Audits:** the per-case command, the Bash audit, the agent-start audit, the retries, the cleanup with trace copies, and the rule against reading the Claude binary are Plan 1's Context, unchanged.
+  - **The agent-start stop (Daneel's ruling on Plan 1's report):** a start of anything other than `seldon:readiness`, or any start in a case that isn't a readiness case, stops the run and goes to Daneel.
 - **SKILL.md and the agent in the lease:** they're declared only so a run that fails on their text can be fixed here. After any such edit:
   - rerun `resume-later`, Plan 5's three cases and every case this plan has passed
   - keep SKILL.md at or under 90,000 bytes
@@ -105,7 +109,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 
 ### Task 1: Add the readiness-findings case
 
-- **Files:** evals/readiness-findings/case.yaml, evals/readiness-findings/prompt.md, evals/readiness-findings/seed.sh, evals/readiness-findings/graders/names-uncovered.md, evals/readiness-findings/graders/names-crossing.md, evals/readiness-findings/graders/ends-on-question.md, evals/readiness-findings/graders/no-write.md, evals/readiness-findings/graders/no-edit.md
+- **Files:** evals/readiness-findings/case.yaml, evals/readiness-findings/prompt.md, evals/readiness-findings/seed.sh, evals/readiness-findings/graders/names-uncovered.md, evals/readiness-findings/graders/names-crossing.md, evals/readiness-findings/graders/ends-on-question.md, evals/readiness-findings/graders/no-write.md, evals/readiness-findings/graders/no-edit.md, evals/readiness-findings/graders/no-other-agent.md
 - **Reads:** evals/resume-later/case.yaml, evals/prd-conflict/graders/ends-on-question.md, skills/seldon/SKILL.md#22. The readiness check, agents/readiness.md
 - **Decisions:** D-07, D-08, D-09, D-18
 - **Pins:** tests/scaffold.test.mjs
@@ -116,7 +120,7 @@ An independent check reads the finished design before the handoff, and Seldon en
     - **`names-uncovered`:** `last_message` holds, on a line of its own, the requirement-no-epic-names line for `CAT-01`, ending on `/seldon epics`.
     - **`names-crossing`:** `last_message` holds, on a line of its own, a crossed-boundary line naming `E-02` as its epic, ending on `/seldon spine`. The categories in its parentheses are left free.
     - **`ends-on-question`:** `last_message` ends on the readiness question on a line of its own, allowing only blanks or a closing fence after it, in `prd-conflict`'s `ends-on-question` form.
-    - the shared `no-write` and `no-edit`
+    - the shared `no-write`, `no-edit` and `no-other-agent`
 - **Verify:**
   - **Testing scope:** the outcome is AC1, which no case covers. Three new graders, their D-21 checks and one run are the evidence. Extra findings don't fail it here. Task 2's `readiness-crossing` is the case that holds a report to exactly one finding, so testing stops there.
   - (1) `node --test tests/scaffold.test.mjs` passes, and `cmp` shows the shared graders equal to `resume-later`'s.
@@ -129,7 +133,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 
 ### Task 2: Add the readiness-crossing case
 
-- **Files:** evals/readiness-crossing/case.yaml, evals/readiness-crossing/prompt.md, evals/readiness-crossing/seed.sh, evals/readiness-crossing/graders/names-crossing.md, evals/readiness-crossing/graders/one-finding.md, evals/readiness-crossing/graders/ends-on-question.md, evals/readiness-crossing/graders/no-write.md, evals/readiness-crossing/graders/no-edit.md
+- **Files:** evals/readiness-crossing/case.yaml, evals/readiness-crossing/prompt.md, evals/readiness-crossing/seed.sh, evals/readiness-crossing/graders/names-crossing.md, evals/readiness-crossing/graders/one-finding.md, evals/readiness-crossing/graders/ends-on-question.md, evals/readiness-crossing/graders/no-write.md, evals/readiness-crossing/graders/no-edit.md, evals/readiness-crossing/graders/no-other-agent.md
 - **Reads:** evals/readiness-findings/case.yaml, evals/readiness-findings/graders/names-crossing.md, skills/seldon/SKILL.md#22. The readiness check, agents/readiness.md, samples/readiness/epics.md
 - **Decisions:** D-07, D-08, D-09, D-19
 - **Pins:** tests/scaffold.test.mjs
@@ -139,7 +143,7 @@ An independent check reads the finished design before the handoff, and Seldon en
   - **Graders:**
     - **`names-crossing`** and **`ends-on-question`:** byte copies of `readiness-findings`'s.
     - **`one-finding`:** `last_message` holds exactly one finding line. A regex with `match: not_contains` that matches when two or more lines start with one of the three kind labels SKILL.md's forms open with.
-    - the shared `no-write` and `no-edit`
+    - the shared `no-write`, `no-edit` and `no-other-agent`
 - **Verify:**
   - **Testing scope:** the outcome is the one-finding report Tasks 3 and 4 replay. One new grader, its D-21 check and one run are the evidence, and testing stops there.
   - (1) `node --test tests/scaffold.test.mjs` passes, and `cmp` shows the copied graders equal to their sources.
@@ -191,30 +195,45 @@ An independent check reads the finished design before the handoff, and Seldon en
 
 ### Task 5: Add the readiness-agent case
 
-- **Files:** evals/readiness-agent/case.yaml, evals/readiness-agent/prompt.md, evals/readiness-agent/seed.sh, evals/readiness-agent/graders/one-agent.md, evals/readiness-agent/graders/starts-readiness.md, evals/readiness-agent/graders/hands-three-paths.md, evals/readiness-agent/graders/no-other-path.md, evals/readiness-agent/graders/no-skill-read.md, evals/readiness-agent/graders/agent-reads-three.md, evals/readiness-agent/graders/agent-reads-nothing-else.md
-- **Reads:** evals/stale-epics/graders/no-read-outside.md, evals/stale-epics/graders/says-stale-line.md, skills/seldon/SKILL.md#22. The readiness check
+- **Files:** evals/readiness-agent/case.yaml, evals/readiness-agent/prompt.md, evals/readiness-agent/seed.sh, evals/readiness-agent/graders/one-agent.md, evals/readiness-agent/graders/starts-readiness.md, evals/readiness-agent/graders/hands-three-paths.md, evals/readiness-agent/graders/no-other-path.md, evals/readiness-agent/graders/no-skill-read.md, evals/readiness-agent/graders/agent-reads-three.md, evals/readiness-agent/graders/agent-reads-nothing-else.md, evals/readiness-agent/graders/no-other-agent.md
+- **Reads:** evals/stale-epics/graders/no-read-outside.md, evals/stale-epics/graders/says-stale-line.md, evals/full-walk/graders/names-spine-first.md, evals/results/phase-8-traces/readiness-probe-run-4.trace.jsonl, skills/seldon/SKILL.md#22. The readiness check
 - **Decisions:** D-03, D-04, D-18
 - **Pins:** tests/scaffold.test.mjs
-- **Action:** This is AC2. Plan 1's report and Daneel's ruling on it decide each grader's form. Where the ruling differs from what follows, the ruling governs.
+- **Action:** This is AC2. Each grader's form follows what Plan 1's traces showed and Daneel's ruling on its report:
+  - the agent tool is `Agent`, with the agent type in its input's `subagent_type`
+  - `tool_used` counts the agent's own calls as well as the skill's: both of Plan 1's first runs scored "Read called 3x" with no Read on the skill's side
+  - the trace carries the agent's records, each with `"parent_tool_use_id":"toolu_..."` naming the start, while the skill's records carry `"parent_tool_use_id":null`
+
+  So a plain count tells the skill's Reads from the agent's only by that field, and the three Read graders below are `regex` graders on `target: trace`.
   - **The case:** Context's seed, the prompt `/seldon`, and no history.
-  - **Graders.** The agent tool is named as Plan 1's trace spells it.
-    - **`one-agent`:** `tool_used` on the agent tool, `min: 1`, `max: 1`.
-    - **`starts-readiness`:** `tool_used` on the agent tool, `input_match` on the agent-type field naming `seldon:readiness`, `min: 1`. With `one-agent`, that's exactly one start, and it's this one.
+  - **Graders:**
+    - **`one-agent`:** `tool_used` on `Agent`, `min: 1`, `max: 1`.
+    - **`starts-readiness`:** `tool_used` on `Agent`, `input_match: '"subagent_type"\s*:\s*"seldon:readiness"'`, `min: 1`. With `one-agent`, that's exactly one start, and it's this one.
     - **`hands-three-paths`:** the start's input names `prd.md`, `spine.md` and `epics.md` under `.planning/seldon/`.
     - **`no-other-path`:** `max: 0` on a start whose input names any other path, such as `brief.md`, `architecture.md`, another file under `.planning/` or a path outside it.
-    - **`no-skill-read`:** the skill makes no Read of the three files.
-      - If Plan 1 found that `tool_used` doesn't count the agent's calls: `tool_used` Read with that `input_match` and `max: 0`.
-      - If it found that it does: a `regex` on the trace with `match: not_contains`, matching such a Read only in a record not marked as the agent's.
-    - **`agent-reads-three`** and **`agent-reads-nothing-else`:** written only if Plan 1 found the trace carries the agent's records. The first is a regex on the trace for a Read of each of the three in a record marked as the agent's. The second is `not_contains` for any Read in such a record whose path isn't one of the three.
-  - **No agent records in the trace:** write neither agent-reads grader, and stop at a checkpoint with one question to Daneel about AC2's last sentence, before anything is reworded or dropped. That's CONTEXT's flagged assumption.
+    - **`no-other-agent`:** the shared copy.
+    - **`no-skill-read`:** the skill makes no Read of the three files. `match: not_contains`, matching a line that carries `"parent_tool_use_id":null` and a Read of one of the three:
+
+      `'(?<![^\n])(?=[^\n]*"parent_tool_use_id":null)(?=[^\n]*"name":"Read","input":\{[^}]*"file_path":"(?:[^"]*/)?\.planning/seldon/(?:prd|spine|epics)\.md")'`
+    - **`agent-reads-three`:** the agent Reads each of the three. One pattern, with one lookahead per file, each finding a line whose `parent_tool_use_id` is a `toolu_` id and which holds a Read of that file:
+
+      `'(?<![\s\S])(?=[\s\S]*(?<![^\n])(?=[^\n]*"parent_tool_use_id":"toolu_)[^\n]*"name":"Read","input":\{[^}]*"file_path":"(?:[^"]*/)?\.planning/seldon/prd\.md")(?=[\s\S]*(?<![^\n])(?=[^\n]*"parent_tool_use_id":"toolu_)[^\n]*"name":"Read","input":\{[^}]*"file_path":"(?:[^"]*/)?\.planning/seldon/spine\.md")(?=[\s\S]*(?<![^\n])(?=[^\n]*"parent_tool_use_id":"toolu_)[^\n]*"name":"Read","input":\{[^}]*"file_path":"(?:[^"]*/)?\.planning/seldon/epics\.md")'`
+    - **`agent-reads-nothing-else`:** `match: not_contains`, matching a line with a `toolu_` parent and a Read whose `file_path` isn't one of the three:
+
+      `'(?<![^\n])(?=[^\n]*"parent_tool_use_id":"toolu_)[^\n]*"name":"Read","input":\{[^}]*"file_path":"(?!(?:[^"]*/)?\.planning/seldon/(?:prd|spine|epics)\.md")'`
+
+    No pattern uses `^` or depends on the order of a line's fields. `(?<![^\n])` marks the start of a line and `(?<![\s\S])` the start of the trace, with or without the `m` flag, which is phase 6's `no-secret` lesson. The grader files set no `flags`.
+  - **`agent-reads-three` is also the check on the field itself.** It can pass only if the grader's view of the trace carries `parent_tool_use_id`. If it fails in a run whose kept trace holds the agent's three Reads, `no-skill-read` and `agent-reads-nothing-else` would pass on nothing. Stop at a checkpoint to Daneel with the kept trace's lines.
 - **Verify:**
   - **Testing scope:** the outcome is AC2, which no case covers. The graders, their D-21 checks against the kept probe traces and one run are the evidence, and testing stops there.
-  - (1) `node --test tests/scaffold.test.mjs` passes.
-  - (2) **D-21,** over trace lines modeled on the copies in `evals/results/phase-8-traces/`:
+  - (1) `node --test tests/scaffold.test.mjs` passes, and `cmp` shows `no-other-agent.md` equal to `resume-later`'s.
+  - (2) **D-21,** each pattern run once with no flags and once with `m`, over trace lines modeled on the copies in `evals/results/phase-8-traces/`:
     - `starts-readiness` fails on another agent type
     - `hands-three-paths` fails with any one path missing
     - `no-other-path` matches, and so fails the grader, on an input that adds `.planning/seldon/brief.md`
-    - `no-skill-read` matches, and so fails the grader, on a skill Read of `.planning/seldon/epics.md`, and doesn't match the same Read in an agent record
-    - where written, `agent-reads-nothing-else` matches, and so fails the grader, on an agent Read of `.planning/seldon/brief.md`
+    - `no-skill-read` matches, and so fails the grader, on a skill Read (`"parent_tool_use_id":null`) of `.planning/seldon/epics.md`, with the Read's input keys in either order, and doesn't match the same Read on an agent line
+    - `agent-reads-three` fails with any one of the agent's three Reads missing, and fails when the three Reads are on skill lines
+    - `agent-reads-nothing-else` matches, and so fails the grader, on an agent Read of `.planning/seldon/brief.md`, and doesn't match an agent Read of any of the three
+  - (2a) Over each whole trace in `evals/results/phase-8-traces/readiness-probe-run-{1,2,3,4}.trace.jsonl`, under both flag sets: `no-skill-read` and `agent-reads-nothing-else` don't match, and `agent-reads-three` matches. In each probe run the agent Read exactly those three and the skill Read none.
   - (3) The seed is vetted. This is a checkpoint.
   - (4) The run exits 0 at 1.00, and both audits are reported.

@@ -6,36 +6,36 @@ requirements:
   - CHECK-01
 files:
   - agents/readiness.md
-  - skills/seldon/SKILL.md
   - tests/skill.test.mjs
   - .claude-plugin/plugin.json
   - .github/workflows/test.yml
 ---
 
-# Phase 8: Readiness check and handoff - Plan 2: The readiness agent and the grant
+# Phase 8: Readiness check and handoff - Plan 2: The readiness agent and its pin
 
 ## Goal
 
-An independent check reads the finished design before the handoff, and Seldon ends with the exact Cadence command to run, proven by eval cases this phase adds. This plan builds the independent half: the `seldon:readiness` agent with its checking rules, the skill's one grant to start it, and the Claude Code version the plugin now needs.
+An independent check reads the finished design before the handoff, and Seldon ends with the exact Cadence command to run, proven by eval cases this phase adds. This plan builds the independent half: the `seldon:readiness` agent with its checking rules, the test that pins its tools, and the Claude Code version the plugin now needs.
 
 ## Must be true when done
 
 - `agents/readiness.md` exists with `tools: Read` and `disallowedTools: Write, Edit, Bash`, holds the checking rules for CHECK-01's three kinds and the fixed report forms, and `claude plugin validate --strict .` passes with it.
-- SKILL.md's `allowed-tools` is the pinned five plus the one agent entry Plan 1 recorded, and `tests/skill.test.mjs` fails on any other list.
+- SKILL.md's `allowed-tools` stays the pinned five, with no agent entry, and `tests/skill.test.mjs`'s grant list doesn't change (Daneel's ruling on Plan 1's report).
 - `tests/skill.test.mjs` also fails unless `agents/readiness.md`'s frontmatter is exactly `tools: Read` with `disallowedTools: Write, Edit, Bash`.
-- `plugin.json` states `engines["claude-code"]` as at least the version Plan 1 ran on, and CI's plugin-validate job installs a version that meets it. If Plan 1 found the validator refuses `engines`, nothing changes and a checkpoint says so.
-- SKILL.md stays at or under 90,000 bytes.
+- `plugin.json` states `engines["claude-code"]` as `>=2.1.327`, the version Plan 1's probe ran on, to be revisited at release, and CI's plugin-validate job installs a version that meets it.
 
 ## Context
 
 - **Locked:** D-01, D-02, D-03, D-06, D-07 and D-08.
-- **Plan 1 binds this plan:** the tool's spelling, the scoped entry and the validator results are the ones Plan 1's report recorded, along with Daneel's ruling on it. If Plan 1 ended on "not scoped, or not shown", this plan doesn't start.
+- **Plan 1 binds this plan:** Plan 1 ended on "not scoped, or not shown". A start of `seldon:readiness` ran in the eval with no Agent entry anywhere, and no entry was shown to scope one. Daneel's ruling on its report:
+  - no grant change in phase 8, so SKILL.md's `allowed-tools` stays the pinned five (D-02 is settled that way)
+  - `claude plugin validate --strict .` takes the agent's frontmatter, and takes `engines` on 2.1.327
+  - the agent's own `tools: Read` held at run time, and the pin in Task 2 keeps both frontmatter lines, since run 4 had both and can't say which one held
 - **The report forms** (the wording is my call, per CONTEXT). Plan 3 shows the same lines in SKILL.md byte for byte:
   - no findings: `The readiness check found nothing to fix.`
   - a requirement no epic names: `Requirement no epic names: <requirement ID>. Fixed by rerunning /seldon epics.`
   - a crossed boundary: `Epic crossing a boundary the spine didn't fix: <epic ID> (<categories>). Fixed by rerunning /seldon spine.` `<categories>` lists every category the epic spans, in the PRD's order: two are joined by "and", as in `(Loans and Repairs)`, and three or more by commas with "and" before the last, as in `(Catalog, Loans and Repairs)`.
   - a decision left open: `Decision left open: <epic IDs, comma-separated> (<the choice, in a few words>). Fixed by rerunning /seldon spine.`
-- **Budget:** SKILL.md is 74,471 bytes today and stays at or under 90,000 (D-19).
 - **No eval runs** in this plan. Plan 3's `resume-later` run is the first live proof of the agent.
 - **No binary:** nothing is read or copied out of the Claude binary or the files it ships with.
 - **Held:** no push, tag, PR or GitHub change, no install of any kind, and nothing published (D-16).
@@ -80,45 +80,43 @@ An independent check reads the finished design before the handoff, and Seldon en
   - (2) `grep -cx 'tools: Read' agents/readiness.md` and `grep -cx 'disallowedTools: Write, Edit, Bash' agents/readiness.md` each print 1.
   - (3) `grep -cF` finds the no-findings line and each of the three finding forms from Context in the file.
 
-### Task 2: Grant the skill the one agent
+### Task 2: Pin the agent's tools
 
-- **Files:** skills/seldon/SKILL.md, tests/skill.test.mjs
-- **Reads:** skills/seldon/SKILL.md, tests/skill.test.mjs, agents/readiness.md
+- **Files:** tests/skill.test.mjs
+- **Reads:** tests/skill.test.mjs, agents/readiness.md
 - **Decisions:** D-01, D-02
 - **Pins:** tests/skill.test.mjs
 - **Action:**
-  - **The grant:** add one entry to `allowed-tools`, the entry Plan 1 recorded, scoped to `seldon:readiness`, as the sixth line of the block list. The five entries above it stay byte for byte.
-  - **The pin:** `GRANT` in `tests/skill.test.mjs` gains the same entry. The test name and the comment above `GRANT` change from "five" to the six entries: phase 2's five and this phase's one agent entry. The pin moves in this commit because the test fails on any other list. Splitting the two would leave the suite red between plans.
-  - **The agent's pin (Daneel's ruling, a security pin):** one more test in `tests/skill.test.mjs` reads `agents/readiness.md`'s frontmatter and fails unless its `tools` value is exactly `Read` and its `disallowedTools` value is exactly `Write, Edit, Bash`. The skill's grant only says which agent may start. This pin is what keeps that agent from being given a tool that writes or runs a command.
-  - **What to avoid:** an unscoped entry, which lets the skill start any agent. That's D-02's stop, and Plan 1's outcome has already ruled it out.
+  - **No grant (Daneel's ruling on Plan 1's report):** SKILL.md's `allowed-tools` and `GRANT` in `tests/skill.test.mjs` stay the pinned five, byte for byte. Plan 1's run 3 started `seldon:readiness` with no Agent entry anywhere, so an entry would claim a limit nothing enforces.
+  - **The agent's pin (Daneel's ruling, a security pin):** one more test in `tests/skill.test.mjs` reads `agents/readiness.md`'s frontmatter and fails unless its `tools` value is exactly `Read` and its `disallowedTools` value is exactly `Write, Edit, Bash`. Claude Code's grants don't limit which agent the skill starts, and Plan 1's run 4 showed the agent's own frontmatter is what held it to Read. This pin is what keeps that agent from being given a tool that writes or runs a command.
+  - **What to avoid:** any Agent entry in `allowed-tools`, scoped or not. No run showed one scoping anything (D-02, settled by Daneel's ruling).
 - **Verify:**
-  - **Testing scope:** the outcome is AC6's pinned grant and the agent's pinned tools. The existing test, the new one and the planted failures below prove them, and testing stops there.
-  - (1) `node --test tests/skill.test.mjs` passes. Today SKILL.md has no sixth entry.
-  - (2) Four planted failures, each restored afterwards:
-    - a seventh entry, `Write`, makes the grant test fail
-    - the agent entry with its scope removed makes the grant test fail
+  - **Testing scope:** the outcome is the agent's pinned tools, with AC6's pinned grant left as it is. The existing test, the new one and the planted failures below prove them, and testing stops there.
+  - (1) `node --test tests/skill.test.mjs` passes, and `git diff skills/seldon/SKILL.md` is empty.
+  - (2) Three planted failures, each restored afterwards:
+    - an added `Agent(seldon:readiness)` line in SKILL.md's `allowed-tools` makes the grant test fail
     - `tools: Read, Bash` in `agents/readiness.md` makes the agent test fail
     - `Bash` taken off the agent's `disallowedTools` line makes the agent test fail
 
     `git diff` then shows only this task's change.
-  - (3) `wc -c skills/seldon/SKILL.md` is at most 90000, and `claude plugin validate --strict .` passes.
+  - (3) `claude plugin validate --strict .` passes.
 
 ### Task 3: State the minimum Claude Code version
 
 - **Files:** .claude-plugin/plugin.json, .github/workflows/test.yml
 - **Reads:** .claude-plugin/plugin.json, .github/workflows/test.yml#plugin-validate
-- **Action:** This is the planner's call CONTEXT left open, for the agent file and the scoped entry.
-  - **The manifest:** `plugin.json` states `engines["claude-code"]` as `>=` the version Plan 1's runs ran on, the only version where the start is proven. If Plan 1 found that `validate --strict` refuses `engines`, write nothing and stop at a checkpoint with that output.
+- **Action:** This is the planner's call CONTEXT left open, for the agent file.
+  - **The manifest:** `plugin.json` states `engines["claude-code"]` as `>=2.1.327`, the version Plan 1's probe ran on and the only one where the agent is proven. Plan 1 found that `validate --strict` takes `engines` on 2.1.327. The floor is revisited at release (Daneel's ruling).
   - **The CI pin:** when that version is above the plugin-validate job's pin, 2.1.326, move the pin in that one `npm install -g` line to that version. CI then installs a Claude Code that meets the manifest's own minimum, and the comment saying the pin moves by hand stays true. Change nothing else in the workflow.
 - **Verify:**
   - **Testing scope:** the outcome is a manifest CI can still install. Local validation plus the plugin-validate job are the evidence, and testing stops there.
   - (1) `claude plugin validate --strict .claude-plugin/plugin.json` and `claude plugin validate --strict .` pass.
-  - (2) `node -e` reading `plugin.json` prints the `engines["claude-code"]` value, which is undefined today.
+  - (2) `node -e` reading `plugin.json` prints the `engines["claude-code"]` value, `>=2.1.327`. It prints undefined today.
   - (3) When that version is above 2.1.326, `grep -c '@anthropic-ai/claude-code@<version>' .github/workflows/test.yml` prints 1, and `git diff .github/workflows/test.yml` changes only that line.
   - (4) The plugin-validate job installs and runs the plugin on the pinned version (ci: plugin-validate). This phase doesn't push, so `/cad-verify` reads it later through `ci-status`.
 
 ## Notes
 
-- **Test pins:** the pin in `tests/skill.test.mjs` stays with the grant in Task 2 instead of a last plan, because D-02 says they change together and the test fails on any other list.
+- **Test pins:** the grant pin in `tests/skill.test.mjs` doesn't change, since the grant doesn't (Daneel's ruling on Plan 1's report). Task 2 adds only the agent's pin.
 - **The crossing rule:** the rule reads a crossing from an epic's requirement IDs spanning `### ` categories, so the clean samples raise none. One known edge: the epics step lets a tightly coupled pair of categories share an epic, and the check reports that epic until the spine fixes a boundary between them. I chose that so the kind has a pass/fail definition, which D-07 asks of a kind.
 - **The version floor:** using the probe's version as the floor refuses older versions it never tried, 2.1.326 included. If that's stricter than John wants, the floor and the CI pin move together.

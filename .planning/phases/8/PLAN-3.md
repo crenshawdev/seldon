@@ -14,6 +14,7 @@ files:
   - evals/resume-later/graders/says-no-findings.md
   - evals/resume-later/graders/asks-nothing.md
   - evals/resume-later/graders/ends-on-new-project.md
+  - evals/resume-later/graders/no-other-agent.md
 ---
 
 # Phase 8: Readiness check and handoff - Plan 3: The skill's routes
@@ -40,7 +41,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 ## Context
 
 - **Locked:** D-03, D-05, D-06, D-08, D-09, D-10, D-11, D-12, D-13, D-14, D-15, D-17, D-19 and D-20.
-- **Plan 1 binds this plan:** the tool's spelling and the scoped entry are the ones Plan 1's report recorded, along with Daneel's ruling on it.
+- **Plan 1 binds this plan:** the tool is spelled `Agent`, with the agent type in its input's `subagent_type`, as Plan 1's traces show. No entry grants it: Plan 1's run 3 showed a start needs none, and Daneel ruled no grant change in phase 8.
 - **The fixed lines** (the wording is my call, per CONTEXT). SKILL.md shows each in a fenced block the way it shows its other fixed lines. The no-findings line and the three finding forms are Plan 2's, byte for byte as `agents/readiness.md` has them.
   - the readiness question: `Do you want to fix these, or hand off the design as it is?`
   - did not run: `The readiness check did not run: <the reason, in a few words>.`
@@ -51,6 +52,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 - **Budget:** SKILL.md stays at or under 90,000 bytes after every task (D-19).
 - **Eval runs (SECURITY):** Task 3 runs on Plan 1's recorded approval and terms. If none is recorded, stop at a checkpoint marked SECURITY before the run.
   - The per-case command, the Bash audit, the agent-start audit, the retries, the cleanup with trace copies, and the rule against reading the Claude binary are Plan 1's Context, unchanged.
+  - The agent-start audit also stops on Daneel's ruling on Plan 1's report: a start of anything other than `seldon:readiness`, or any start in a case that isn't a readiness case, stops the run and goes to Daneel.
   - `resume-later`'s seed doesn't change, so it needs no new vet.
 - **The agent in the lease:** `agents/readiness.md` is declared only so Task 3's run can fix its text. After such an edit, `claude plugin validate --strict .` passes and the run is retried on the retry terms.
 - **Held:** no push, tag, PR or GitHub change, no install of any kind, and nothing published (D-16).
@@ -70,7 +72,7 @@ An independent check reads the finished design before the handoff, and Seldon en
     - The epics confirm keeps its `/clear` words, so the check never runs in the conversation that wrote the epics.
   - **The look-up:** the sentence in "Where a run starts" that looks for `brief.md`, `prd.md`, `spine.md` and `epics.md` uses Glob, never Read. A run that ends at the check then reads none of the three documents (AC2). The steps still read their own documents when they start.
   - **The start (D-03):**
-    - start exactly one agent, `seldon:readiness`, with the tool Plan 1 recorded
+    - start exactly one agent, `seldon:readiness`, with the `Agent` tool
     - its prompt holds the paths of `prd.md`, `spine.md` and `epics.md` in the working folder, one per line, and nothing else
     - never Read those three yourself, before or after
     - start no other agent
@@ -87,7 +89,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 - **Verify:**
   - **Testing scope:** the outcome is the route as text. These checks tie it to Context's lines and the agent file, Task 3 proves it live, and testing stops there.
   - (1) `grep -c 'come in a later release' skills/seldon/SKILL.md` and `grep -c 'later-release' skills/seldon/SKILL.md` each print 0. Today they print 1 and 2.
-  - (2) `grep -cF` finds each of these in SKILL.md: the no-findings line, the readiness question, the did-not-run line's words up to its colon, and the not-checked line. Each prints 0 today. `seldon:readiness` is counted in the body only, below the frontmatter's closing `---`, where it prints at least 1. Plan 2's grant already puts the name in the frontmatter, so a count over the whole file can't fail.
+  - (2) `grep -cF` finds each of these in SKILL.md: the no-findings line, the readiness question, the did-not-run line's words up to its colon, and the not-checked line. Each prints 0 today. `grep -c 'seldon:readiness' skills/seldon/SKILL.md` prints at least 1, and 0 today. The frontmatter carries no agent entry (Daneel's ruling on Plan 1's report), so the count comes from the body.
   - (2a) `perl -ne 'print if /^## 22\. /../^## 23\. /' skills/seldon/SKILL.md | grep -c 'PROJECT.md'` prints at least 1: the section names the handoff's Glob and puts it before the first report line. It prints 0 today, since there is no section 22.
   - (3) A `node -e` script shows each of the three finding forms appears byte for byte in both SKILL.md and `agents/readiness.md`.
   - (4) The look-up sentence in "Where a run starts" no longer says "Read or Glob".
@@ -116,29 +118,31 @@ An independent check reads the finished design before the handoff, and Seldon en
 
 ### Task 3: Rewrite resume-later for the check and the handoff
 
-- **Files:** evals/resume-later/case.yaml, evals/resume-later/graders/says-later-release.md, evals/resume-later/graders/says-no-findings.md, evals/resume-later/graders/asks-nothing.md, evals/resume-later/graders/ends-on-new-project.md
+- **Files:** evals/resume-later/case.yaml, evals/resume-later/graders/says-later-release.md, evals/resume-later/graders/says-no-findings.md, evals/resume-later/graders/asks-nothing.md, evals/resume-later/graders/ends-on-new-project.md, evals/resume-later/graders/no-other-agent.md
 - **Reads:** evals/resume-later/case.yaml, evals/resume-later/graders/says-later-release.md, evals/epics-confirm/graders/suggests-clear.md, .planning/phases/7/PLAN-5.md#Context
 - **Decisions:** D-05, D-13, D-18
 - **Pins:** tests/scaffold.test.mjs
 - **Action:** The case changes with the line it pinned (D-05). It becomes AC4's first sentence, and the phase's first live run of the whole path.
   - **`case.yaml`:**
     - the description says all four documents are there and nothing is stale, so a bare `/seldon` has to run the readiness check, say the no-findings line, ask nothing, write and edit nothing, and end on the new-project handoff command
-    - `allowed_tools` is `[Skill, Read, Glob, Grep, "<the entry Plan 1 recorded>"]` (D-18)
+    - `allowed_tools` stays `[Skill, Read, Glob, Grep]`, with no Agent entry (D-18, as Daneel ruled on Plan 1's report: run 3 showed a start needs none)
     - `max_turns: 20` and `timeout_seconds: 600`, or higher if Plan 1 found the agent's turns count and need it
   - **Unchanged:** the seed, the prompt, `no-write.md` and `no-edit.md`.
-  - **Graders:** delete `says-later-release.md`. No grader or description may quote the old line, since AC6 greps `evals/` for it. Add three graders, copying every fixed line from SKILL.md:
+  - **Graders:** delete `says-later-release.md`. No grader or description may quote the old line, since AC6 greps `evals/` for it. Add four graders, copying every fixed line from SKILL.md:
     - `says-no-findings`: `last_message` holds the no-findings line on a line of its own
     - `asks-nothing`: `last_message` holds no `?` (`match: not_contains`)
     - `ends-on-new-project`: `last_message` ends on `/cad-new-project --brief .planning/seldon` on a line of its own. The line may sit inside a code fence, with only blanks or a closing fence after it, in `suggests-clear`'s form.
+    - `no-other-agent` (Daneel's ruling on Plan 1's report): `type: tool_used`, `tool: Agent`, `input_match: '^(?<![\s\S])(?![\s\S]*"subagent_type"\s*:\s*"seldon:readiness")'`, `min: 0`, `max: 0`. It matches any Agent input without that exact key and value, so a start of any other agent, or one with no `subagent_type`, fails the grader. A quote inside the prompt string is escaped in the input's JSON, so the prompt can't supply the key. It opens `^(?<![\s\S])`, which holds with or without the `m` flag, as phase 6's `no-secret` fix found. Every case in Plans 5 and 6 that expects the start carries a byte copy, so the audit's check stays in the committed suite.
 
-    All three read `last_message` on purpose. Task 1's one-message rule is what puts the no-findings line there, so a run that says the line before the handoff's Glob fails `says-no-findings`, and that failure is the skill's to fix, never the grader's target to move to the trace (Daneel's ruling).
+    The first three read `last_message` on purpose. Task 1's one-message rule is what puts the no-findings line there, so a run that says the line before the handoff's Glob fails `says-no-findings`, and that failure is the skill's to fix, never the grader's target to move to the trace (Daneel's ruling).
 - **Verify:**
-  - **Testing scope:** the outcome is the whole path on the clean samples (AC4's first sentence). Three new graders, their D-21 checks, one run and its audits are the evidence. The other outcomes are Plans 5 and 6's, and testing stops there.
+  - **Testing scope:** the outcome is the whole path on the clean samples (AC4's first sentence). Four new graders, their D-21 checks, one run and its audits are the evidence. The other outcomes are Plans 5 and 6's, and testing stops there.
   - (1) `node --test tests/scaffold.test.mjs` passes, and `git grep -n "come in a later release" -- evals/resume-later` prints nothing. Today it prints two lines.
   - (2) **D-21,** with a `node -e` script over hand-made inputs in the scratch area:
     - `says-no-findings` fails on a message without the line, and on one where the line is reworded
     - `asks-nothing` matches, and so fails the grader, on a message holding a question
     - `ends-on-new-project` fails on `/cad-phase add --brief .planning/seldon`, on `.planning/seldon/`, and on the command followed by more text
+    - `no-other-agent`, before the case's first run, with its `input_match` run once with no flags and once with `m` over `JSON.stringify` of hand-made Agent inputs. It doesn't match an input naming `seldon:readiness` with `subagent_type` first, in the middle and last. It matches, and so fails the grader, on inputs naming `general-purpose`, `Explore` and `seldon:readiness-2`, on one with no `subagent_type`, and on one naming `general-purpose` whose prompt holds the text `"subagent_type":"seldon:readiness"`.
   - (3) The run exits 0 at 1.00. Both audits are reported, and the trace shows exactly one start of `seldon:readiness`. If it misses on the skill's or the agent's text, fix that text in this plan's lease, rerun, and stay within the retry terms.
   - (4) The trace copy is in `evals/results/phase-8-traces/`, and `ls -d` fails on the kept path.
 
