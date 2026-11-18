@@ -232,14 +232,19 @@ these in order:
   question in "The spine's questions", alone or with the spine's other
   questions, and the user answered. Carry the step on with those answers just
   as "Spine questions answered" does: through "The spine rerun" with Edit when
-  that turn was a rerun over a `spine.md` that's there, from `/seldon spine`
-  or a stale `spine.md`, otherwise through "The spine draft".
+  that turn was a rerun over a `spine.md` that's there, from `/seldon spine`,
+  a stale `spine.md` or a fix at the readiness question, otherwise through
+  "The spine draft". On a rerun a fix at the readiness question started, the
+  report's finding lines that name the spine are its change as well as those
+  answers.
 - **Spine questions answered:** your last turn asked the spine step's
   questions, and the user answered. When that turn was a rerun over a
-  `spine.md` that's there, from `/seldon spine` or a stale `spine.md`, go to
-  "The spine rerun" in "The spine draft"
+  `spine.md` that's there, from `/seldon spine`, a stale `spine.md` or a fix
+  at the readiness question, go to "The spine rerun" in "The spine draft"
   and carry the rerun on with those answers, changing `spine.md` with Edit,
-  never a fresh Write. Otherwise go to "The spine draft" and draft with those
+  never a fresh Write. On a rerun a fix at the readiness question started,
+  the report's finding lines that name the spine are its change as well as
+  those answers. Otherwise go to "The spine draft" and draft with those
   answers.
 - **Brief change answered:** your last turn was changing a `brief.md` that's
   there, stopped to ask and wrote nothing, and the user answered. It stopped
