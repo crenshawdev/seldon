@@ -105,18 +105,26 @@ test('every tool_used grader that states a max also states its min', () => {
 });
 
 // The case.yaml keys whose value is text; allowed_tools: [...] is a flow list on purpose and never reaches this.
-const STRING_KEY = /^ *(schema_version|name|description|history_file):[ \t]+(.*?)[ \t\r]*$/;
+const STRING_KEY = /^( *)(schema_version|name|description|history_file):(?:[ \t]+(.*?))?[ \t\r]*$/;
 // A plain value can't start with any of these and still be read as the text it looks like.
 const INDICATOR = /^[-?:,[\]{}#&*!|>%@`]/;
+const ANY_KEY = /^ *[\w-]+:(?:[ \t]|\r?$)/;
 
+// One line per value keeps this a line check: a value that's empty, a block scalar or wrapped fails instead.
 function plainStringProblems(source) {
   const problems = [];
-  source.split('\n').forEach((text, i) => {
+  const lines = source.split('\n');
+  lines.forEach((text, i) => {
     const m = text.match(STRING_KEY);
-    if (!m || m[2] === '' || m[2][0] === '"' || m[2][0] === "'") return;
-    const [, key, value] = m;
+    if (!m) return;
+    const [, indent, key, value = ''] = m;
+    const next = lines.slice(i + 1).find((line) => line.trim() !== '');
     let why = null;
-    if (INDICATOR.test(value)) why = `starts with ${value[0]}`;
+    if (value === '') why = 'is empty or starts on the next line';
+    else if (value[0] === '|' || value[0] === '>') why = `starts with ${value[0]}`;
+    else if (next !== undefined && next.match(/^ */)[0].length > indent.length && !ANY_KEY.test(next)) why = 'runs onto the next line';
+    else if (value[0] === '"' || value[0] === "'") return;
+    else if (INDICATOR.test(value)) why = `starts with ${value[0]}`;
     else if (/:(?:[ \t]|$)/.test(value)) why = 'holds ": "';
     else if (/[ \t]#/.test(value)) why = 'holds " #"';
     if (why) problems.push({ line: i + 1, key, why });
@@ -125,7 +133,7 @@ function plainStringProblems(source) {
 }
 
 // 900d872's class: an unquoted "word for word: the" in a description stopped the eval loading the case.
-test('every case.yaml string key\'s unquoted value has no ": ", no " #" and no leading YAML indicator (a line check, not a YAML parse)', () => {
+test('every case.yaml string key\'s value sits on its key\'s line, and unquoted has no ": ", no " #" and no leading YAML indicator (a line check, not a YAML parse)', () => {
   const problems = [];
   let files = 0;
   for (const entry of readdirSync(evals, { recursive: true })) {
@@ -133,14 +141,14 @@ test('every case.yaml string key\'s unquoted value has no ": ", no " #" and no l
     if (path.split(sep)[0] === 'results' || path.split(sep).pop() !== 'case.yaml') continue;
     files += 1;
     for (const p of plainStringProblems(readFileSync(join(evals, path), 'utf8'))) {
-      problems.push(`evals/${path.split(sep).join('/')}:${p.line}: ${p.key}'s unquoted value ${p.why}, so YAML won't read it as written; quote it`);
+      problems.push(`evals/${path.split(sep).join('/')}:${p.line}: ${p.key}'s value ${p.why}; quote it on the key's line so YAML and this check read the same text`);
     }
   }
   assert.deepEqual(problems, [], `\n${problems.join('\n')}`);
   assert.ok(files > 0, 'found no case.yaml under evals/');
 });
 
-test('the string-key line check flags ": ", " #" and a leading indicator, and leaves quoted values and flow lists alone', () => {
+test('the string-key line check flags ": ", " #", a leading indicator, an empty value, a block scalar and a wrapped value, and leaves one-line quoted values and flow lists alone', () => {
   const flagged = [
     ['description: each quoted word for word: the trust answer\n', 'holds ": "'],
     ['description: ends on a colon:\n', 'holds ": "'],
@@ -148,6 +156,12 @@ test('the string-key line check flags ": ", " #" and a leading indicator, and le
     ['name: [resume-later]\n', 'starts with ['],
     ['description: *anchor\n', 'starts with *'],
     ['context:\n  history_file: a: b.jsonl\n', 'holds ": "'],
+    ['description:\n  the text on the next line\n', 'is empty or starts on the next line'],
+    ['description:   \nname: x\n', 'is empty or starts on the next line'],
+    ['description: >\n  folded text\n', 'starts with >'],
+    ['description: |-\n  literal text\n', 'starts with |'],
+    ['description: clean first line\n  then word for word: the rest\n', 'runs onto the next line'],
+    ['description: "quoted but\n  wrapped"\n', 'runs onto the next line'],
   ];
   for (const [source, why] of flagged) {
     assert.equal(plainStringProblems(source).length, 1, JSON.stringify(source));
@@ -161,6 +175,7 @@ test('the string-key line check flags ": ", " #" and a leading indicator, and le
     'name: resume-later\n',
     'description: A bare /seldon, at 10:30 for issue#1, with a URL like https://example.com\n',
     'execution:\n  allowed_tools: [Skill, Read, Glob, Grep]\n  disallowed_tools: [Agent]\n',
+    'name: x\ndescription: "one line"\nruns: 1\ncontext:\n  history_file: history.jsonl\n  scaffold_script: seed.sh\n',
   ];
   for (const source of clean) assert.deepEqual(plainStringProblems(source), [], JSON.stringify(source));
 });
