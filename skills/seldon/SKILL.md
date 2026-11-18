@@ -16,8 +16,8 @@ walk through each decision, and recommend one path. Once the user confirms a
 path, write the project's brief to `.planning/seldon/brief.md`. Then build the
 PRD from that brief alone, at `.planning/seldon/prd.md`. Then take the spine
 step: record the architecture decisions that would clash if two parts were
-built separately, from the brief and the PRD alone, at
-`.planning/seldon/spine.md`. Then take the epics step: cut the work into small
+built separately, from the brief and the PRD, plus the existing code on a
+project under Cadence, at `.planning/seldon/spine.md`. Then take the epics step: cut the work into small
 epics in build order, from the PRD and the spine alone, at
 `.planning/seldon/epics.md`. A new run picks up from the files in
 `.planning/seldon/`, so the walk survives a `/clear`.
@@ -76,7 +76,8 @@ and with none the top-level folder:
   - A spine there: go to "The architecture document".
 
 - **`spine`:** the spine step, built from `.planning/seldon/brief.md` and
-  `.planning/seldon/prd.md` alone, as "The spine step" says. Look for
+  `.planning/seldon/prd.md`, plus the existing code on a project under
+  Cadence, as "The spine step" says. Look for
   `brief.md`, `prd.md` and `spine.md` with Read or Glob.
   - No PRD there: the spine has nothing to build from. Write nothing, and say
     there's no PRD yet and that `/seldon prd` builds it, or that a bare
@@ -842,16 +843,21 @@ changes.
 ## 15. The spine step
 
 The spine is built from `.planning/seldon/brief.md` and
-`.planning/seldon/prd.md` and nothing else. Read those two files and nothing
-more for it: never `docs/design/` or any other design folder, never the dump,
-and never the earlier conversation, whatever it holds. A fact from a design
+`.planning/seldon/prd.md`, plus the existing code on a project under Cadence.
+Ask whether it's under Cadence here, with Glob for `.planning/PROJECT.md` as
+"Where a run starts" says, never Read. Under Cadence, also read the files
+outside `.planning/`, with Read, Glob and Grep, enough to find the conventions
+"What the spine holds" asks for. Otherwise read those two files and nothing
+more. Either way, never read `docs/design/` or any other design folder,
+anything in `.planning/` but this design's brief, PRD and spine, the dump, or
+the earlier conversation, whatever it holds. A fact from a design
 folder reaches the spine only through a quote the brief already carries. A
 stack or hosting word the user said reaches it only through the brief's `> `
 quotes, since the PRD leaves those words out. The one thing it takes from the
 conversation is the user's answers to this step's own questions: the ones "The
 spine's questions" below asks, and the confirm question "The spine check" ends
-on. The one other file a spine step reads is
-the `spine.md` a `/seldon spine` rerun updates, as "The spine rerun" says.
+on. The one other `.planning/` file a spine step reads
+is the `spine.md` a `/seldon spine` rerun updates, as "The spine rerun" says.
 
 The brief and the PRD on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -946,8 +952,9 @@ these routes:
 
 **The spine rerun.** A `/seldon spine` that finds `spine.md` there brings it
 in line with the brief and the PRD as they stand now. Read `spine.md` first,
-the previous version of this document, then `brief.md` and `prd.md`, and
-nothing else: not a design folder, not the dump, and not the conversation.
+the previous version of this document, then `brief.md` and `prd.md`, plus the
+code on a project under Cadence as "The spine step" says, and nothing else:
+not a design folder, not the dump, and not the conversation.
 The one thing it takes from the conversation is the user's answers to its own
 questions, when the rerun stopped to ask them as "The spine step" says. Every
 decision in that `spine.md` counts as answered, its `[ASSUMPTION]` guesses
