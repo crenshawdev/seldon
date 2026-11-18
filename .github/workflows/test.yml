@@ -72,7 +72,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
-      - run: npm install -g --ignore-scripts @anthropic-ai/claude-code@2.1.326 # zizmor: ignore[adhoc-packages]
+      - run: npm install -g --ignore-scripts @anthropic-ai/claude-code@2.1.327 # zizmor: ignore[adhoc-packages]
       - run: npm explore -g @anthropic-ai/claude-code -- node install.cjs
       - run: claude plugin validate --strict .
       - run: claude plugin validate --strict .claude-plugin/plugin.json

@@ -9,6 +9,9 @@
   "homepage": "https://github.com/crenshawdev/seldon",
   "repository": "https://github.com/crenshawdev/seldon.git",
   "license": "MIT",
+  "engines": {
+    "claude-code": ">=2.1.327"
+  },
   "keywords": [
     "planning",
     "design",
