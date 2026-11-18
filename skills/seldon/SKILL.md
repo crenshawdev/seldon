@@ -165,19 +165,21 @@ these in order:
   again about What it refuses after their answers, or asked a coaching
   question, and the user answered. Carry on from there.
 - **PRD questions answered:** your last turn asked the PRD step's questions,
-  and the user answered. When that turn was a `/seldon prd` rerun over a
-  `prd.md` that's there, go to "The PRD rerun" in "The PRD draft" and carry
+  and the user answered. When that turn was a rerun over a `prd.md` that's
+  there, from `/seldon prd` or a stale `prd.md`, go to "The PRD rerun" in
+  "The PRD draft" and carry
   the rerun on with those answers, changing `prd.md` with Edit, never a fresh
   Write. Otherwise go to "The PRD draft" and draft with those answers.
 - **Who-relies question answered:** your last turn asked the who-relies
   question in "The spine's questions", alone or with the spine's other
   questions, and the user answered. Carry the step on with those answers just
   as "Spine questions answered" does: through "The spine rerun" with Edit when
-  that turn was a `/seldon spine` rerun over a `spine.md` that's there,
-  otherwise through "The spine draft".
+  that turn was a rerun over a `spine.md` that's there, from `/seldon spine`
+  or a stale `spine.md`, otherwise through "The spine draft".
 - **Spine questions answered:** your last turn asked the spine step's
-  questions, and the user answered. When that turn was a `/seldon spine` rerun
-  over a `spine.md` that's there, go to "The spine rerun" in "The spine draft"
+  questions, and the user answered. When that turn was a rerun over a
+  `spine.md` that's there, from `/seldon spine` or a stale `spine.md`, go to
+  "The spine rerun" in "The spine draft"
   and carry the rerun on with those answers, changing `spine.md` with Edit,
   never a fresh Write. Otherwise go to "The spine draft" and draft with those
   answers.
@@ -224,19 +226,12 @@ these in order:
     turn, as "The brief rerun" in "The draft" says, without asking what should
     change.
   - **Go on from the brief:** look for the files again, as "Where a run
-    starts" says, and follow that section's routes, exactly as a resume does:
-    - Only a brief there: start with the PRD resume line, then go to "The
-      PRD step".
-    - A brief and a PRD, no spine: start with the spine resume line, then go
-      to "The spine step".
-    - A brief, a PRD and a spine, no epics: start with the epics resume line,
-      then go to "The epics step".
-    - All four there: write nothing, and end on the later-release line.
-
-    Going on never runs the PRD step over a PRD that's there, the spine step
-    over a spine that's there, or the epics step over an `epics.md` that's
-    there. The text from the question's turn isn't input to the PRD, the
-    spine or the epics.
+    starts" says, and follow its routes for a brief with `$ARGUMENTS` counted
+    empty, exactly as a bare `/seldon` does: the stale check and its three
+    stale routes first, then the resume lines and the later-release line.
+    Going on runs a step over a document that's there only as the rerun a
+    stale link calls for. The text from the question's turn isn't input to
+    the PRD, the spine or the epics.
 
 Anything else is a new run: start at "Where a run starts". The files in
 `.planning/seldon/` decide where a new run goes, even when this conversation
@@ -304,6 +299,35 @@ there's no record of a confirmation to look for. `$ARGUMENTS` counts as empty
 when it holds nothing but blanks. Then:
 
 - **No brief:** go on to "The dump".
+- **A brief and empty `$ARGUMENTS`:** before any text, run the stale check in
+  "Stamps and stale links". The earliest stale link wins, even over a missing
+  later document:
+  - **`prd.md` stale:** say the PRD stale line, then go to "The PRD rerun" in
+    "The PRD draft":
+
+    ```
+    I'm updating the PRD, because .planning/seldon/brief.md has changed since the PRD was built from it. To revise the brief instead, run /seldon brief.
+    ```
+
+  - **Otherwise, `spine.md` stale:** say the spine stale line, then go to "The
+    spine rerun" in "The spine draft":
+
+    ```
+    I'm updating the spine, because .planning/seldon/prd.md has changed since the spine was built from it. To revise the PRD instead, run /seldon prd.
+    ```
+
+  - **Otherwise, `epics.md` stale:** say the epics stale line, then go to "The
+    epics rerun" in "The epics draft":
+
+    ```
+    I'm updating the epics, because .planning/seldon/spine.md has changed since the epics were built from it. To revise the spine instead, run /seldon spine.
+    ```
+
+  Say a stale line the way a resume line is said: exactly those words, on a
+  line of their own, as the first text of your reply, before your next tool
+  call and before you read any document. Never Edit that document until its
+  line is in your reply. The stamp the rerun records comes from this same
+  output. With nothing stale, the routes below run.
 - **A brief, no PRD and empty `$ARGUMENTS`:** this is a resume. Before your
   next tool call, and before you read the brief, draft or write anything, say
   exactly these words, on a line of their own, as the first text of your
@@ -337,7 +361,8 @@ when it holds nothing but blanks. Then:
 
   Never Write `epics.md` on a resume until that line is in your reply. Then go
   to "The epics step".
-- **All four documents, and empty `$ARGUMENTS`:** write nothing. End your
+- **All four documents, nothing stale, and empty `$ARGUMENTS`:** write
+  nothing. End your
   message with exactly these words, on a line of their own, with nothing after
   them. This is the later-release line:
 
@@ -345,8 +370,8 @@ when it holds nothing but blanks. Then:
   All four documents are there. The readiness check and the handoff to Cadence come in a later release, so I've written nothing this time.
   ```
 
-- **A brief, and `$ARGUMENTS` isn't empty:** write nothing, and go to "A dump
-  when documents are there".
+- **A brief, and `$ARGUMENTS` isn't empty:** write nothing, run no stale
+  check, and go to "A dump when documents are there".
 
 ### A dump when documents are there
 
@@ -430,7 +455,9 @@ the stamp it records if written now, such as
 - **Which output:** the stamp comes from this turn's output of the stale
   check. A route that writes one of these files and hasn't run it in this turn
   runs it right before its first Write or Edit. There it uses the output only
-  for its stamp line and says nothing about any `stale:` line.
+  for its stamp line and says nothing about any `stale:` line. Only a bare
+  `/seldon`, or going on from the brief, routes on those lines, as "Where a
+  run starts" says. A named step never does.
 - **Whose stamp:** a step records only its own file's stamp. The brief and
   `architecture.md` carry none, and a brief rerun still never writes or edits
   `prd.md`.
@@ -691,8 +718,8 @@ The PRD is built from `.planning/seldon/brief.md` and nothing else. Read that
 file and nothing more for it: never `docs/design/` or any other design folder,
 never the dump, and never the earlier conversation, whatever it holds. A fact
 from a design folder reaches the PRD only through a quote the brief already
-carries. The one other file a PRD step reads is the `prd.md` a `/seldon prd`
-rerun updates, as "The PRD rerun" says.
+carries. The one other file a PRD step reads is the `prd.md` a rerun
+updates, as "The PRD rerun" says.
 
 The brief on disk is the confirmed one, even where it differs from something
 said earlier in this conversation: the user may have edited the file by hand
@@ -729,10 +756,11 @@ of their own, with nothing after them. This is the PRD's create guard line:
 That guard is about creating a PRD with Write. Three routes change a PRD
 that's there, and all three do it with Edit, never a fresh Write:
 
-- A `/seldon prd` rerun, as "The PRD rerun" below says. It's the only route
+- A rerun, from `/seldon prd` or from a bare `/seldon` whose stale check
+  found `prd.md` stale, as "The PRD rerun" below says. It's the only route
   into the PRD step that updates a PRD that's there.
 - "PRD questions answered" in "Where the conversation stands", when the turn
-  that asked those questions was a `/seldon prd` rerun. It carries that rerun
+  that asked those questions was such a rerun. It carries that rerun
   on with the user's answers, as "The PRD rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
   the PRD's own confirm question with changes. Make those changes with Edit,
@@ -744,8 +772,9 @@ says. Every other route that reaches this step and finds `prd.md` writes
 nothing and ends on the PRD's create guard line, on a line of its own, with
 nothing after it.
 
-**The PRD rerun.** A `/seldon prd` that finds `prd.md` there brings it in line
-with the brief as it stands now. Read `prd.md` first, the previous version of
+**The PRD rerun.** A `/seldon prd` that finds `prd.md` there, or a bare
+`/seldon` whose stale check found `prd.md` stale, brings it in line with the
+brief as it stands now. Read `prd.md` first, the previous version of
 this document, then `brief.md`, and nothing else: not a design folder, and
 not the conversation. The one thing it takes from the conversation is the
 user's answers to its own questions, when the rerun stopped to ask them as
@@ -909,8 +938,7 @@ settle a stack or hosting choice too, as "Stack and hosting" below says. The
 one thing it takes from the conversation is the user's answers to this step's
 own questions: the ones "The spine's questions" below asks, and the confirm
 question "The spine check" ends on. The one other `.planning/` file a spine
-step reads is the `spine.md` a `/seldon spine` rerun updates, as "The spine
-rerun" says.
+step reads is the `spine.md` a rerun updates, as "The spine rerun" says.
 
 The brief and the PRD on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -1005,7 +1033,7 @@ Who relies on what in this project today?
 
 Prose before it can say it means people and systems outside this repository.
 
-**On a rerun.** A `/seldon spine` rerun reads a `spine.md` that's there, and
+**On a rerun.** A spine rerun reads a `spine.md` that's there, and
 every decision in it counts as answered, its `[ASSUMPTION]` guesses included.
 The rerun asks only about what that spine doesn't decide yet and only the user
 can decide, under the same rules, and otherwise carries on in the same turn.
@@ -1019,11 +1047,12 @@ create a spine that isn't there yet. Never Write over a `spine.md` that's
 there: one that's there changes only with Edit, never a fresh Write, through
 these routes:
 
-- A `/seldon spine` rerun, as "The spine rerun" below says. It's the only
+- A rerun, from `/seldon spine` or from a bare `/seldon` whose stale check
+  found `spine.md` stale, as "The spine rerun" below says. It's the only
   route into the spine step that updates a spine that's there.
 - "Spine questions answered" or "Who-relies question answered" in "Where the
-  conversation stands", when the turn that asked those questions was a
-  `/seldon spine` rerun. It carries that rerun
+  conversation stands", when the turn that asked those questions was such a
+  rerun. It carries that rerun
   on with the user's answers, as "The spine rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
   the spine's own confirm question with changes. Make those changes in
@@ -1032,8 +1061,9 @@ these routes:
 
 Each of these keeps the stamp line current, as "Stamps and stale links" says.
 
-**The spine rerun.** A `/seldon spine` that finds `spine.md` there brings it
-in line with the brief and the PRD as they stand now. Read `spine.md` first,
+**The spine rerun.** A `/seldon spine` that finds `spine.md` there, or a bare
+`/seldon` whose stale check found `spine.md` stale, brings it in line with the
+brief and the PRD as they stand now. Read `spine.md` first,
 the previous version of this document, then `brief.md` and `prd.md`, plus the
 code on a project under Cadence as "The spine step" says, and nothing else:
 not a design folder, not the dump, and not the conversation.
@@ -1188,8 +1218,8 @@ The epics are built from `.planning/seldon/prd.md` and
 `.planning/seldon/spine.md` and nothing else. Read those two files and nothing
 more for it: never the brief, never `docs/design/` or any other design folder,
 never the dump, and never the earlier conversation, whatever it holds. The one
-other file an epics step reads is the `epics.md` a `/seldon epics` rerun
-updates, as "The epics rerun" says.
+other file an epics step reads is the `epics.md` a rerun updates, as "The
+epics rerun" says.
 
 The PRD and the spine on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -1232,7 +1262,8 @@ create an `epics.md` that isn't there yet. Never Write over an `epics.md`
 that's there: one that's there changes only with Edit, never a fresh Write,
 through these routes:
 
-- A `/seldon epics` rerun, as "The epics rerun" below says. It's the only
+- A rerun, from `/seldon epics` or from a bare `/seldon` whose stale check
+  found `epics.md` stale, as "The epics rerun" below says. It's the only
   route into the epics step that updates an `epics.md` that's there.
 - "Names changes" in "Where the conversation stands", when the user answers
   the epics confirm question with changes. Make those changes in `epics.md`
@@ -1240,10 +1271,11 @@ through these routes:
 
 Each of these keeps the stamp line current, as "Stamps and stale links" says.
 
-**The epics rerun.** A `/seldon epics` that finds `epics.md` there brings it
-in line with the PRD and the spine as they stand now. Read `epics.md` first,
-the previous version of this document, then `prd.md` and `spine.md`, and
-nothing else. It asks no question. Change the epics with Edit only, never a
+**The epics rerun.** A `/seldon epics` that finds `epics.md` there, or a bare
+`/seldon` whose stale check found `epics.md` stale, brings it in line with
+the PRD and the spine as they stand now. Read `epics.md` first, the previous
+version of this document, then `prd.md` and `spine.md`, and nothing else,
+however the rerun was reached. It asks no question. Change the epics with Edit only, never a
 fresh Write over them, so a line the change doesn't touch is never typed
 again:
 
