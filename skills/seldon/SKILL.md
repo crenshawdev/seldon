@@ -31,7 +31,9 @@ epics in build order, from the PRD and the spine alone, at
   `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
   `.planning/seldon/epics.md`, plus
   `.planning/seldon/architecture.md`, the one file written only on
-  `/seldon architecture`, as "The architecture document" says. Never write,
+  `/seldon architecture`, as "The architecture document" says. Each is the
+  one in the working folder, as "Designs and the working folder" says, and
+  never another design's. Never write,
   edit or create anything else, in the project or outside it. A design folder
   is input only.
 - When the user asks for the brief, or anything else, somewhere else - a
@@ -214,6 +216,30 @@ after the user confirms a path.
 
 ## 2. Where a run starts
 
+### Designs and the working folder
+
+A design is one body of work's documents, in one folder. The top-level design
+is the one at the top of `.planning/seldon/`, and it stays there and works as
+it always has. A named design sits in `.planning/seldon/<name>/`, holding the
+same files in the same format. A folder holds a design when its `brief.md` is
+there. Find the designs with Glob for `.planning/seldon/brief.md` and
+`.planning/seldon/*/brief.md`, never Read.
+
+The working folder is the one folder a run reads its documents from and writes
+them to. With no design it's the top-level folder, so a project's first brief
+goes where it always has. With one design it's that design's folder.
+
+Every `.planning/seldon/` file path in this skill, fixed lines and check
+commands included, names that file in the working folder. With the top-level
+design every line reads exactly as written. With a named design it names that
+folder instead: the PRD resume line names `.planning/seldon/<name>/brief.md`,
+the PRD's create guard line names `.planning/seldon/<name>/prd.md`, and a
+check runs on `.planning/seldon/<name>`, unquoted.
+
+A step under way keeps the working folder its run settled, which the
+conversation shows. A run writes and edits only inside its working folder, and
+never touches another design.
+
 A project already under Cadence starts the same way. It counts as under
 Cadence when `.planning/PROJECT.md` exists, the file Cadence's
 `/cad-new-project` stops on. Whether it's there is a question for Glob, asked
@@ -226,7 +252,8 @@ and what the project has already built enters the design only at the spine
 step, and a design folder still enters at the brief as "The design folder"
 says.
 
-Before you ask for or read any dump, look for `.planning/seldon/brief.md`,
+Before you ask for or read any dump, settle the working folder, as "Designs
+and the working folder" says. Then look for `.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
 `.planning/seldon/epics.md` in the project with Read or Glob. An error or no
 match means that file isn't there. A brief on disk counts as confirmed, so
