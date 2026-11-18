@@ -19,8 +19,19 @@ function evalsSection(text) {
 // --case and --tag pick cases; --eval-dir swaps the folder they come from. Any of them and it's no longer the whole suite.
 const FILTER = /(?:^|\s)(--case|--tag|--eval-dir)(?=[\s=]|$)/g;
 
+// A trailing \ carries the command onto the next line, so a filter there is still part of it.
+function evalCommands(section) {
+  const lines = section.split('\n');
+  return lines.flatMap((line, i) => {
+    if (!line.trimStart().startsWith('claude plugin eval')) return [];
+    let end = i;
+    while (lines[end].trimEnd().endsWith('\\') && end + 1 < lines.length) end++;
+    return [lines.slice(i, end + 1).join('\n')];
+  });
+}
+
 function commandProblems(section) {
-  const commands = section.split('\n').filter((line) => line.trimStart().startsWith('claude plugin eval'));
+  const commands = evalCommands(section);
   if (commands.length !== 1) return [`expected one claude plugin eval line, found ${commands.length}`];
   return [...commands[0].matchAll(FILTER)].map((m) => `the eval command carries ${m[1]}, so it doesn't run every case`);
 }
@@ -73,6 +84,8 @@ test('a case filter on the command is flagged by name', () => {
     const text = readme.replace(real, `${real} ${extra}`);
     assert.deepEqual(commandProblems(evalsSection(text)), [`the eval command carries ${flag}, so it doesn't run every case`], extra);
   }
+  const wrapped = readme.replace(real, `${real} \\\n  --case fast-path`);
+  assert.deepEqual(commandProblems(evalsSection(wrapped)), ["the eval command carries --case, so it doesn't run every case"], 'wrapped');
 });
 
 test('a missing, invented or repeated case name is flagged by name', () => {
