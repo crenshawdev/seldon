@@ -271,7 +271,7 @@
     {
       "n": 9,
       "name": "The full graders",
-      "description": "The full graders check every run, and /cad-verify runs the whole eval suite locally",
+      "description": "The full graders check every run that writes what they grade, and a unit test proves the suite command covers every case",
       "status": "unplanned",
       "plans": []
     }
