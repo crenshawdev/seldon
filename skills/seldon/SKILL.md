@@ -1013,17 +1013,31 @@ to it:
 - an `[ASSUMPTION]` tag, inline right after the decision's text, never on the
   `## ` heading and never on the `Kind:` line
 
-A spine quote comes from one of two sources, and nowhere else:
+A spine quote comes from one of three sources, and nowhere else:
 
 - The brief's `> ` lines, word for word. A quote is a whole `> ` line or one
   unbroken run of that line's exact words. Where the brief's quote had a
   `(docs/design/...)` line under it, keep that line under the spine's quote
   too.
 - The user's replies to this step's own questions.
+- On a project under Cadence, the existing code outside `.planning/`, quoted
+  word for word from the file. The line right after the quote names the file,
+  relative to the project root, in parentheses and indented like the quote,
+  as "Words from a design folder" in "The draft" does.
 
 The brief's item text and the PRD's text are Seldon's wording, not the user's,
 so neither is ever quoted. Never paraphrase a quote and never tidy it. A
-decision with no source words is a guess and carries the tag.
+decision with no source words is a guess and carries the tag. A convention
+quoted from the code carries no `[ASSUMPTION]`, because what the code shows
+isn't a guess:
+
+```
+## S-03: Orders are stored in SQLite
+Kind: stack
+New work stores its data through better-sqlite3, as the existing code does.
+> import Database from 'better-sqlite3';
+(src/db.js)
+```
 
 **The answers to the spine's questions.** Each answer goes into its part's
 own decision, word for word, on a `> ` line under that decision's text:
