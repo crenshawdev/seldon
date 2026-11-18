@@ -22,6 +22,7 @@ const ELSEWHERE = {
   'epics-no-boundary/spine.md': 'epics-split/prd.md',
   'readiness/prd.md': 'brief.md',
   'readiness-uncovered/epics.md': 'readiness/spine.md',
+  'readiness-open-decision/epics.md': 'readiness/spine.md',
 };
 const STAMP = /^Built from: \S+ sha256:([0-9a-f]{16})$/m;
 

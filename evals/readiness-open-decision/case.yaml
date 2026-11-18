@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: readiness-open-decision
+description: A bare /seldon in a fresh session where all four documents are at .planning/seldon/, seeded from samples/brief.md, samples/readiness/prd.md, samples/readiness/spine.md and samples/readiness-open-decision/epics.md, and none is stale. Every requirement is on an epic and no epic crosses a boundary, but E-03 (Repairs) has to keep a tool logged broken from being checked out while checkouts stay with E-02 (Lending), and no spine decision says how the two meet, so Seldon has to report that decision left open with both epic IDs and the step that fixes it, write and edit nothing, and end on the readiness question.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

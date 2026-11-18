@@ -133,6 +133,7 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `readiness-fix` answers that question with a fix, and checks that Seldon edits `spine.md` in that turn so a new boundaries decision names loans and repairs, writes and edits no epics, and ends on the spine confirm question.
 - `readiness-fix-answer` answers the who-relies question that a fix's spine rerun stopped to ask on a project under Cadence, and checks that Seldon carries the rerun on with Edit and never a Write of `spine.md`, adds a new boundaries decision naming loans and repairs, quotes the answer under a decision, writes and edits no epics, starts no agent and ends on the spine confirm question.
 - `readiness-agent` runs a bare `/seldon` where all four documents are there and none is out of date, and checks that Seldon starts exactly one agent, `seldon:readiness`, hands it the paths of `prd.md`, `spine.md` and `epics.md` and no other path, and reads none of the three itself, while the agent reads each of the three and nothing else.
+- `readiness-open-decision` runs a bare `/seldon` on a design where every requirement is on an epic and no epic crosses a boundary, but `E-03` has to keep a tool logged broken from being checked out while checkouts belong to `E-02`, and no spine decision says how the two meet. It checks that Seldon reports that decision left open with both epic IDs and the step that fixes it, writes and edits nothing, starts no agent but the readiness check and ends on the readiness question.
 
 Results go to `evals/results/`, which git ignores.
 
