@@ -1116,8 +1116,10 @@ If it breaks with nobody there, who is told, and how?
 
 Prose before those lines can name the part they're about. The failure question
 goes with unattended work only: never ask it about an outside dependency the
-system leans on, such as an email provider. A design without one of these
-parts gets none of that part's questions.
+system leans on, such as an email provider. A design with neither outside
+input nor data people outside the project can reach gets no trust-boundary
+question, and one without unattended work gets neither the unattended-work nor
+the failure question.
 
 On a project under Cadence, ask the who-relies question with the spine's other
 open questions, in the same message, with exactly these words, on a line of
