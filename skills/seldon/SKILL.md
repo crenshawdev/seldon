@@ -168,6 +168,12 @@ these in order:
   `prd.md` that's there, go to "The PRD rerun" in "The PRD draft" and carry
   the rerun on with those answers, changing `prd.md` with Edit, never a fresh
   Write. Otherwise go to "The PRD draft" and draft with those answers.
+- **Who-relies question answered:** your last turn asked the who-relies
+  question in "The spine's questions", alone or with the spine's other
+  questions, and the user answered. Carry the step on with those answers just
+  as "Spine questions answered" does: through "The spine rerun" with Edit when
+  that turn was a `/seldon spine` rerun over a `spine.md` that's there,
+  otherwise through "The spine draft".
 - **Spine questions answered:** your last turn asked the spine step's
   questions, and the user answered. When that turn was a `/seldon spine` rerun
   over a `spine.md` that's there, go to "The spine rerun" in "The spine draft"
@@ -897,7 +903,8 @@ draft" says, unless something only the user can decide is still open. Then ask
 every such question in one plain-prose message that ends your turn, and write
 nothing in that turn. Use no AskUserQuestion and no menu. Once the user
 answers, "Spine questions answered" in "Where the conversation stands" carries
-the step on with those answers. Only these are open:
+the step on with those answers, or "Who-relies question answered" when that
+turn asked the who-relies question. Only these are open:
 
 - **Stack and hosting:** a `stack` or `hosting` decision the brief's `> `
   quotes never name. The PRD leaves those words out, so the brief's quotes are
@@ -906,6 +913,8 @@ the step on with those answers. Only these are open:
   the code settles counts as settled even when the brief never quotes it, and
   isn't asked about: its decision quotes the code, as "The spine draft" says.
 - **The parts' questions:** the questions below, for the parts the design has.
+- **Who relies on what:** on a project under Cadence, always open, a rerun
+  included, so there the step never drafts in the turn it starts.
 
 Read the brief and the PRD for two kinds of part:
 
@@ -939,10 +948,22 @@ goes with unattended work only: never ask it about an outside dependency the
 system leans on, such as an email provider. A design without one of these
 parts gets none of that part's questions.
 
+On a project under Cadence, ask the who-relies question with the spine's other
+open questions, in the same message, with exactly these words, on a line of
+its own:
+
+```
+Who relies on what in this project today?
+```
+
+Prose before it can say it means people and systems outside this repository.
+
 **On a rerun.** A `/seldon spine` rerun reads a `spine.md` that's there, and
 every decision in it counts as answered, its `[ASSUMPTION]` guesses included.
 The rerun asks only about what that spine doesn't decide yet and only the user
 can decide, under the same rules, and otherwise carries on in the same turn.
+The one exception is the who-relies question, which a rerun on a project under
+Cadence always asks.
 
 ## 16. The spine draft
 
@@ -953,8 +974,9 @@ these routes:
 
 - A `/seldon spine` rerun, as "The spine rerun" below says. It's the only
   route into the spine step that updates a spine that's there.
-- "Spine questions answered" in "Where the conversation stands", when the turn
-  that asked those questions was a `/seldon spine` rerun. It carries that rerun
+- "Spine questions answered" or "Who-relies question answered" in "Where the
+  conversation stands", when the turn that asked those questions was a
+  `/seldon spine` rerun. It carries that rerun
   on with the user's answers, as "The spine rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
   the spine's own confirm question with changes. Make those changes in
@@ -969,7 +991,9 @@ not a design folder, not the dump, and not the conversation.
 The one thing it takes from the conversation is the user's answers to its own
 questions, when the rerun stopped to ask them as "The spine step" says. Every
 decision in that `spine.md` counts as answered, its `[ASSUMPTION]` guesses
-included, so the rerun asks only about what it doesn't decide yet. Change the
+included, so the rerun asks only about what it doesn't decide yet, except the
+who-relies question: on a project under Cadence the rerun always asks it, as
+"The spine's questions" says. Change the
 spine with Edit only, never a fresh Write over it, so a line the change doesn't
 touch is never typed again:
 
@@ -1052,6 +1076,14 @@ own decision, word for word, on a `> ` line under that decision's text:
   included, go into that job's own decision, the one that says what the job
   does.
 - A stack or hosting answer goes into the `stack` or `hosting` decision.
+- A who-relies answer goes into the decision for the part it names. An answer
+  naming several parts puts each run of its words into the decision for the
+  part that run names. One that names no part, such as nothing outside the
+  repository relying on the project, or names only a part this body of work
+  doesn't build, goes into no decision: say it back to the user in one
+  sentence and record nothing. A dependent of code this work doesn't touch
+  doesn't shape this design, and a decision for it would carry an S- ID no
+  epic can cite.
 
 Never put an answer into a decision of a new kind, one outside the six, or
 into a decision that holds only the answer.
