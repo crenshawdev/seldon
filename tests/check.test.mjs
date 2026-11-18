@@ -477,3 +477,62 @@ test('--stale with no directory or a file for one exits 2', () => {
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
 });
+
+// The mode, the file it reads, that file's parent and the line it passes with.
+const STAMPED = [['--prd', 'prd.md', 'brief.md', PRD_OK_LINE], ['--spine', 'spine.md', 'prd.md', SPINE_OK_LINE], ['--epics', 'epics.md', 'spine.md', EPICS_OK_LINE]];
+
+test('well-formed stamps pass the full check, --prd, --spine and --epics', (t) => {
+  const dir = stripped(t);
+  // Top down, as the steps run, so each parent already holds its own stamp when its child takes its hash.
+  for (const [, file, parent] of STAMPED) edit(dir, file, underTitle(stampLine(parent, hash(dir, parent))));
+  assert.deepEqual(checkDir(dir), []);
+  for (const [mode, , , ok] of STAMPED) {
+    const r = run(mode, dir);
+    assert.equal(r.status, 0);
+    assert.equal(r.stdout.trim(), ok);
+  }
+});
+
+for (const [mode, file, parent] of STAMPED) {
+  for (const [name, line] of [
+    ['the wrong parent', stampLine(file === 'prd.md' ? 'spine.md' : 'brief.md', OLD)],
+    ['an uppercase hash', stampLine(parent, 'ABCDEF0123456789')],
+  ]) {
+    test(`${mode} on a stamp with ${name} exits 1, naming ${file} and Built from`, (t) => {
+      const dir = stripped(t);
+      edit(dir, file, underTitle(line));
+      const r = run(mode, dir);
+      assert.equal(r.status, 1);
+      assert.equal(r.stdout.trim(), `${file}: Built from: ${JSON.stringify(line)} is not a "Built from: ${parent} sha256:<16 lowercase hex digits>" stamp`);
+    });
+  }
+}
+
+test('two stamp lines in one file fail as a repeated line', (t) => {
+  const dir = stripped(t);
+  const line = stampLine('brief.md', hash(dir, 'brief.md'));
+  edit(dir, 'prd.md', underTitle(`${line}\n${line}`));
+  assert.deepEqual(checkDir(dir), ['prd.md: Built from: line appears more than once']);
+});
+
+test("a stamp above the spine's Retired line passes the full check and --spine", (t) => {
+  const dir = stripped(t);
+  edit(dir, 'spine.md', underTitle(`${stampLine('prd.md', hash(dir, 'prd.md'))}\nRetired: S-07, S-08`));
+  assert.deepEqual(checkDir(dir), []);
+  const r = run('--spine', dir);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.trim(), SPINE_OK_LINE);
+});
+
+// Once the samples carry stamps, this is what keeps an unstamped document passing.
+test('a copy of the samples with every stamp stripped passes the full check, --prd, --spine and --epics', (t) => {
+  const dir = stripped(t);
+  const full = run(dir);
+  assert.equal(full.status, 0);
+  assert.equal(full.stdout.trim(), OK_LINE);
+  for (const [mode, , , ok] of STAMPED) {
+    const r = run(mode, dir);
+    assert.equal(r.status, 0);
+    assert.equal(r.stdout.trim(), ok);
+  }
+});
