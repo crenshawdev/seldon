@@ -16,8 +16,12 @@ const run = (...args) => spawnSync(process.execPath, [script, ...args], { encodi
 const staleLines = (stdout) => stdout.split('\n').filter((l) => l.startsWith('stale: '));
 
 const PARENT = { 'prd.md': 'brief.md', 'spine.md': 'prd.md', 'epics.md': 'spine.md' };
-// These two folders borrow their parent from another sample folder, the way their seeds do.
-const ELSEWHERE = { 'epics-rerun/spine.md': 'spine-rerun/prd.md', 'epics-no-boundary/spine.md': 'epics-split/prd.md' };
+// These folders borrow their parent from another sample folder, the way their seeds do.
+const ELSEWHERE = {
+  'epics-rerun/spine.md': 'spine-rerun/prd.md',
+  'epics-no-boundary/spine.md': 'epics-split/prd.md',
+  'readiness/prd.md': 'brief.md',
+};
 const STAMP = /^Built from: \S+ sha256:([0-9a-f]{16})$/m;
 
 const hashOf = (file) => createHash('sha256').update(readFileSync(join(samples, file))).digest('hex').slice(0, 16);
