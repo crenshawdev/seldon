@@ -42,6 +42,16 @@ test('no workflow runs the eval suite or sees a model key', () => {
   assert.deepEqual(problems, [], `\n${problems.join('\n')}`);
 });
 
+// \u0041 is "A", so the raw text never says ANTHROPIC and only the escape check can catch it.
+const ESCAPED_KEY = 'env:\n  K: "\\u0041NTHROPIC_API_KEY"\n';
+
+test('an escaped model key is caught as an escape, not by name', () => {
+  assert.ok(ESCAPED_KEY.includes('\\u0041') && !ESCAPED_KEY.includes('ANTHROPIC'));
+  const reasons = workflowProblems(ESCAPED_KEY).map((p) => p.why);
+  assert.ok(reasons.includes('a YAML escape that can spell a hidden name'));
+  assert.ok(!reasons.includes('names ANTHROPIC_API_KEY'));
+});
+
 test('the eval command, a model key and any secret but GITHUB_TOKEN are each flagged on their line', () => {
   const flagged = [
     ['steps:\n  - run: claude plugin eval .\n', 2, 'runs claude plugin eval'],
@@ -54,7 +64,7 @@ test('the eval command, a model key and any secret but GITHUB_TOKEN are each fla
     ['env:\n  KEY: ${{ secrets.SONAR_TOKEN }}\n', 2, 'reaches a secret other than GITHUB_TOKEN'],
     // \\ so a real backslash reaches the guard; a bare \x73 would be JS spelling "s" before the test sees it.
     ['run: "${{ \\x73ecrets.MODEL_KEY }}"\n', 1, 'a YAML escape that can spell a hidden name'],
-    ['env:\n  K: "\\u0041NTHROPIC_API_KEY"\n', 2, 'a YAML escape that can spell a hidden name'],
+    [ESCAPED_KEY, 2, 'a YAML escape that can spell a hidden name'],
     ['"\\U00000073ecrets"\n', 1, 'a YAML escape that can spell a hidden name'],
   ];
   for (const [text, line, why] of flagged) assert.deepEqual(workflowProblems(text), [{ line, why }], JSON.stringify(text));
