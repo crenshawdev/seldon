@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: readiness-findings
+description: A bare /seldon in a fresh session where all four documents are at .planning/seldon/, seeded from samples/brief.md, samples/readiness/prd.md, samples/readiness/spine.md and samples/readiness-uncovered/epics.md, and none is stale. One PRD requirement, CAT-01, is on no epic, and one epic, E-02, spans Loans and Repairs with no spine boundary between them, so Seldon has to report both by ID, each with the step that fixes it, write and edit nothing, and end on the readiness question.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
