@@ -850,14 +850,16 @@ outside `.planning/`, with Read, Glob and Grep, enough to find the conventions
 "What the spine holds" asks for. Otherwise read those two files and nothing
 more. Either way, never read `docs/design/` or any other design folder,
 anything in `.planning/` but this design's brief, PRD and spine, the dump, or
-the earlier conversation, whatever it holds. A fact from a design
-folder reaches the spine only through a quote the brief already carries. A
-stack or hosting word the user said reaches it only through the brief's `> `
-quotes, since the PRD leaves those words out. The one thing it takes from the
-conversation is the user's answers to this step's own questions: the ones "The
-spine's questions" below asks, and the confirm question "The spine check" ends
-on. The one other `.planning/` file a spine step reads
-is the `spine.md` a `/seldon spine` rerun updates, as "The spine rerun" says.
+the earlier conversation, whatever it holds. A fact from a design folder
+reaches the spine only through a quote the brief already carries. A stack or
+hosting word the user said reaches it only through the brief's `> ` quotes,
+since the PRD leaves those words out. On a project under Cadence the code can
+settle a stack or hosting choice too, as "Stack and hosting" below says. The
+one thing it takes from the conversation is the user's answers to this step's
+own questions: the ones "The spine's questions" below asks, and the confirm
+question "The spine check" ends on. The one other `.planning/` file a spine
+step reads is the `spine.md` a `/seldon spine` rerun updates, as "The spine
+rerun" says.
 
 The brief and the PRD on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -900,7 +902,9 @@ the step on with those answers. Only these are open:
 - **Stack and hosting:** a `stack` or `hosting` decision the brief's `> `
   quotes never name. The PRD leaves those words out, so the brief's quotes are
   the only place the user settled them, and one they never name is asked
-  about, never guessed.
+  about, never guessed. On a project under Cadence, a stack or hosting choice
+  the code settles counts as settled even when the brief never quotes it, and
+  isn't asked about: its decision quotes the code, as "The spine draft" says.
 - **The parts' questions:** the questions below, for the parts the design has.
 
 Read the brief and the PRD for two kinds of part:
