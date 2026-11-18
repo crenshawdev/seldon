@@ -1282,6 +1282,8 @@ wants changes. That same question names `/seldon architecture` as the way to
 ask for the full architecture document once the spine is confirmed, such as:
 do you confirm the spine, after which `/seldon architecture` can write the
 full architecture document if you want one, or do you want changes?
+Its question mark is the last thing in your turn: never move
+`/seldon architecture` into a sentence of its own after the question.
 
 Naming it writes nothing. Only `/seldon architecture` itself writes the
 document, as "The architecture document" says, and a `/seldon architecture`
