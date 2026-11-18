@@ -2,10 +2,10 @@
   "layout": 1,
   "cycleOpen": true,
   "cursor": {
-    "phase": 5,
-    "status": "phase complete",
-    "next": "/cad-context 6",
-    "updated": "2026-11-17"
+    "phase": 6,
+    "status": "context gathered",
+    "next": "/cad-plan 6",
+    "updated": "2026-11-18"
   },
   "phases": [
     {
