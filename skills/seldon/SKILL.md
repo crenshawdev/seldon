@@ -178,6 +178,15 @@ these in order:
 
   Either way, carry the change on: update `brief.md` with it, as "The brief
   rerun" in "The draft" says, changing it with Edit, never a fresh Write.
+- **Name given:** your last turn ended on the name line, or on the documents
+  question with the name line above it, and the reply is a folder name rather
+  than a choice to rerun the brief or go on.
+  - **Fits and isn't taken,** as "A new design's name" says: the working
+    folder is `.planning/seldon/<name>/`. The dump is the text from the turn
+    that first showed the name line. Go to "The design folder" with it, and
+    the walk goes on in that folder as any new run's does.
+  - **Doesn't fit, or is taken:** write nothing, say why in one sentence, and
+    end on the name line alone, on a line of its own, with nothing after it.
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
   - **Rerun the brief:** the user chose the rerun in their own words. The text
@@ -310,14 +319,35 @@ when it holds nothing but blanks. Then:
 The user's words are never set aside without asking. When a brief is already
 there and `$ARGUMENTS` isn't empty, write nothing in this turn. Don't read a
 design folder and don't judge a path on that text. Use no AskUserQuestion and
-no menu. End your message with exactly these words, on a line of their own,
-with nothing after them. This is the documents question:
+no menu. The text may be new work, so offer it a design of its own with
+exactly these words, on a line of their own. This is the name line:
+
+```
+To design this as a new body of work in its own folder under .planning/seldon/, reply with a short name for that folder, in lowercase letters, digits and hyphens.
+```
+
+With one design, end your message after the name line with exactly these
+words, on a line of their own, with nothing after them. This is the documents
+question:
 
 ```
 Do you want to rerun the brief with this text, using /seldon brief, or go on from the brief that's already there?
 ```
 
-That question ends your turn.
+With more than one design the documents question can't say which brief. Put
+one sentence before the name line saying that `/seldon brief` reruns one
+design's brief and a bare `/seldon` goes on with one, and let the name line
+alone end your message, on a line of its own, with nothing after it.
+
+Either way, that last line ends your turn.
+
+### A new design's name
+
+A name fits when it's one or more lowercase letters, digits and hyphens, and
+nothing else. It's taken when Glob finds anything in
+`.planning/seldon/<name>/`. A reply that's one of the five names in "Where the
+conversation stands" never reaches here, since that section reads it as the
+step. Never make up a name from the dump: only the user names a design.
 
 ## 3. The dump
 
