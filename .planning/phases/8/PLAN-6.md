@@ -52,6 +52,7 @@ files:
   - evals/readiness-fix-answer/graders/no-epics-edit.md
   - evals/readiness-fix-answer/graders/ends-on-confirm.md
   - evals/readiness-fix-answer/graders/starts-no-agent.md
+  - tests/scaffold.test.mjs
   - evals/readiness-agent/case.yaml
   - evals/readiness-agent/prompt.md
   - evals/readiness-agent/seed.sh
@@ -211,7 +212,7 @@ An independent check reads the finished design before the handoff, and Seldon en
 
 ### Task 5: Add the readiness-fix-answer case
 
-- **Files:** evals/readiness-fix-answer/case.yaml, evals/readiness-fix-answer/prompt.md, evals/readiness-fix-answer/seed.sh, evals/readiness-fix-answer/history.jsonl, evals/readiness-fix-answer/graders/edits-spine.md, evals/readiness-fix-answer/graders/no-spine-write.md, evals/readiness-fix-answer/graders/fixes-boundary.md, evals/readiness-fix-answer/graders/keeps-answer.md, evals/readiness-fix-answer/graders/no-epics-write.md, evals/readiness-fix-answer/graders/no-epics-edit.md, evals/readiness-fix-answer/graders/ends-on-confirm.md, evals/readiness-fix-answer/graders/starts-no-agent.md
+- **Files:** evals/readiness-fix-answer/case.yaml, evals/readiness-fix-answer/prompt.md, evals/readiness-fix-answer/seed.sh, evals/readiness-fix-answer/history.jsonl, evals/readiness-fix-answer/graders/edits-spine.md, evals/readiness-fix-answer/graders/no-spine-write.md, evals/readiness-fix-answer/graders/fixes-boundary.md, evals/readiness-fix-answer/graders/keeps-answer.md, evals/readiness-fix-answer/graders/no-epics-write.md, evals/readiness-fix-answer/graders/no-epics-edit.md, evals/readiness-fix-answer/graders/ends-on-confirm.md, evals/readiness-fix-answer/graders/starts-no-agent.md, tests/scaffold.test.mjs
 - **Reads:** evals/readiness-fix/seed.sh, evals/readiness-fix/history.jsonl, evals/readiness-fix/graders/fixes-boundary.md, evals/spine-who-relies/seed.sh, evals/spine-who-relies/graders/asks-who-relies.md, evals/spine-answers/graders/carries-answer.md, samples/cadence-project/planning/PROJECT.md, skills/seldon/SKILL.md#1. Where the conversation stands, skills/seldon/SKILL.md#15. The spine step, skills/seldon/SKILL.md#16. The spine draft
 - **Decisions:** D-10, D-19
 - **Pins:** tests/scaffold.test.mjs
@@ -229,17 +230,19 @@ An independent check reads the finished design before the handoff, and Seldon en
   - **`case.yaml`:** the description says a project under Cadence, a readiness report with one finding, E-02 crossing Loans and Repairs, a fix whose spine rerun stopped to ask who relies on what, and this turn's answer. Seldon has to carry the rerun on with Edit, keep the finding's boundary and the answer in `spine.md`, leave `epics.md` alone, start no agent and end on the spine confirm question.
   - **Graders:**
     - **`edits-spine`**, **`fixes-boundary`**, **`no-epics-write`**, **`no-epics-edit`** and **`ends-on-confirm`:** byte copies of `readiness-fix`'s
-    - **`no-spine-write`:** `tool_used` Write, `input_match: '"file_path"\s*:\s*"[^"]*\.planning/seldon/spine\.md"'`, `max: 0`. The rerun changes a `spine.md` that's there, so a fresh Write over it fails.
+    - **`no-spine-write`:** `tool_used` Write, `input_match: '"file_path"\s*:\s*"[^"]*\.planning/seldon/spine\.md"'`, `min: 0`, `max: 0`. The rerun changes a `spine.md` that's there, so a fresh Write over it fails. The runner reads a missing `min` as 1, so without `min: 0` the grader reads `expected 1..0` and can't pass (try 1, Daneel's ruling).
+  - **The bound test (Daneel's ruling):** one test in `tests/scaffold.test.mjs`, which already walks `evals/`, fails when any `tool_used` grader under `evals/` (`results/` excluded) has a `max:` line and no `min:` line, and names each such file. It lands in its own commit before the case's.
     - **`keeps-answer`:** a `regex` on the file `.planning/seldon/spine.md`, in `evals/spine-answers/graders/carries-answer.md`'s form, with `flags: m`: `'^## S-\d{2,}:(?=[^\n]*(?:\n(?!## )[^\n]*)*?\n[ \t]*> [^\n]*county volunteer centre relies on the reminder emails)'`. It matches an S- decision, heading to the next heading, with the answer's words on a `> ` line.
     - **`starts-no-agent`:** `tool_used` Agent, `min: 0`, `max: 0`. Neither the rerun nor the answer runs the readiness check: that runs only on a bare `/seldon` with empty arguments (SKILL.md:427), and this turn's arguments are the answer.
   - **The open item it closes:** `.planning/phases/8/records/reports/plan-3.md:48` carries "no eval case covers the route where the user answers a question a fix-started spine rerun stopped to ask" for the phase summary. Don't edit that report. The phase summary marks the item covered by `readiness-fix-answer`.
 - **Verify:**
-  - **Testing scope:** the outcome is the answer route 70a0b54 fixed, end to end on a fix the readiness question started. The capture run, three new graders with their D-21 checks, one run and the stale check in (6) are the evidence, and testing stops there.
+  - **Testing scope:** the outcome is the answer route 70a0b54 fixed, end to end on a fix the readiness question started. The capture run, three new graders with their D-21 checks, the bound test with its planted failure, the case's runs and the stale check in (6) are the evidence, and testing stops there.
   - (1) `node --test tests/scaffold.test.mjs` passes, the history parses with `parentUuid` chained, and `cmp` shows the five copied graders equal to `readiness-fix`'s.
   - (2) A `node -e` check shows the history's first exchange equals `readiness-fix`'s in every field but `sessionId`, `cwd` and the uuids, and its second assistant line equals the passing capture run's last message byte for byte.
   - (3) **D-21:**
     - `no-spine-write`'s `input_match` matches a Write input to `.planning/seldon/spine.md`, and doesn't match one to `epics.md` or to `spine.md.bak`
     - `keeps-answer` fails on the unchanged `samples/readiness/spine.md`, on a copy with the answer's words on a line without `> `, and on a copy with them on a `> ` line above the first `## S-` heading. It passes on a copy with them on a `> ` line under the reminders decision.
+  - (3a) **The bound test:** `node --test tests/scaffold.test.mjs` passes with `no-spine-write.md` holding `min: 0`. One planted failure, restored afterwards: a copy of a max-0 grader under `evals/` with its `min:` line removed makes the test fail and name that file. `git diff` then shows only this task's change.
   - (4) The seed is vetted before the capture run. This is a checkpoint.
   - (5) The run exits 0 at 1.00, and both audits are reported. It has at most three tries, a retry only after a fix or a miss the trace shows is model variance.
   - (6) Before the kept folder is removed, `node lib/check.mjs --stale <kept workspace>/.planning/seldon` prints `stale: epics.md was built from an earlier spine.md` and no other stale line, as `readiness-fix`'s (5) does.
