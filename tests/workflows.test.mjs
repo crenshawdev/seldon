@@ -14,8 +14,8 @@ const MODEL_KEY = /ANTHROPIC_API_KEY/gi;
 const SECRETS = /\bsecrets\b/gi;
 // Expression contexts ignore case, so secrets.github_token is the same token.
 const GITHUB_TOKEN = /^\s*(?:\.\s*GITHUB_TOKEN\b|\[\s*(['"])GITHUB_TOKEN\1\s*\])/i;
-// \x, \u and \U are YAML's only escapes that spell any character, so banning them beats decoding YAML.
-const ESCAPE = /\\[xuU]/g;
+// Every YAML escape starts with a backslash, and with none YAML can only fold lines with a space, so no split name rejoins.
+const ESCAPE = /\\/g;
 // An OIDC token logs a job into Bedrock or Vertex, and that reaches a model with no key to grep for.
 const ID_TOKEN = /\bid-token['"]?\s*:/g;
 // write-all grants id-token without naming it; the bare word still counts behind an alias, a tag or a line break.
@@ -58,12 +58,20 @@ test('an escaped model key is caught as an escape, not by name', () => {
   assert.ok(!reasons.includes('names ANTHROPIC_API_KEY'));
 });
 
+// A \ before a line break in a double-quoted scalar drops the break, so YAML reads this as secrets.MODEL_KEY.
+const SPLIT_SECRET = 'KEY: "${{ secr\\\n   ets.MODEL_KEY }}"\n';
+
+test('a name split by an escaped line break is caught as an escape', () => {
+  assert.ok(SPLIT_SECRET.includes('secr\\\n') && !SPLIT_SECRET.includes('secrets'));
+  assert.deepEqual(workflowProblems(SPLIT_SECRET), [{ line: 1, why: 'a YAML escape that can spell a hidden name' }]);
+});
+
 test('the eval command, a model key and any secret but GITHUB_TOKEN are each flagged on their line', () => {
   const flagged = [
     ['steps:\n  - run: claude plugin eval .\n', 2, 'runs claude plugin eval'],
     ['steps:\n  - run: >-\n      claude plugin\n      eval . --no-publish\n', 3, 'runs claude plugin eval'],
     ['  - run: npx -y @anthropic-ai/claude-code@2.1.327 plugin eval .\n', 1, 'runs claude plugin eval'],
-    ['  - run: |\n      claude plugin \\\n        eval .\n', 2, 'runs claude plugin eval'],
+    ['  - run: |\n      claude plugin \\\n        eval .\n', 2, 'a YAML escape that can spell a hidden name', 'runs claude plugin eval'],
     ['env:\n  ANTHROPIC_API_KEY: x\n', 2, 'names ANTHROPIC_API_KEY'],
     ['env:\n  KEY: ${{ secrets.MODEL_KEY }}\n', 2, 'reaches a secret other than GITHUB_TOKEN'],
     ["env:\n  KEY: ${{ secrets['CLAUDE_CODE_OAUTH_TOKEN'] }}\n", 2, 'reaches a secret other than GITHUB_TOKEN'],
@@ -76,7 +84,9 @@ test('the eval command, a model key and any secret but GITHUB_TOKEN are each fla
     ['permissions: write-all\n', 1, 'a cloud login that can reach a model without a key'],
     ['jobs:\n  test:\n    permissions: "write-all"\n', 3, 'a cloud login that can reach a model without a key'],
   ];
-  for (const [text, line, why] of flagged) assert.deepEqual(workflowProblems(text), [{ line, why }], JSON.stringify(text));
+  for (const [text, line, ...whys] of flagged) {
+    assert.deepEqual(workflowProblems(text), whys.map((why) => ({ line, why })), JSON.stringify(text));
+  }
   const clean = [
     '      - run: claude plugin validate --strict .\n',
     '# No eval runs here and no step sees a model key; evals run locally under /cad-verify.\n',
