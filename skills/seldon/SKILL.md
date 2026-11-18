@@ -329,11 +329,11 @@ says.
 
 Before you ask for or read any dump, settle the working folder, as "Designs
 and the working folder" says. With more than one design, this run's arguments
-that aren't empty go straight to "A dump when documents are there". An empty
-one writes nothing and ends on the which-design question, unless the user just
-chose a design at it for this run: then "Design chosen" has already settled
-the working folder, so use that folder and don't ask again. Then look for
-`.planning/seldon/brief.md`,
+that aren't empty go straight to "A dump when documents are there". Empty
+arguments write nothing and end on the which-design question, unless the
+user just chose a design at it for this run: then "Design chosen" has already
+settled the working folder, so use that folder and don't ask again. Then look
+for `.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
 `.planning/seldon/epics.md` in the project with Read or Glob. An error or no
 match means that file isn't there. A brief on disk counts as confirmed, so

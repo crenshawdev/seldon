@@ -73,4 +73,11 @@ test('$ARGUMENTS appears once, on its own line inside the seldon-arguments marke
   assert.equal(lines[at], '$ARGUMENTS', `$ARGUMENTS shares its line with other text: ${lines[at]}`);
   assert.equal(lines[at - 1], '<seldon-arguments>', 'the line before $ARGUMENTS is not <seldon-arguments>');
   assert.equal(lines[at + 1], '</seldon-arguments>', 'the line after $ARGUMENTS is not </seldon-arguments>');
+  // The prose says "the block above", so the block has to stay where that prose can see it.
+  const heading = lines.indexOf('## 1. Where the conversation stands');
+  const look = lines.findIndex((line) => line.startsWith('Before anything else, look at this run\'s arguments'));
+  assert.ok(heading !== -1, 'SKILL.md has no "## 1. Where the conversation stands" heading');
+  assert.ok(look !== -1, 'SKILL.md has no line starting "Before anything else, look at this run\'s arguments"');
+  assert.ok(heading < at - 1, 'the <seldon-arguments> block sits before section 1\'s heading');
+  assert.ok(at - 1 < look, 'the <seldon-arguments> block sits after "Before anything else, look at this run\'s arguments"');
 });
