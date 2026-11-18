@@ -3,14 +3,9 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 8,
-    "status": "planned",
-    "next": "/cad-execute 8",
-    "updated": "2026-11-18",
-    "plan": {
-      "k": 1,
-      "j": 7,
-      "name": "The probe"
-    }
+    "status": "executed",
+    "next": "/cad-verify 8",
+    "updated": "2026-11-18"
   },
   "phases": [
     {
@@ -241,35 +236,35 @@
       "n": 8,
       "name": "Readiness check and handoff",
       "description": "An independent check before the handoff, then the exact Cadence command to run",
-      "status": "planned",
+      "status": "executed",
       "plans": [
         {
           "file": "PLAN-1.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-2.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-3.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-4.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-5.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-6.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-7.md",
-          "finished": false
+          "finished": true
         }
       ]
     },

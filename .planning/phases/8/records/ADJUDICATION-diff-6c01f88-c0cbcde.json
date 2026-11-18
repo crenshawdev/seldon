@@ -1,0 +1,35 @@
+{
+  "phase": "8",
+  "trigger": "diff",
+  "discriminator": "6c01f88-c0cbcde",
+  "round": 1,
+  "base": "6c01f88f64f16cc3001749bbf157157572d984a9",
+  "head": "c0cbcde92b964a03a07245a11d0f0c904f649b59",
+  "base_id": "6c01f88f64f16cc3001749bbf157157572d984a9",
+  "head_id": "c0cbcde92b964a03a07245a11d0f0c904f649b59",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "evals/readiness-fix/graders/fixes-boundary.md",
+      "line": 6,
+      "severity": "medium",
+      "claim": "fixes-boundary does not tell the finding's loans/repairs boundary apart from an unrelated edit, because the seeded spine's S-03 (Reminders run from a daily scheduled job) is already a `Kind: boundaries` decision that says 'reads the loan log'. Adding the word 'repair' anywhere in S-03 satisfies all three lookaheads. The same grader is byte-copied into readiness-fix-answer.",
+      "failure_scenario": "Start from samples/readiness/spine.md and change only S-03's body to 'A job runs once a day, reads the loan log and the repair log and sends that day's reminders.' Run the grader's pattern over that file and it matches at '## S-03: Reminders run from a daily scheduled job' (checked with node). That edit draws no boundary between loans and repairs, and E-02 still crosses them. Yet edits-spine, no-epics-*, ends-on-confirm and fixes-boundary all pass, and the stale check still reports the epics as stale, so readiness-fix scores 1.00. This contradicts PLAN-6 Task 4's claim that an edit that 'changes something else' fails it. The risk is concrete in readiness-fix-answer: its route edits S-03 (kept trace readiness-fix-answer-try-2 writes the who-relies answer there), so a run that adds a repair mention to S-03 instead of adding the S-07 boundary would also pass.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "a5c6a345bb666cb59799b2233da36ffc8102fd30",
+      "base_id": "6c01f88f64f16cc3001749bbf157157572d984a9",
+      "head_id": "c0cbcde92b964a03a07245a11d0f0c904f649b59"
+    }
+  ]
+}

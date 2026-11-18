@@ -1,0 +1,35 @@
+{
+  "phase": "8",
+  "trigger": "diff",
+  "discriminator": "82c0953-18eb063",
+  "round": 1,
+  "base": "82c0953e71c44abd16f1a159617fde70a16ea771",
+  "head": "18eb06373e59d1f055e38c7274c0db772aa104b0",
+  "base_id": "82c0953e71c44abd16f1a159617fde70a16ea771",
+  "head_id": "18eb06373e59d1f055e38c7274c0db772aa104b0",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 234,
+      "severity": "medium",
+      "claim": "The section 1 routes that carry a spine rerun on after its questions (\"Who-relies question answered\" at 231-236 and \"Spine questions answered\" at 237-243) still list only \"/seldon spine or a stale spine.md\" as the rerun's origins and send every other case \"through The spine draft\". A spine rerun started by a fix at the readiness question is missing from both lists, and neither route says to carry the finding lines on.",
+      "failure_scenario": "Take a project under Cadence (.planning/PROJECT.md is there, which is the /cad-phase add case). The readiness check reports \"Epic crossing a boundary the spine didn't fix: E-02 (Loans and Repairs). Fixed by rerunning /seldon spine.\" and the user answers `/seldon fix them`. \"Readiness question answered\" sends this to \"The spine rerun\". On a Cadence project the who-relies question is always open, so the rerun writes nothing and ends on \"Who relies on what in this project today?\" (lines 1078-1079 and 1166-1167). The next turn, `/seldon <answer>`, matches \"Who-relies question answered\". That route checks whether the earlier turn was a rerun \"from /seldon spine or a stale spine.md\". A fix-started rerun is neither, so the route sends it \"through The spine draft\", which contradicts section 16's create guard, and it carries on \"with those answers\" only. The finding lines from two turns back are not named as input, so the rerun can update the spine from the files and the answer alone and leave the boundary unfixed. The next check then reports the same crossing again, which is the outcome D-10 rejects (\"a rerun with no finding carried ... so the same finding returns\"). Plan 3 Task 4 asks that each general rule name the fix exception where it states the rule, and these two routes were not updated.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "70a0b54098ae7d1be99302b2526f41e2836974b5",
+      "base_id": "82c0953e71c44abd16f1a159617fde70a16ea771",
+      "head_id": "18eb06373e59d1f055e38c7274c0db772aa104b0"
+    }
+  ]
+}
