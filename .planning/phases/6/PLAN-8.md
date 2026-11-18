@@ -28,17 +28,18 @@ Seldon designs the next body of work on a project already under Cadence, in its 
   - the which-design question when there's more than one design
   - the spine reading the code on a project under Cadence, quoting the conventions it records with their file, and asking who relies on what today
 - The README's Evals section has a line for every case in `evals/` and none for a case that's gone.
-- The README's eval command, run verbatim from the repository root, exits 0 with every case at 1.00. There is no `not granted`, no `scaffold failed`, and no Bash command but the four checks.
+- The README's eval command, run verbatim from the repository root, exits 0 with every case at 1.00. There is no `not granted`, no `scaffold failed`, and no Bash command but the four checks and what the Bash audit below also allows.
 - AC5 holds: each check mode passes `samples/`, `allowed-tools` is still the pinned five, and the unit suite passes under the coverage gate.
 
 ## Context
 
-- **Locked:** D-14: the README's eval command and its two `--allow-tools` rules don't change, and neither does the paragraph on the grant and the seeds. The decisions each README sentence describes are Plans 1 to 7's: D-01 to D-13.
+- **Locked:** D-14: the README's eval command and its two `--allow-tools` rules don't change, and neither does the paragraph on the grant and the seeds, apart from the one sentence below. The decisions each README sentence describes are Plans 1 to 7's: D-01 to D-13.
+- **The grant sentence (added during Plan 7, on the owner's ruling, a deviation from D-14):** the grant paragraph's sentence "Seldon can write only inside `.planning/seldon/` and run only its own check, and nothing broader." overstates the restriction. Plan 7's runs showed Claude Code lets a read-only shell command, such as a file listing, through whenever Bash is available, inside the eval's sandbox. Reword that one sentence so it says what's true: the grant lets Seldon write only inside `.planning/seldon/` and run its own check, and Claude Code may still let a read-only shell command through. The rest of the paragraph, the command and the two rules stay word for word.
 - **Words:** a new body of work's folder is "its own folder" or a named design, never a bare "design folder", which in the README already means a project's own design notes (Plan 1's choice).
 - **Why README.md is last:** it's the record each case-adding plan feeds, so it's edited once here, after Plans 1 to 7.
 - **Eval runs (SECURITY):** on the approval Plan 2 recorded for phase 6, which names this plan's one full-suite run. If Plan 2's report records no approval, or records one that covers per-case runs only, stop at a checkpoint marked SECURITY before the run and ask for approval of this one full run. Anything off these terms is a checkpoint marked SECURITY.
   - Run from `/code/seldon`, never a worktree. The full run is the README's command, with `--keep-temp` added before `--allow-tools` for the Bash audit only.
-  - **Bash audit:** report every Bash command in every kept trace. Only `node /code/seldon/lib/check.mjs` with `--brief`, `--prd`, `--spine` or `--epics`, then `.planning/seldon`, `.planning/seldon/repair-log` or `.planning/seldon/sowlist`, is allowed. Anything else is a SECURITY checkpoint.
+  - **Bash audit:** report every Bash command in every kept trace, with its permission record. Allowed: `node /code/seldon/lib/check.mjs` with `--brief`, `--prd`, `--spine` or `--epics`, then `.planning/seldon`, `.planning/seldon/repair-log` or `.planning/seldon/sowlist`. Also allowed, on the owner's ruling during Plan 7: a command that only lists or reads files, that the permission layer accepted as read-only (`subcommandResults`), and that ran inside the run's sandbox, as long as the case's no-secret grader passes where it has one. Judge each command by its text, since a check.mjs call can carry `subcommandResults` too. Anything else is a SECURITY checkpoint.
   - **Retries:** at most three tries per case. A case whose miss the trace shows is model variance may be rerun alone with `--case <name>`. Any other failing case, or one still failing after its third try, is a checkpoint, not a fix, because this plan leases only `README.md`.
   - **Cleanup:** before the plan finishes, remove only the folders the run printed as kept, by their exact paths, never by a glob such as `/tmp/claude-eval-*`.
   - **Suite size:** phase 5's 32 cases plus this phase's 8 make 40.
@@ -85,7 +86,8 @@ Seldon designs the next body of work on a project already under Cadence, in its 
 - **Decisions:** D-14, D-15
 - **Action:**
   - **Add lines:** one plain line per case this phase added, each saying what the case gives Seldon and what it checks, in the list's existing style: `cadence-project`, `cadence-dump`, `new-design-name`, `new-design-brief`, `which-design`, `which-design-answer`, `spine-who-relies` and `spine-conventions`.
-  - **Unchanged:** the other case lines, the command, and the paragraph on the grant and the seeds.
+  - **The grant sentence:** reworded as the Context's grant-sentence bullet says, and nothing else in that paragraph.
+  - **Unchanged:** the other case lines, the command, and the rest of the paragraph on the grant and the seeds.
 - **Verify:**
   - **Testing scope:** this is the phase's regression gate, AC5. One full run, the unit suite under the coverage gate and the checks below are enough, and testing stops there.
   - (1) A `node -e` script compares the case directories under `evals/`, except `results/`, with the backticked names in the README's list. Every directory is listed, and no listed name lacks a directory. Today the eight new names are missing.
@@ -97,6 +99,7 @@ Seldon designs the next body of work on a project already under Cadence, in its 
   - (4) `node --test tests/skill.test.mjs` passes, so `allowed-tools` is still phase 2 D-02's five.
   - (5) The coverage job's command from `.github/workflows/test.yml` passes, and so do both lcov guards.
   - (6) `git diff --name-only` for this plan's commits lists only `README.md`.
+  - (7) `grep -c 'run only its own check, and nothing broader' README.md` prints 0, and prints 1 today. `git diff README.md` changes no other line of the grant paragraph.
 
 ## Notes
 

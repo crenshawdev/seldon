@@ -3,14 +3,9 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 6,
-    "status": "planned",
-    "next": "/cad-execute 6",
-    "updated": "2026-11-18",
-    "plan": {
-      "k": 1,
-      "j": 8,
-      "name": "The format for named designs and code quotes"
-    }
+    "status": "executed",
+    "next": "/cad-verify 6",
+    "updated": "2026-11-18"
   },
   "phases": [
     {
@@ -161,39 +156,39 @@
       "n": 6,
       "name": "Existing projects and design folders",
       "description": "Design the next body of work under Cadence in its own folder, with the spine reading the existing code",
-      "status": "planned",
+      "status": "executed",
       "plans": [
         {
           "file": "PLAN-1.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-2.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-3.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-4.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-5.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-6.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-7.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-8.md",
-          "finished": false
+          "finished": true
         }
       ]
     },

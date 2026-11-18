@@ -1,0 +1,35 @@
+{
+  "phase": "6",
+  "trigger": "diff",
+  "discriminator": "5331e96-bb0fd64",
+  "round": 1,
+  "base": "5331e96",
+  "head": "bb0fd64",
+  "base_id": "5331e96ac33f5cb969541ae80af00bba1400c01d",
+  "head_id": "bb0fd642056423391fbab3483e4a43fa23a8ed1d",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 854,
+      "severity": "medium",
+      "claim": "On a project under Cadence the spine step now reads any file outside `.planning/` and quotes it word for word, with \"never paraphrase a quote and never tidy it\". Nothing keeps secret-bearing files out: not `.env*`, deploy configs, or credentials in docker-compose. So a hosting or stack decision \"the code settles\" can copy a live secret into spine.md.",
+      "failure_scenario": "Take a Cadence project with `.env.production` holding `DATABASE_URL=postgres://admin:s3cret@db.prod.example.com/app`, or a docker-compose.yml with `POSTGRES_PASSWORD: s3cret`, and a brief that never quotes hosting. Lines 912-914 treat hosting as settled by the code, and the decision has to quote the code (lines 1051-1054). The rule at 1057 forbids tidying or redacting the line. So the spine gets `> DATABASE_URL=postgres://admin:s3cret@...` with `(.env.production)` under it. That file lives in `.planning/seldon/`, which normally gets committed, and the secret later reaches architecture.md. No rule in SKILL.md, docs/FORMAT.md or the phase 6 plans excludes such files or allows redaction.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "43f29ef",
+      "base_id": "5331e96ac33f5cb969541ae80af00bba1400c01d",
+      "head_id": "bb0fd642056423391fbab3483e4a43fa23a8ed1d"
+    }
+  ]
+}

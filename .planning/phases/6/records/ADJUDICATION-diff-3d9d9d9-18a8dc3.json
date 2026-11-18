@@ -1,0 +1,48 @@
+{
+  "phase": "6",
+  "trigger": "diff",
+  "discriminator": "3d9d9d9-18a8dc3",
+  "round": 1,
+  "base": "3d9d9d9",
+  "head": "18a8dc3",
+  "base_id": "3d9d9d9098029d5af8ff3afe9951e4ce499a5dea",
+  "head_id": "18a8dc349281c672429b24499d49f6fb87620d31",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 224,
+      "severity": "low",
+      "claim": "The new paragraph says 'what the project already has enters the design only at the spine step', which contradicts section 4 ('The design folder', line 307). That section has the brief read `docs/design/` and any folder the dump points to. PLAN-6 line 28 keeps that intent: docs/design reaches the spine only through the brief's quotes.",
+      "failure_scenario": "Take a project under Cadence (`.planning/PROJECT.md` present) that also has `docs/design/`, or a dump that points to a folder of existing notes, and run `/seldon <dump>`. Section 2 now tells the model that nothing the project already has enters before the spine. Section 4 tells it to read `docs/design/` for the judgment and the brief. A model that follows the broader new sentence skips the design notes, and the brief loses the quotes section 10 requires. No case seeds Cadence files together with `docs/design/`, so the conflict is untested. The cadence-dump run still globbed `docs/design/**`, so this has not been seen to fail.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "041d106",
+      "base_id": "3d9d9d9098029d5af8ff3afe9951e4ce499a5dea",
+      "head_id": "18a8dc349281c672429b24499d49f6fb87620d31"
+    },
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "evals/cadence-dump/graders/recommends-fast-path.md",
+      "line": 4,
+      "severity": "low",
+      "claim": "The pattern 'Recommended path:[\\s*_`]*fast path' with flag i has no line anchors. It also accepts newlines and bold or code markup between the words, so it passes when the line-of-its-own, plain-text recommendation that case.yaml and PLAN-2's must-be-true claim is missing.",
+      "failure_scenario": "The last message is 'I think **Recommended path:** fast path makes sense here, since...', or it puts 'Recommended path:' and 'fast path' on separate lines. Both break SKILL.md section 6 ('on a line of its own ... plain text with no bold or other markup'), but the grader matches either one and the case scores 1.00. The 1.00 run's line-of-its-own property was confirmed only by the executor reading the trace by hand, not by the grader.",
+      "ruling": "survived",
+      "convergent": false,
+      "base_id": "3d9d9d9098029d5af8ff3afe9951e4ce499a5dea",
+      "head_id": "18a8dc349281c672429b24499d49f6fb87620d31"
+    }
+  ]
+}

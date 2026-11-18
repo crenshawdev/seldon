@@ -1,0 +1,35 @@
+{
+  "phase": "6",
+  "trigger": "risk_surface",
+  "discriminator": "43f29ef-0d949a7",
+  "round": 1,
+  "base": "43f29ef",
+  "head": "0d949a7",
+  "base_id": "43f29ef332bae144e04285698e14bdef98854b60",
+  "head_id": "0d949a70859f4fcd92e9619e29522bff37300afb",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 860,
+      "severity": "medium",
+      "claim": "The spine step's secret-file rule tells the model to skip a `.env*`, key or credential file \"by name\". It never says to keep those files out of a Grep run over a directory, and Claude Code's Grep searches hidden files, so a project-wide content Grep still reads the credential line and puts it in the transcript.",
+      "failure_scenario": "Under Cadence, line 855 lets the step read the code outside `.planning/` with Read, Glob and Grep to find conventions. Claude Code 2.1.327's Grep always passes `--hidden` to ripgrep, and its only default exclusions are VCS folders (.git, .svn, .hg, .bzr, .jj, .sl), so `.env*` is not excluded. Inside a git repo, ripgrep skips files the .gitignore lists, which protects a gitignored .env. It does not protect a committed .env, a key or credential file the .gitignore misses, or a folder that is not a git repo. The spine-conventions and spine-who-relies seeds copy `code/.` (including `.env`) into the run with no .gitignore. Example: looking for who owns or changes the tool records, the model runs Grep with pattern `(?i)admin|token` in content mode and no path, so it searches the project root. It never names `.env`, so 'skip it by name' never triggers, but the result contains `.env:1:TOOLSHED_ADMIN_TOKEN=FAKE-not-a-secret`. On a real project the same kind of search over a credential file the .gitignore misses puts a real credential into the model's context and the session transcript. Line 861's rule against quoting a credential line limits only what the spine quotes, not what the Grep returns. Nothing in the step requires a Grep exclusion such as `glob: '!**/.env*'` or one for key and credential files. The no-secret graders would catch this in the eval rather than pass it, so the gap is in the skill's instruction, not in the graders.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "7304538bd93d7b2a68f9de166be39079f558c894",
+      "base_id": "43f29ef332bae144e04285698e14bdef98854b60",
+      "head_id": "0d949a70859f4fcd92e9619e29522bff37300afb"
+    }
+  ]
+}
