@@ -55,7 +55,13 @@ more, follow that name's route below. Four are step names, `brief`, `prd`,
 `spine` and `epics`, and each is a rerun of that step. The fifth,
 `architecture`, isn't a step: it asks for the full architecture document. That
 holds wherever the conversation stands and whatever files exist, so don't look
-at the conversation for it:
+at the conversation for it.
+
+Each route settles the working folder before it looks for files. With more
+than one design, write nothing and end on the which-design question, as
+"Which design" says, unless the user just chose a design at it for this run,
+which stops the route asking again. With one design it's that design's folder,
+and with none the top-level folder:
 
 - **`architecture`:** the full architecture document, built from the brief,
   the PRD and the spine. Look for `brief.md`, `prd.md` and `spine.md` with
@@ -99,8 +105,10 @@ at the conversation for it:
   - A brief there: this is the brief rerun, as "The brief rerun" in "The
     draft" says. Check these in order:
     - **After the documents question:** your last turn ended on the documents
-      question in "A dump when documents are there". The text from that
-      question's turn is the rerun's change. Update the brief with it in this
+      question in "A dump when documents are there". Or the dump turn ended on
+      the name line alone, the user then took `/seldon brief`, and a
+      which-design exchange came between. The text from the dump turn is the
+      rerun's change. Update the brief with it in this
       same turn, as "The brief rerun" says, without asking what should change:
       the user already gave it once.
     - **Otherwise, reopen it:** Read `brief.md`, name it, and ask in one
@@ -178,6 +186,15 @@ these in order:
 
   Either way, carry the change on: update `brief.md` with it, as "The brief
   rerun" in "The draft" says, changing it with Edit, never a fresh Write.
+- **Design chosen:** your last turn ended on the which-design question, and
+  the user named one of the designs, by its folder or in their own words. That
+  design's folder is the working folder. Go back to the run that asked:
+  - For a bare `/seldon`, go to "Where a run starts" for that design, with
+    `$ARGUMENTS` counted empty.
+  - For a step name, take that name's route for that design.
+
+  A reply naming none of them writes nothing and ends on the which-design
+  question again.
 - **Name given:** your last turn ended on the name line, or on the documents
   question with the name line above it, and the reply is a folder name rather
   than a choice to rerun the brief or go on.
@@ -236,7 +253,8 @@ there. Find the designs with Glob for `.planning/seldon/brief.md` and
 
 The working folder is the one folder a run reads its documents from and writes
 them to. With no design it's the top-level folder, so a project's first brief
-goes where it always has. With one design it's that design's folder.
+goes where it always has. With one design it's that design's folder. With
+more than one, "Which design" settles it.
 
 Every `.planning/seldon/` file path in this skill, fixed lines and check
 commands included, names that file in the working folder. With the top-level
@@ -262,7 +280,12 @@ step, and a design folder still enters at the brief as "The design folder"
 says.
 
 Before you ask for or read any dump, settle the working folder, as "Designs
-and the working folder" says. Then look for `.planning/seldon/brief.md`,
+and the working folder" says. With more than one design, a `$ARGUMENTS` that
+isn't empty goes straight to "A dump when documents are there". An empty one
+writes nothing and ends on the which-design question, unless the user just
+chose a design at it for this run: then "Design chosen" has already settled
+the working folder, so use that folder and don't ask again. Then look for
+`.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
 `.planning/seldon/epics.md` in the project with Read or Glob. An error or no
 match means that file isn't there. A brief on disk counts as confirmed, so
@@ -348,6 +371,22 @@ nothing else. It's taken when Glob finds anything in
 `.planning/seldon/<name>/`. A reply that's one of the five names in "Where the
 conversation stands" never reaches here, since that section reads it as the
 step. Never make up a name from the dump: only the user names a design.
+
+### Which design
+
+With more than one design, a run that needs one asks which first. In one
+prose sentence, name each design by its folder: the top-level design as the
+one at the top of `.planning/seldon/`, and each named design as its own
+`.planning/seldon/<name>/`. No list or menu. Then end your message with
+exactly these words, on a line of their own, with nothing after them. This is
+the which-design question:
+
+```
+Which design do you want to work on?
+```
+
+The question needs only the Glob that found the designs, so read nothing else
+for it.
 
 ## 3. The dump
 
