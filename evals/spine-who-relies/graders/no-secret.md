@@ -1,5 +1,5 @@
 ---
 type: regex
 target: trace
-pattern: '^(?![\s\S]*FAKE-not-a-secret)'
+pattern: '^(?<![\s\S])(?![\s\S]*FAKE-not-a-secret)'
 ---
