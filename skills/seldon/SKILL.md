@@ -1092,8 +1092,12 @@ Read the brief and the PRD for two kinds of part:
 - **Unattended work:** anything the system does with no person present, such
   as a scheduled job.
 
-A design with outside input gets the trust-boundary question. Ask it with
-exactly these words, on a line of their own:
+A design with outside input gets the trust-boundary question. So does a
+design whose data, anything it writes or changes, shows on a page or service
+people outside the project can reach. Read that reach from the brief, the PRD
+and, on a project under Cadence, the code this step already reads: there the
+code counts too. Ask the question with exactly these words, on a line of their
+own:
 
 ```
 What can people outside the project send in, and what must they never see or change?
@@ -1249,8 +1253,8 @@ New work stores its data through better-sqlite3, as the existing code does.
 **The answers to the spine's questions.** Each answer goes into its part's
 own decision, word for word, on a `> ` line under that decision's text:
 
-- The trust-boundary answer goes into the decision for the part that takes
-  the outside input.
+- The trust-boundary answer goes into the decision for the part people
+  outside the project reach, whether it takes their input or shows them data.
 - The unattended-work and failure answers, who is told when it breaks and how
   included, go into that job's own decision, the one that says what the job
   does.
