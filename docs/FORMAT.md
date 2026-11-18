@@ -26,6 +26,7 @@ It sits in its design's folder, beside the spine it expands on: `.planning/seldo
 - It expands on the spine's decisions by their S- IDs, drawing on the brief, the PRD and the spine.
 - It adds no decision and no ID of its own, so the spine's S- IDs stay the only decisions a reader locks.
 - This document defines no shape for it, and no check reads it. The full check ignores it, as it ignores any other file in the folder.
+- It carries no stamp and sits outside the chain of stamps, so nothing ever reports it stale (see "Stamps").
 
 ## Rules for every file
 
@@ -228,7 +229,7 @@ Retired: CAT-03, LOAN-02
 - A retired ID is never reused, by a requirement or a non-functional requirement, because IDs carry into Cadence's `REQUIREMENTS.md` unchanged.
 - The check reads only `- ` bullets in the requirement sections, so to it this line is prose.
 
-When a spine rerun drops a decision, `spine.md` keeps its ID on one prose line directly under the `# ` title, before the first `## ` decision:
+When a spine rerun drops a decision, `spine.md` keeps its ID on one prose line directly under the `# ` title, or under the stamp line when there is one (see "Stamps"), before the first `## ` decision:
 
 ```
 Retired: S-03
@@ -238,7 +239,7 @@ Retired: S-03
 - A retired ID is never reused, because the epics and the phases built from them cite decisions by ID.
 - To the check this is text before the first decision, which no rule reads.
 
-When an epics rerun drops an epic, `epics.md` keeps its ID on one prose line directly under the `# ` title, before the first `## ` epic:
+When an epics rerun drops an epic, `epics.md` keeps its ID on one prose line directly under the `# ` title, or under the stamp line when there is one, before the first `## ` epic:
 
 ```
 Retired: E-03
@@ -250,6 +251,26 @@ Retired: E-03
 - To the check this is text before the first epic, which no rule reads.
 
 Spine decisions and epics use a one-letter prefix on purpose. Cadence's audit admits only a prefix of 2 to 8 characters before the dash as a requirement ID, so it never counts `S-01` or `E-01` as a requirement.
+
+## Stamps
+
+`prd.md`, `spine.md` and `epics.md` each record the file they were built from, on one stamp line:
+
+```
+Built from: brief.md sha256:0d4f6a2c9e81b357
+```
+
+- Each file names its parent by bare file name, never by path: `prd.md` names `brief.md`, `spine.md` names `prd.md`, and `epics.md` names `spine.md`. The parent is the file of that name in the same design folder, so a design is only ever compared within its own folder.
+- The hash is the first 16 lowercase hex digits of the SHA-256 of the parent's whole file, byte for byte, its own stamp line included. That's what carries a change down the chain: a changed brief means a rerun gives the PRD a new stamp, the new stamp gives the PRD a new hash, and the spine built from the old PRD reads stale.
+- The line sits directly under the `# ` title, above a `Retired:` line when the file has one, and always before the first `## ` heading.
+- The line is exact: `Built from:`, a space, the parent's name, a space, `sha256:` and the 16 digits, with nothing after them, no tag and no trailing space. A file holds at most one.
+- Seldon writes the stamp on every write of the file, when it creates the file and on every rerun, a rerun that changes nothing else included. It never works the hash out itself: it copies the stamp `node lib/check.mjs --stale <dir>` prints for that file (see "Stale links").
+
+A link is stale when the parent's current hash differs from the one in the child's stamp. Any change to the parent counts, a hand edit or a whitespace-only change included, because the hash is over raw bytes. A document with no stamp reads fresh, so a document written before stamps existed reads fresh until a rerun stamps it.
+
+`brief.md` and `architecture.md` carry no stamp. The brief starts the chain, so it has no parent, and `architecture.md` sits outside the chain (see "The architecture document").
+
+A reader skips the stamp line. It records where the document came from and isn't part of the document's content: it's no requirement, decision or epic, and nothing in it carries into Cadence.
 
 ## The [ASSUMPTION] tag
 
@@ -368,6 +389,8 @@ node lib/check.mjs <dir>
 
 The check covers what this document defines and nothing more. It holds each epic to the three epic limits: at most 5 requirement IDs, 2 to 5 done-when items, and `**Depends on:**` naming only earlier epics. It doesn't trace requirements into epics.
 
+In `prd.md`, `spine.md` and `epics.md` it holds a stamp line, when the file has one, to its exact form, and compares no hashes (see "Stamps"). A file with no stamp passes, and so does a stale one. A malformed stamp fails, for example `prd.md: Built from: "Built from: brief.md sha256:ZZ" is not a "Built from: brief.md sha256:<16 lowercase hex digits>" stamp`, and a second stamp line fails as `prd.md: Built from: line appears more than once`.
+
 ### The brief alone
 
 ```
@@ -391,6 +414,7 @@ node lib/check.mjs --prd <dir>
 This is for the PRD step, which has written the PRD and needs to check what it wrote before the spine and epics exist.
 
 - It reads only `<dir>/prd.md` and holds it to the PRD rules above. Whether the other three files exist doesn't matter.
+- It holds a stamp line, when the file has one, to its exact form, and compares no hashes (see "Stamps").
 - It exits 0 when the PRD conforms, and prints one line: `seldon check: prd.md conforms`.
 - Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `prd.md: missing file` when there's no PRD. It exits 2 when the directory argument is missing or isn't a directory.
 
@@ -405,6 +429,7 @@ node lib/check.mjs --spine <dir>
 This is for the spine step, which has written the spine and needs to check what it wrote before the epics exist.
 
 - It reads only `<dir>/spine.md` and holds it to the spine rules above, the `Kind:` line included. Whether the other three files exist doesn't matter.
+- It holds a stamp line, when the file has one, to its exact form, and compares no hashes (see "Stamps").
 - It exits 0 when the spine conforms, and prints one line: `seldon check: spine.md conforms`.
 - Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `spine.md: missing file` when there's no spine. It exits 2 when the directory argument is missing or isn't a directory.
 
@@ -419,10 +444,34 @@ node lib/check.mjs --epics <dir>
 This is for the epics step, which has written the epics and needs to check what it wrote. The step runs this mode, never the full check.
 
 - It reads only `<dir>/epics.md` and holds it to the epics rules above. Whether the other three files exist doesn't matter.
+- It holds a stamp line, when the file has one, to its exact form, and compares no hashes (see "Stamps").
 - It exits 0 when the epics conform, and prints one line: `seldon check: epics.md conforms`.
 - Otherwise it reports exactly as the full check does. It exits 1 with one line per problem, and prints `epics.md: missing file` when there's no epics file. It exits 2 when the directory argument is missing or isn't a directory.
 
 The full check above still needs all four files, so a folder holding only the epics fails it.
+
+### Stale links
+
+```
+node lib/check.mjs --stale <dir>
+```
+
+This is for a step about to write `prd.md`, `spine.md` or `epics.md`: it says which documents a changed parent has left behind, and gives the stamp to write.
+
+- It reads whichever of `brief.md`, `prd.md`, `spine.md` and `epics.md` are in `<dir>`, and nothing outside that one folder. It holds none of them to the format rules, which is the other modes' job.
+- It checks three links, in chain order: `prd.md` against `brief.md`, `spine.md` against `prd.md`, and `epics.md` against `spine.md`. A link is stale when the child has a stamp, its parent is there, and the parent's current hash differs from the stamp's (see "Stamps"). A missing child, a missing parent or a child with no stamp is never stale, and a malformed or repeated stamp reads as no stamp here.
+- It prints one line per stale link, in chain order, for example `stale: prd.md was built from an earlier brief.md`, and exits 1.
+- With no stale link it prints one line, `seldon check: no stale link`, and exits 0.
+- Either way it then prints, in chain order, the stamp each of `prd.md`, `spine.md` and `epics.md` records when written now, one line for each whose parent is there, whether or not the file itself is there yet. A step copies the stamp after `stamp for <file>: ` into the file it writes.
+- It exits 2 when the directory argument is missing or isn't a directory.
+
+It never reports `architecture.md`, which is outside the chain. A folder holding a stamped `prd.md` beside a changed brief and no spine prints:
+
+```
+stale: prd.md was built from an earlier brief.md
+stamp for prd.md: Built from: brief.md sha256:<hash>
+stamp for spine.md: Built from: prd.md sha256:<hash>
+```
 
 ## Examples
 
