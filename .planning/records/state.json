@@ -154,20 +154,27 @@
     },
     {
       "n": 6,
-      "name": "Existing projects and PRD changes",
-      "description": "Design the next body of work under Cadence, and carry PRD changes through spine and epics",
+      "name": "Existing projects and design folders",
+      "description": "Design the next body of work under Cadence in its own folder, with the spine reading the existing code",
       "status": "unplanned",
       "plans": []
     },
     {
       "n": 7,
+      "name": "PRD changes flow downstream",
+      "description": "Show what a PRD change conflicts with, and walk the documents built from a changed one again",
+      "status": "unplanned",
+      "plans": []
+    },
+    {
+      "n": 8,
       "name": "Readiness check and handoff",
       "description": "An independent check before the handoff, then the exact Cadence command to run",
       "status": "unplanned",
       "plans": []
     },
     {
-      "n": 8,
+      "n": 9,
       "name": "The full graders",
       "description": "The full graders check every run, and /cad-verify runs the whole eval suite locally",
       "status": "unplanned",
