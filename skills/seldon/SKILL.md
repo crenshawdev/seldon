@@ -883,6 +883,13 @@ spelled the way `docs/FORMAT.md` spells them:
 A choice one part can make alone, such as a page layout or a library used
 inside one part, stays out. A spine doesn't need all six kinds.
 
+On a project under Cadence, a convention the existing code follows is a
+decision when a part this body of work builds would clash with it if built
+separately. Record it only as one of the six kinds, and leave out one that
+fits none. Record only a convention that touches a part this work builds, or
+a project-wide one (design approach, stack, hosting), since every S- ID needs
+an epic that cites it, as "Citations" in "The epics draft" says.
+
 **The spine's questions.** Draft the spine in this same turn, as "The spine
 draft" says, unless something only the user can decide is still open. Then ask
 every such question in one plain-prose message that ends your turn, and write
