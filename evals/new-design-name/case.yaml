@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: new-design-name
+description: A /seldon dump for Toolshed's repair log on a project already under Cadence whose finished design, Toolshed's brief, PRD, spine and epics, sits at the top of .planning/seldon/, seeded with Cadence's PROJECT.md, ROADMAP.md and STATE.md beside it, so Seldon has to write and edit nothing and offer the dump a design of its own with the name line on a line of its own.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
