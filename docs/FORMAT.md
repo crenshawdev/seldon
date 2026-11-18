@@ -4,18 +4,24 @@ This is the contract for the four documents Seldon writes. Cadence's reader is b
 
 ## Location and ownership
 
-Seldon writes the four documents of the contract, all in `.planning/seldon/`:
+Seldon writes the four documents of the contract, all in `.planning/seldon/`. A project's first design sits at the top of that folder:
 
 - `.planning/seldon/brief.md`
 - `.planning/seldon/prd.md`
 - `.planning/seldon/spine.md`
 - `.planning/seldon/epics.md`
 
+That design stays at the top, and Seldon never moves it into a named folder.
+
+Each later body of work gets its own named design, in its own folder, `.planning/seldon/<name>/`. That folder holds the same four files, `.planning/seldon/<name>/brief.md` and the rest, under every rule in this document. A name is made of lowercase letters, digits and hyphens.
+
 It writes nothing outside `.planning/seldon/`. A design folder the project already has, such as `docs/design/`, is read as input and never written to. Cadence stays the only writer of its own files.
 
 ### The architecture document
 
-Seldon also writes one more file, `.planning/seldon/architecture.md`, and only when the user asks for it with `/seldon architecture`. It's the one file Seldon writes only on request.
+Seldon also writes one more file, `architecture.md`, and only when the user asks for it with `/seldon architecture`. It's the one file Seldon writes only on request.
+
+It sits in its design's folder, beside the spine it expands on: `.planning/seldon/architecture.md` for the top-level design, `.planning/seldon/<name>/architecture.md` for a named one.
 
 - It expands on the spine's decisions by their S- IDs, drawing on the brief, the PRD and the spine.
 - It adds no decision and no ID of its own, so the spine's S- IDs stay the only decisions a reader locks.
@@ -343,7 +349,7 @@ Balances are computed from payments and never stored.
 node lib/check.mjs <dir>
 ```
 
-`<dir>` holds the four files: `.planning/seldon/` in a project, `samples/` in this repository. This is the full check, and it needs all four.
+`<dir>` holds the four files: `.planning/seldon/` for the top-level design, `.planning/seldon/<name>/` for a named one, and `samples/` in this repository. This is the full check, and it needs all four.
 
 - It exits 0 when all four conform, and prints one line: `seldon check: all four documents conform`.
 - It exits 1 when anything doesn't conform, and prints one line per problem, every problem it finds rather than the first. Each line names the file, then the epic or decision ID when there is one, then the section or field, then what's wrong, for example `epics.md: E-02: Done when: missing field`.
