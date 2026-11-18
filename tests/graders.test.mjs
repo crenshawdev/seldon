@@ -11,7 +11,9 @@ const FULL = [
   { kind: 'size', case: 'epics-split', file: 'evals/epics-split/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'full-walk', file: 'evals/full-walk/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
-  { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md' },
+  { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
+  { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
+  { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
 ];
 
 // The kinds D-01 holds to byte copies.
@@ -148,12 +150,26 @@ function unequal(copies) {
   return copies.filter((c) => !c.bytes.equals(copies[0].bytes)).map((c) => c.name);
 }
 
-function epics(...requirementLines) {
+// The first epic's Outcome line carries outcomeIds, so an ID can sit in the file but on no Requirements line.
+function epics(requirementLines, outcomeIds = []) {
   const parts = ['# Toolshed - epics', 'Built from: spine.md sha256:fce47dade8bb786c', ''];
   requirementLines.forEach((ids, i) => {
-    parts.push(`## E-0${i + 1}: Part ${i + 1}`, '**Outcome:** Volunteers keep the shed running.', `**Requirements:** ${ids.join(', ')}`, '**Spine decisions:** S-01', '');
+    const outcome = i === 0 && outcomeIds.length ? ` It covers ${outcomeIds.join(', ')}.` : '';
+    parts.push(`## E-0${i + 1}: Part ${i + 1}`, `**Outcome:** Volunteers keep the shed running.${outcome}`, `**Requirements:** ${ids.join(', ')}`, '**Spine decisions:** S-01', '');
   });
   return parts.join('\n');
+}
+
+// A PRD's requirement IDs, read from its - **ID**: bullets.
+function prdIds(file) {
+  return [...readFileSync(join(root, file), 'utf8').matchAll(/^- \*\*([A-Z]+-\d+)\*\*:/gm)].map((m) => m[1]);
+}
+
+// Three IDs to an epic, each on exactly one Requirements line.
+function spread(ids) {
+  const lines = [];
+  for (let i = 0; i < ids.length; i += 3) lines.push(ids.slice(i, i + 3));
+  return lines;
 }
 
 test('every full grader the table names is in the tree and reads as a regex grader', () => {
@@ -190,13 +206,44 @@ test('the grader reader takes a single-quoted pattern with doubled quotes, and f
 });
 
 test('each size-grader copy fails an epic whose Requirements line holds 6 IDs', () => {
-  const six = epics(['CAT-01', 'CAT-02', 'LOAN-01', 'LOAN-02', 'LOAN-03', 'NFR-01'], ['NFR-02']);
+  const six = epics([['CAT-01', 'CAT-02', 'LOAN-01', 'LOAN-02', 'LOAN-03', 'NFR-01'], ['NFR-02']]);
   for (const { file } of of('size')) assert.equal(passes(load(file), six), false, file);
 });
 
 test('each size-grader copy passes the same epics with 5 IDs on that line', () => {
-  const five = epics(['CAT-01', 'CAT-02', 'LOAN-01', 'LOAN-02', 'LOAN-03'], ['NFR-01', 'NFR-02']);
+  const five = epics([['CAT-01', 'CAT-02', 'LOAN-01', 'LOAN-02', 'LOAN-03'], ['NFR-01', 'NFR-02']]);
   for (const { file } of of('size')) assert.equal(passes(load(file), five), true, file);
+});
+
+test('each trace grader passes epics with every seeded PRD ID on exactly one Requirements line', () => {
+  for (const { file, prd } of of('trace')) {
+    const ids = prdIds(prd);
+    assert.ok(ids.length > 0, `${prd}: no requirement IDs`);
+    assert.equal(passes(load(file), epics(spread(ids))), true, file);
+  }
+});
+
+test('each trace grader fails when any one seeded ID is on no Requirements line', async (t) => {
+  for (const { file, prd } of of('trace')) {
+    const grader = load(file);
+    for (const id of prdIds(prd)) {
+      await t.test(`${file} fails with ${id} only on an Outcome line`, () => {
+        const without = spread(prdIds(prd)).map((line) => line.filter((x) => x !== id));
+        assert.equal(passes(grader, epics(without, [id])), false);
+      });
+    }
+  }
+});
+
+test("each trace grader fails a seeded ID on two epics' Requirements lines", async (t) => {
+  for (const { file, prd } of of('trace')) {
+    const ids = prdIds(prd);
+    await t.test(`${file} fails with ${ids[0]} on two epics`, () => {
+      const lines = spread(ids);
+      lines.at(-1).push(ids[0]);
+      assert.equal(passes(load(file), epics(lines)), false);
+    });
+  }
 });
 
 test("every full grader's pattern uses only D-09's forms", () => {
