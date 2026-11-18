@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 9,
-    "status": "executed",
-    "next": "/cad-verify 9",
+    "status": "phase complete",
+    "next": "/cad-milestone",
     "updated": "2026-11-18"
   },
   "phases": [
@@ -272,7 +272,7 @@
       "n": 9,
       "name": "The full graders",
       "description": "The full graders check every run that writes what they grade, and a unit test proves the suite command covers every case",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -422,12 +422,12 @@
     {
       "id": "EVAL-02",
       "phase": 9,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "EVAL-04",
       "phase": 9,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }

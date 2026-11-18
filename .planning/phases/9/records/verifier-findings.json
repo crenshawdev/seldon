@@ -1,0 +1,108 @@
+{
+  "status": "delivered",
+  "score": "9/9",
+  "truths": [
+    {
+      "n": 1,
+      "truth": "node --test tests/graders.test.mjs passes, and in it each new or changed full grader fails its hand-made bad input and passes a matching good one, and the test fails on any full grader pattern outside D-09",
+      "status": "VERIFIED",
+      "uat_item": 1,
+      "evidence": "tests/graders.test.mjs:275-283 (size: 6 IDs fail, 5 pass, all three copies), :285-314 (trace: every seeded PRD ID read from the case's PRD fixture; each ID moved to an Outcome line fails; one ID on two epics fails), :316-330 (last-message half: each of the three finding labels fails), :338-341 (agent-result half fails an Agent result holding only a finding while the last message says the no-findings line), :351-363 (all three recommendation graders fail bold line, bold label, mid-sentence, split), :365-399 (D-09 form check over every FULL entry plus planted refused forms). One full-suite run, the coverage job's command from .github/workflows/test.yml with lcov sent to the scratchpad, Node v26.13.1: tests 187, pass 187, fail 0. Mutation spot-check on a scratch copy: removing the NFR-02 lookahead from full-walk/graders/every-requirement-traced.md fails 'each trace grader fails when any one seeded ID is on no Requirements line'; adding '(fast) path\\1' to fast-path's grader fails the D-09 test with 'backreference \\1' and 'capturing group'. The node-test job's Node 22/24 matrix wasn't run locally because only Node 26 is installed. None of the three new test files uses an API newer than Node 22."
+    },
+    {
+      "n": 2,
+      "truth": "Each full grader sits only in its own cases, the size grader and both readiness-passes halves are byte copies held equal by a test, and every new tool_used grader with a max has a min",
+      "status": "VERIFIED",
+      "uat_item": 2,
+      "evidence": "at-most-five-ids.md is in epics-split, full-walk and epics-from-spine (md5 fc4628f5 for all three). The trace graders are full-walk/graders/every-requirement-traced.md, epics-split/graders/every-requirement-traced.md and epics-from-spine/graders/every-requirement-once.md. says-no-findings.md (md5 40de515e) and agent-finds-nothing.md (md5 54779ca6) are in resume-later, handoff-cadence, handoff-named and readiness-agent. A grep of evals/*/graders for 'Requirements:' and 'nothing to fix' finds no other size, trace or readiness-passes grader: readiness-not-run/no-findings-line.md is a not_contains on the line, and epics-rerun's two are content-retention graders. tests/graders.test.mjs:401-436 holds the equal-copy and placement checks. Scratch mutation: one byte appended to handoff-named/graders/agent-finds-nothing.md fails 'the copies of each held grader are equal bytes', and a copy of the size grader in spine-job fails placement with 'belongs only in epics-split, full-walk, epics-from-spine' and 'a byte copy of the size grader outside its cases'. Phase 9 adds or changes no tool_used grader (git diff 5ea7fba..HEAD -- evals/). tests/scaffold.test.mjs 'every tool_used grader that states a max also states its min' passes over every grader."
+    },
+    {
+      "n": 3,
+      "truth": "The new and changed graders pass on their cases' kept full-run-3 traces, with file graders checked against epics.md rebuilt from the trace's Write and Edit inputs. One full-walk run and one readiness-agent run with the README's grant score 1.00, with the trace and size graders and both readiness-passes halves among the scored graders",
+      "status": "VERIFIED",
+      "uat_item": 3,
+      "evidence": "An independent re-match script (scratchpad verifier-p9/match.mjs) rebuilt epics.md from each trace's Write and Edit inputs and read last_message as both the last top-level assistant text and the result event. Over evals/results/phase-8-traces/full-run-3/, every check PASSes: full-walk every-requirement-traced and at-most-five-ids; epics-from-spine at-most-five-ids and every-requirement-once; epics-split every-requirement-traced and at-most-five-ids; says-no-findings and agent-finds-nothing on resume-later, handoff-cadence, handoff-named and readiness-agent; the recommendation graders on fast-path, cadence-dump and asks-for-dump; ends-on-confirm on stale-spine, readiness-fix and readiness-fix-answer. Negative check: both readiness-passes halves FAIL on full-run-3's readiness-findings and readiness-crossing traces. Real runs: evals/results/2026-11-18T22-34-19-557Z/aggregate-result.json has caseFilter full-walk and score 1, with 8 of 8 scored graders passed:true, including every-requirement-traced, at-most-five-ids and writes-epics. evals/results/2026-11-18T22-35-37-821Z/aggregate-result.json has caseFilter readiness-agent and score 1, with 10 of 10 passed, including agent-finds-nothing and says-no-findings. Both kept traces (phase-9-traces/full-walk-try-1, readiness-agent-try-1) show permissionMode dontAsk and permission_denials [], and the re-match passes on both. The aggregate doesn't record the grant flags. That the runs used the README's grant rests on plan-4.md's quoted command, which is README.md's command with --case and --keep-temp added."
+    },
+    {
+      "n": 4,
+      "truth": "SKILL.md lets /seldon architecture sit in a sentence just before a plain confirm question. stale-spine's ends-on-confirm passes that form and fails a statement ending. stale-spine's history runs from the S-03 conflict question to a go-ahead to the applied change. Every case that ends on the spine confirm question scores 1.00 solo within three tries. SKILL.md is at or under 90,000 bytes",
+      "status": "VERIFIED",
+      "uat_item": 4,
+      "evidence": "skills/seldon/SKILL.md:1306-1316 now says 'Just before that question, a sentence names /seldon architecture ... The question mark is the last thing in your turn'. wc -c SKILL.md gives 80,867. tests/graders.test.mjs:444-465 has three passing forms (in-question, same line, paragraph above) and three failing forms (trailing command sentence, command far above, no closing question), plus the three-copy equality check (all three copies md5 c27c7071). evals/stale-spine/history.jsonl: L1 '/seldon prd'; L2 names S-03 and ends 'Do you want me to apply this change to the PRD anyway?'; L3 '/seldon yes, go ahead and change it'; L4 is the applied change, with 'seldon check: prd.md conforms' and the PRD confirm question; L5-L6 are the confirm and the /clear words. L2 equals prd-conflict-apply's history L2 (D-17), L4 equals the result of the capture trace taken at 4482e4c, there is one sessionId, and the parentUuid chain is intact. A scan of every full-run-3 last message finds exactly seven cases ending on the spine confirm question: spine-from-prd, spine-answers, spine-conventions, spine-rerun, stale-spine, readiness-fix, readiness-fix-answer. Their aggregates (evals/results/2026-11-18T22-20-06-990Z through 2026-11-18T22-23-48-473Z) each show one case, score 1 and no failed grader, all started after 4482e4c (22:16:09Z), with one try each. The stale-spine trace's session_id 1d1d6488 is the new history's. Each of the seven traces ends on the new form. git diff --stat 4482e4c HEAD -- skills/ is empty."
+    },
+    {
+      "n": 5,
+      "truth": "A unit test fails when README.md's eval command carries --case or another case filter, or when the README's case list and the folders under evals/ (results/ left out) differ by one name, and it passes on the repo",
+      "status": "VERIFIED",
+      "uat_item": 5,
+      "evidence": "tests/eval-suite.test.mjs:20 refuses --case, --tag and --eval-dir. :23-31 reads the command whole across backslash continuations. :78-89 compares the README's bullets to the folders under evals/ name for name. :119-135 covers nested case files and experimental.evals. Plan 2's recorded --help output lists --case and --tag as the only case filters (PLAN-2.md:38, reports/plan-2.md fix D). The README command 'claude plugin eval . --trust-plugin --no-publish --ablation none --scaffold --allow-tools ...' carries no filter, and the suite run passes with 58 bullets against 58 folders. Scratch mutation: adding '--tag spine' to the README command fails 'the README's eval command carries no case filter', and adding evals/extra-case fails the list test with 'extra-case: a folder under evals/ the README doesn't list'."
+    },
+    {
+      "n": 6,
+      "truth": "A unit test reads every workflow file and fails on claude plugin eval or a model-key reference, passing on test.yml. allowed-tools is still the pinned five, claude plugin validate --strict . passes, and the unit suite passes under the coverage gate",
+      "status": "VERIFIED",
+      "uat_item": 6,
+      "evidence": "tests/workflows.test.mjs:38-49 reads every file under .github/workflows/ recursively. Rules at :11-22 cover plugin eval in any spelling, ANTHROPIC_API_KEY, any secrets mention but GITHUB_TOKEN, any backslash, id-token: and write-all. It passes on test.yml. Scratch mutation: a workflow running 'claude plugin eval .' with '${{ secrets.ANTHROPIC_KEY }}' fails with 'evals.yml:7: runs claude plugin eval' and 'evals.yml:9: reaches a secret other than GITHUB_TOKEN'. SKILL.md:5-10 allowed-tools is Read, Glob, Grep, Edit(.planning/seldon/**), Bash(node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs:*), unchanged in phase 9, and skill.test.mjs 'allowed-tools grants exactly D-02's five entries' passes. 'claude plugin validate --strict .' and '--strict .claude-plugin/plugin.json' both print 'Validation passed' and exit 0. The one ICON_MISSING plugin-directory warning doesn't change the result. Coverage gate: exit 0, lib/check.mjs at 99.41% lines and 97.90% branches against 85/85, and both the '^LF:[1-9]' and no-'LH:0' guards pass. Not a criterion: fix H (4cfa959) is in place, and the uncommitted working-tree SUMMARY.md and reports/plan-2.md, edited at 17:43 by another agent and not by this verifier, now record it as kept on John's ruling ('Keep it (Recommended)')."
+    },
+    {
+      "n": 7,
+      "truth": "ROADMAP.md's phase 9 criteria 2 and 3 read as D-03 and D-04 word for word, REQUIREMENTS.md's EVAL-04 reads D-04's row, and CAPTURE.md has no '(phase 9)' tag and has a (backlog) entry for each of D-20 to D-23",
+      "status": "VERIFIED",
+      "uat_item": 7,
+      "evidence": "A node comparison that extracts the quoted D-03 and D-04 texts and the EVAL-04 row from CONTEXT.md finds ROADMAP.md phase 9 '2. <D-03>' true, '3. <D-04>' true, and REQUIREMENTS.md:52 '**EVAL-04**: <row>' true. grep -cF '(phase 9)' .planning/CAPTURE.md gives 0. CAPTURE.md has (backlog) entries for D-22's four runtime guards at :4-7, D-23's release run at :8, D-20's first-text wording at :9, and D-21's re-ask route, stamp-only rerun and other closing questions at :10-12."
+    },
+    {
+      "n": 8,
+      "truth": "ROADMAP criterion 1: the graders fail a run when a document is missing, a PRD requirement ID traces into no epic, an epic carries more than 5 requirement IDs, or the readiness check reports a finding",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "Document missing: 15 file_exists graders cover brief.md, prd.md, spine.md, epics.md and architecture.md (including writes-epics.md on full-walk, epics-from-spine and epics-split), and no seed.sh copies the file its case's file_exists grader checks. A real run shows the grader failing: evals/results/2026-11-17T15-48-06-269Z prd-reads-brief writes-prd passed:false, '.planning/seldon/prd.md missing (expected present)'. The trace, size and finding failures are proven by truth 1's unit tests, and on real traces by truth 3's negative check, where both readiness-passes halves fail on the readiness-findings and readiness-crossing traces."
+    },
+    {
+      "n": 9,
+      "truth": "ROADMAP criterion 2: one eval case drives one user turn, full-walk replays the fast path from a full project description through the spine confirm and its graded turn's epics pass the document, trace and size graders, and the clean handoff cases pass readiness-passes",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "Each of the 58 case folders has exactly one prompt.md, and no case.yaml has a prompts, turns or messages key. Each of the 56 full-run-3 traces scanned has exactly one result event. evals/full-walk/history.jsonl has 14 lines: L1 the Toolshed dump, L2 'Recommended path: fast path', L12 the spine confirm, L14 the /clear words. prompt.md is '/seldon'. The graded turn passes writes-epics, every-requirement-traced and at-most-five-ids in the real run (truth 3). resume-later, handoff-cadence and handoff-named pass both halves on their kept traces, and readiness-agent passes them in a real run (truth 3). Observation for the lead, outside AC4's scope and not counted as a gap: evals/full-walk/history.jsonl L12 and evals/stale-epics/history.jsonl L2 still replay the in-question spine confirm form that D-13 replaced. The grader still accepts that form, and full-walk scored 1.00 at HEAD with it, but D-28 asks that a replayed history be one the skill at HEAD produces, and all seven solo runs at HEAD produced the new form instead."
+    }
+  ],
+  "passes": [
+    {
+      "k": 1,
+      "name": "The full graders' unit tests catch every bad input",
+      "evidence": "Suite run gives 187 pass and 0 fail under the coverage command. tests/graders.test.mjs:275-399 covers each bad and good input and the D-09 form check. Scratch mutations (a dropped trace ID, a backreference) each fail the named tests."
+    },
+    {
+      "k": 2,
+      "name": "Each full grader sits only in its own cases, with copies held equal",
+      "evidence": "md5-equal copies sit in the D-14 cases and no other case holds a full grader. tests/graders.test.mjs:401-436 holds both rules, and scratch mutations (a one-byte change in an agent-result copy, a size copy in spine-job) fail them. No new tool_used grader exists, and the scaffold min/max test passes."
+    },
+    {
+      "k": 3,
+      "name": "The new graders pass on kept traces and on the two real runs",
+      "evidence": "An independent re-match over full-run-3 passes every grader, with file graders checked against rebuilt epics.md. 2026-11-18T22-34-19-557Z full-walk has score 1 with every-requirement-traced and at-most-five-ids passed. 2026-11-18T22-35-37-821Z readiness-agent has score 1 with agent-finds-nothing and says-no-findings passed."
+    },
+    {
+      "k": 4,
+      "name": "The spine confirm form, stale-spine's history and the solo runs",
+      "evidence": "SKILL.md:1306-1316 carries the new form, and SKILL.md is 80,867 bytes. The grader's form tests and three-copy equality pass. History L1-L6 run from the S-03 conflict question to the go-ahead to the applied change. The seven spine-confirm cases each score 1 on try 1 (aggregates 2026-11-18T22-20-06-990Z to 22-23-48-473Z)."
+    },
+    {
+      "k": 5,
+      "name": "A unit test proves the README's eval command runs every case",
+      "evidence": "tests/eval-suite.test.mjs refuses --case, --tag and --eval-dir and matches 58 bullets to 58 folders. Scratch mutations (--tag added, an extra case folder) each fail the test."
+    },
+    {
+      "k": 6,
+      "name": "No workflow runs the eval suite or sees a model key",
+      "evidence": "tests/workflows.test.mjs passes on test.yml and fails a planted workflow with plugin eval and secrets.ANTHROPIC_KEY. allowed-tools is still the pinned five. claude plugin validate --strict passes. The coverage gate passes at 99.41/97.90 with both guards."
+    },
+    {
+      "k": 7,
+      "name": "The roadmap, requirements and capture wording match the decisions",
+      "evidence": "Exact-string comparison against CONTEXT.md's D-03, D-04 and EVAL-04 texts is true for all three. CAPTURE.md has 0 '(phase 9)' tags and (backlog) entries for D-20 to D-23 at :4-12."
+    }
+  ],
+  "gaps": [],
+  "human_checks": []
+}
