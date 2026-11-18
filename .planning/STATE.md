@@ -1,6 +1,7 @@
 # State
 
 Phase: 9 of 9 (The full graders)
-Status: context gathered
-Next: /cad-plan 9
+Plan: 1 of 4 (The graders and their unit tests)
+Status: planned
+Next: /cad-execute 9
 Updated: 2026-11-18
