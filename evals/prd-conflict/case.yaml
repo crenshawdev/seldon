@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: prd-conflict
+description: A /seldon prd in a fresh session. The brief at .planning/seldon/ is copied from samples/prd-rerun/, which dropped reminders and gained a refusal to send them, next to samples/prd.md and samples/spine.md, which were built before that change. Dropping reminders retires LOAN-03, and spine decision S-03 quotes the same brief line LOAN-03 does. Seldon has to name S-03, the decision the change hits, before writing anything, and end on the conflict question with nothing written or edited.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Skill, Read, Glob, Grep]
