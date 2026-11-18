@@ -856,7 +856,10 @@ outside `.planning/`, with Read, Glob and Grep, enough to find the conventions
 "What the spine holds" asks for. Otherwise read those two files and nothing
 more. Either way, never read `docs/design/` or any other design folder,
 anything in `.planning/` but this design's brief, PRD and spine, the dump, or
-the earlier conversation, whatever it holds. A fact from a design folder
+the earlier conversation, whatever it holds. In the code, never Read or Grep
+inside a `.env*` file or a key or credential file: skip it by name, even where
+Glob lists it. Never quote a line elsewhere that holds a password, token, key,
+or a connection string with credentials. A fact from a design folder
 reaches the spine only through a quote the brief already carries. A stack or
 hosting word the user said reaches it only through the brief's `> ` quotes,
 since the PRD leaves those words out. On a project under Cadence the code can
@@ -912,6 +915,8 @@ turn asked the who-relies question. Only these are open:
   about, never guessed. On a project under Cadence, a stack or hosting choice
   the code settles counts as settled even when the brief never quotes it, and
   isn't asked about: its decision quotes the code, as "The spine draft" says.
+  A choice that shows only in a secret-bearing file or line, which the code
+  reading never reads or quotes, isn't one the code settles, so ask about it.
 - **The parts' questions:** the questions below, for the parts the design has.
 - **Who relies on what:** on a project under Cadence, always open, a rerun
   included, so there the step never drafts in the turn it starts.
