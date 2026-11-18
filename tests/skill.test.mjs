@@ -63,3 +63,14 @@ test('every check command in the body starts with the Bash rule\'s command', () 
   }
   assert.ok(body.includes(`${prefix} --brief .planning/seldon`), `the body never runs: ${prefix} --brief .planning/seldon`);
 });
+
+// The loader pastes this run's arguments over every token, so one in prose reads "look at ``" on a bare /seldon.
+test('$ARGUMENTS appears once, on its own line inside the seldon-arguments markers', () => {
+  const text = readFileSync(skillPath, 'utf8').replace(/\r\n/g, '\n');
+  assert.equal(text.split('$ARGUMENTS').length - 1, 1, 'SKILL.md holds $ARGUMENTS other than exactly once');
+  const lines = text.split('\n');
+  const at = lines.findIndex((line) => line.includes('$ARGUMENTS'));
+  assert.equal(lines[at], '$ARGUMENTS', `$ARGUMENTS shares its line with other text: ${lines[at]}`);
+  assert.equal(lines[at - 1], '<seldon-arguments>', 'the line before $ARGUMENTS is not <seldon-arguments>');
+  assert.equal(lines[at + 1], '</seldon-arguments>', 'the line after $ARGUMENTS is not </seldon-arguments>');
+});

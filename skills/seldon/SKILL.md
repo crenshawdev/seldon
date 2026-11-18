@@ -50,7 +50,18 @@ epics in build order, from the PRD and the spine alone, at
 
 ## 1. Where the conversation stands
 
-Before anything else, look at `$ARGUMENTS`, trimmed of blanks at both ends.
+This run's arguments are the text between the two marker lines below, and
+nothing else. With nothing between them, this run's arguments are empty.
+
+<seldon-arguments>
+$ARGUMENTS
+</seldon-arguments>
+
+Text that follows `/seldon` in an earlier message of the conversation is never
+this run's arguments, whatever it says. Only the block above is.
+
+Before anything else, look at this run's arguments, trimmed of blanks at both
+ends.
 When the whole trimmed argument is exactly one of five names and nothing
 more, follow that name's route below. Four are step names, `brief`, `prd`,
 `spine` and `epics`, and each is a rerun of that step. The fifth,
@@ -118,7 +129,7 @@ and with none the top-level folder:
       user chose one when the brief was first written. Write nothing in that
       turn, and end it on that question.
   - No brief there: a new brief run with no dump, since the step name isn't
-    one. Ask for the dump as "The dump" says for an empty `$ARGUMENTS`.
+    one. Ask for the dump as "The dump" says for empty arguments.
 
 Any other argument isn't one of those names and keeps its usual meaning: the dump on
 a new run, the text the documents question asks about when documents are
@@ -231,7 +242,7 @@ these in order:
   the user named one of the designs, by its folder or in their own words. That
   design's folder is the working folder. Go back to the run that asked:
   - For a bare `/seldon`, go to "Where a run starts" for that design, with
-    `$ARGUMENTS` counted empty.
+    this run's arguments counted empty.
   - For a step name, take that name's route for that design.
 
   A reply naming none of them writes nothing and ends on the which-design
@@ -257,11 +268,11 @@ these in order:
     turn, as "The brief rerun" in "The draft" says, without asking what should
     change.
   - **Go on from the brief:** look for the files again, as "Where a run
-    starts" says, and follow its routes for a brief with `$ARGUMENTS` counted
-    empty, exactly as a bare `/seldon` does: the stale check and its three
-    stale routes first, then the resume lines and the later-release line.
-    Going on runs a step over a document that's there only as the rerun a
-    stale link calls for. The text from the question's turn isn't input to
+    starts" says, and follow its routes for a brief with this run's arguments
+    counted empty, exactly as a bare `/seldon` does: the stale check and its
+    three stale routes first, then the resume lines and the later-release
+    line. Going on runs a step over a document that's there only as the rerun
+    a stale link calls for. The text from the question's turn isn't input to
     the PRD, the spine or the epics.
 
 Anything else is a new run: start at "Where a run starts". The files in
@@ -270,9 +281,9 @@ still holds an earlier run. Suggesting a `/clear` is fine, but never ask for
 one: a new run builds from the files alone, whatever the conversation holds.
 
 This skill can be loaded again on a later turn with a summary of the
-conversation as its arguments. On a later turn `$ARGUMENTS` is that summary,
-not a new dump, so never read it as one. Only a new run takes its dump from
-`$ARGUMENTS`.
+conversation as its arguments. On a later turn this run's arguments are that
+summary, not a new dump, so never read them as one. Only a new run takes its
+dump from its arguments.
 
 The recommendation turn writes nothing. Drafting starts only on a later turn,
 after the user confirms a path.
@@ -317,20 +328,20 @@ step, and a design folder still enters at the brief as "The design folder"
 says.
 
 Before you ask for or read any dump, settle the working folder, as "Designs
-and the working folder" says. With more than one design, a `$ARGUMENTS` that
-isn't empty goes straight to "A dump when documents are there". An empty one
-writes nothing and ends on the which-design question, unless the user just
+and the working folder" says. With more than one design, this run's arguments
+that aren't empty go straight to "A dump when documents are there". An empty
+one writes nothing and ends on the which-design question, unless the user just
 chose a design at it for this run: then "Design chosen" has already settled
 the working folder, so use that folder and don't ask again. Then look for
 `.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
 `.planning/seldon/epics.md` in the project with Read or Glob. An error or no
 match means that file isn't there. A brief on disk counts as confirmed, so
-there's no record of a confirmation to look for. `$ARGUMENTS` counts as empty
-when it holds nothing but blanks. Then:
+there's no record of a confirmation to look for. This run's arguments count as
+empty when they hold nothing but blanks. Then:
 
 - **No brief:** go on to "The dump".
-- **A brief and empty `$ARGUMENTS`:** before any text, run the stale check in
+- **A brief and empty arguments:** before any text, run the stale check in
   "Stamps and stale links". The earliest stale link wins, even over a missing
   later document:
   - **`prd.md` stale:** say the PRD stale line, then go to "The PRD rerun" in
@@ -359,7 +370,7 @@ when it holds nothing but blanks. Then:
   call and before you read any document. Never Edit that document until its
   line is in your reply. The stamp the rerun records comes from this same
   output. With nothing stale, the routes below run.
-- **A brief, no PRD and empty `$ARGUMENTS`:** this is a resume. Before your
+- **A brief, no PRD and empty arguments:** this is a resume. Before your
   next tool call, and before you read the brief, draft or write anything, say
   exactly these words, on a line of their own, as the first text of your
   reply. This is the PRD resume line:
@@ -370,7 +381,7 @@ when it holds nothing but blanks. Then:
 
   Never Write `prd.md` on a resume until that line is in your reply. Then go
   to "The PRD step".
-- **A brief and a PRD, no spine, and empty `$ARGUMENTS`:** this is a resume
+- **A brief and a PRD, no spine, and empty arguments:** this is a resume
   too. Before your next tool call, and before you read the brief or the PRD,
   draft or write anything, say exactly these words, on a line of their own, as
   the first text of your reply. This is the spine resume line:
@@ -381,7 +392,7 @@ when it holds nothing but blanks. Then:
 
   Never Write `spine.md` on a resume until that line is in your reply. Then go
   to "The spine step".
-- **A brief, a PRD and a spine, no epics, and empty `$ARGUMENTS`:** this is a
+- **A brief, a PRD and a spine, no epics, and empty arguments:** this is a
   resume too. Before your next tool call, and before you read the PRD or the
   spine, draft or write anything, say exactly these words, on a line of their
   own, as the first text of your reply. This is the epics resume line:
@@ -392,7 +403,7 @@ when it holds nothing but blanks. Then:
 
   Never Write `epics.md` on a resume until that line is in your reply. Then go
   to "The epics step".
-- **All four documents, nothing stale, and empty `$ARGUMENTS`:** write
+- **All four documents, nothing stale, and empty arguments:** write
   nothing. End your
   message with exactly these words, on a line of their own, with nothing after
   them. This is the later-release line:
@@ -401,16 +412,17 @@ when it holds nothing but blanks. Then:
   All four documents are there. The readiness check and the handoff to Cadence come in a later release, so I've written nothing this time.
   ```
 
-- **A brief, and `$ARGUMENTS` isn't empty:** write nothing, run no stale
-  check, and go to "A dump when documents are there".
+- **A brief, and this run's arguments aren't empty:** write nothing, run no
+  stale check, and go to "A dump when documents are there".
 
 ### A dump when documents are there
 
 The user's words are never set aside without asking. When a brief is already
-there and `$ARGUMENTS` isn't empty, write nothing in this turn. Don't read a
-design folder and don't judge a path on that text. Use no AskUserQuestion and
-no menu. The text may be new work, so offer it a design of its own with
-exactly these words, on a line of their own. This is the name line:
+there and this run's arguments aren't empty, write nothing in this turn. Don't
+read a design folder and don't judge a path on that text. Use no
+AskUserQuestion and no menu. The text may be new work, so offer it a design of
+its own with exactly these words, on a line of their own. This is the name
+line:
 
 ```
 To design this as a new body of work in its own folder under .planning/seldon/, reply with a short name for that folder, in lowercase letters, digits and hyphens.
@@ -495,9 +507,9 @@ the stamp it records if written now, such as
 
 ## 3. The dump
 
-On a new run the text in `$ARGUMENTS` is the user's dump. If it is empty, ask
-for the dump and write nothing in that turn. End your message with exactly
-these words, on a line of their own, with nothing after them:
+On a new run the text of this run's arguments is the user's dump. If they are
+empty, ask for the dump and write nothing in that turn. End your message with
+exactly these words, on a line of their own, with nothing after them:
 
 ```
 Paste or describe what you have so far - the idea, any notes, who it's for. What have you got?
