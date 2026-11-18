@@ -15,10 +15,11 @@ const FULL = [
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
   ...['resume-later', 'handoff-cadence', 'handoff-named', 'readiness-agent'].map((c) => ({ kind: 'last-message', case: c, file: `evals/${c}/graders/says-no-findings.md` })),
+  ...['resume-later', 'handoff-cadence', 'handoff-named', 'readiness-agent'].map((c) => ({ kind: 'agent-result', case: c, file: `evals/${c}/graders/agent-finds-nothing.md` })),
 ];
 
 // The kinds D-01 holds to byte copies.
-const EQUAL = ['size', 'last-message'];
+const EQUAL = ['size', 'last-message', 'agent-result'];
 
 const NO_FINDINGS = 'The readiness check found nothing to fix.';
 const HANDOFF = 'To hand this design to Cadence, run:\n\n/cad-new-project --brief .planning/seldon';
@@ -170,6 +171,20 @@ function epics(requirementLines, outcomeIds = []) {
   return parts.join('\n');
 }
 
+// Agent start, task_notification, Agent result and final text, shaped like phase 8's kept traces with invented ids.
+function readinessTrace({ report, summary, last }) {
+  const id = 'toolu_01TestReadinessStart0001';
+  const indented = report.split('\n').map((line) => `  ${line}`).join('\n');
+  const handBack = `  <tools-used-before-summary>Read</tools-used-before-summary>\n  \n[Subagent hand-back] The report follows:\n${indented}\nagentId: a0123456789abcdef\n<usage>subagent_tokens: 6532</usage>`;
+  const events = [
+    { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id, name: 'Agent', input: { description: 'Seldon readiness check', subagent_type: 'seldon:readiness', prompt: '.planning/seldon/prd.md\n.planning/seldon/spine.md\n.planning/seldon/epics.md' } }] }, parent_tool_use_id: null },
+    { type: 'system', subtype: 'task_notification', task_id: 'a0123456789abcdef', tool_use_id: id, status: 'completed', summary },
+    { type: 'user', message: { role: 'user', content: [{ tool_use_id: id, type: 'tool_result', content: [{ type: 'text', text: handBack }] }] }, parent_tool_use_id: null, tool_use_result: { status: 'completed', agentType: 'seldon:readiness', content: [{ type: 'text', text: report }] } },
+    { type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: last }] }, parent_tool_use_id: null },
+  ];
+  return `${events.map((e) => JSON.stringify(e)).join('\n')}\n`;
+}
+
 // A PRD's requirement IDs, read from its - **ID**: bullets.
 function prdIds(file) {
   return [...readFileSync(join(root, file), 'utf8').matchAll(/^- \*\*([A-Z]+-\d+)\*\*:/gm)].map((m) => m[1]);
@@ -270,6 +285,17 @@ test('each last-message half fails that message with any one finding line added'
 
 test('each last-message half fails the handoff with no no-findings line', () => {
   for (const { file } of of('last-message')) assert.equal(passes(load(file), HANDOFF), false, file);
+});
+
+test("each agent-result half passes a trace whose Agent result is the no-findings line", () => {
+  const trace = readinessTrace({ report: NO_FINDINGS, summary: NO_FINDINGS, last: `${NO_FINDINGS}\n\n${HANDOFF}` });
+  for (const { file } of of('agent-result')) assert.equal(passes(load(file), trace), true, file);
+});
+
+// The run D-07 exists for: the agent raised a finding and the skill said nothing was wrong.
+test('each agent-result half fails a trace whose Agent result holds a finding, though the last message says the no-findings line', () => {
+  const trace = readinessTrace({ report: FINDINGS[0], summary: FINDINGS[0], last: `${NO_FINDINGS}\n\n${HANDOFF}` });
+  for (const { file } of of('agent-result')) assert.equal(passes(load(file), trace), false, file);
 });
 
 test("every full grader's pattern uses only D-09's forms", () => {
