@@ -104,6 +104,67 @@ test('every tool_used grader that states a max also states its min', () => {
   assert.deepEqual(unbounded, [], `\na max: with no min: reads as expected 1..max and can't pass:\n${unbounded.join('\n')}`);
 });
 
+// The case.yaml keys whose value is text; allowed_tools: [...] is a flow list on purpose and never reaches this.
+const STRING_KEY = /^ *(schema_version|name|description|history_file|scaffold_script):[ \t]+(.*?)[ \t\r]*$/;
+// A plain value can't start with any of these and still be read as the text it looks like.
+const INDICATOR = /^[-?:,[\]{}#&*!|>%@`]/;
+
+function plainStringProblems(source) {
+  const problems = [];
+  source.split('\n').forEach((text, i) => {
+    const m = text.match(STRING_KEY);
+    if (!m || m[2] === '' || m[2][0] === '"' || m[2][0] === "'") return;
+    const [, key, value] = m;
+    let why = null;
+    if (INDICATOR.test(value)) why = `starts with ${value[0]}`;
+    else if (/:(?:[ \t]|$)/.test(value)) why = 'holds ": "';
+    else if (/[ \t]#/.test(value)) why = 'holds " #"';
+    if (why) problems.push({ line: i + 1, key, why });
+  });
+  return problems;
+}
+
+// 900d872's class: an unquoted "word for word: the" in a description stopped the eval loading the case.
+test('every case.yaml string key\'s unquoted value has no ": ", no " #" and no leading YAML indicator (a line check, not a YAML parse)', () => {
+  const problems = [];
+  let files = 0;
+  for (const entry of readdirSync(evals, { recursive: true })) {
+    const path = String(entry);
+    if (path.split(sep)[0] === 'results' || path.split(sep).pop() !== 'case.yaml') continue;
+    files += 1;
+    for (const p of plainStringProblems(readFileSync(join(evals, path), 'utf8'))) {
+      problems.push(`evals/${path.split(sep).join('/')}:${p.line}: ${p.key}'s unquoted value ${p.why}, so YAML won't read it as written; quote it`);
+    }
+  }
+  assert.deepEqual(problems, [], `\n${problems.join('\n')}`);
+  assert.ok(files > 0, 'found no case.yaml under evals/');
+});
+
+test('the string-key line check flags ": ", " #" and a leading indicator, and leaves quoted values and flow lists alone', () => {
+  const flagged = [
+    ['description: each quoted word for word: the trust answer\n', 'holds ": "'],
+    ['description: ends on a colon:\n', 'holds ": "'],
+    ['description: the fix # not a comment\n', 'holds " #"'],
+    ['name: [resume-later]\n', 'starts with ['],
+    ['description: *anchor\n', 'starts with *'],
+    ['context:\n  history_file: a: b.jsonl\n', 'holds ": "'],
+  ];
+  for (const [source, why] of flagged) {
+    assert.equal(plainStringProblems(source).length, 1, JSON.stringify(source));
+    assert.equal(plainStringProblems(source)[0].why, why, JSON.stringify(source));
+  }
+  assert.equal(plainStringProblems('context:\n  history_file: a: b.jsonl\n')[0].line, 2);
+  const clean = [
+    'description: "word for word: the trust answer # and more"\n',
+    "description: 'word for word: the trust answer'\n",
+    'schema_version: "1.1"\n',
+    'name: resume-later\n',
+    'description: A bare /seldon, at 10:30 for issue#1, with a URL like https://example.com\n',
+    'execution:\n  allowed_tools: [Skill, Read, Glob, Grep]\n  disallowed_tools: [Agent]\n',
+  ];
+  for (const source of clean) assert.deepEqual(plainStringProblems(source), [], JSON.stringify(source));
+});
+
 test('every allowed form passes', (t) => {
   const dir = mkdtempSync(join(tmpdir(), 'seldon-scaffold-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
