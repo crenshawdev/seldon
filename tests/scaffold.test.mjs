@@ -91,6 +91,19 @@ test('every scaffold a case names sits in its case folder and only copies fixtur
   assert.ok(found.length >= 2, `expected the design-folder and existing-brief scaffolds, found ${found.length}`);
 });
 
+// The runner reads a missing min as 1, so a lone max: 0 asks for one call and allows none.
+test('every tool_used grader that states a max also states its min', () => {
+  const unbounded = [];
+  for (const entry of readdirSync(evals, { recursive: true })) {
+    const path = String(entry);
+    if (path.split(sep)[0] === 'results' || !path.endsWith('.md')) continue;
+    const head = readFileSync(join(evals, path), 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!head || !/^type:[ \t]*(["']?)tool_used\1[ \t\r]*$/m.test(head[1])) continue;
+    if (/^max[ \t]*:/m.test(head[1]) && !/^min[ \t]*:/m.test(head[1])) unbounded.push(`evals/${path.split(sep).join('/')}`);
+  }
+  assert.deepEqual(unbounded, [], `\na max: with no min: reads as expected 1..max and can't pass:\n${unbounded.join('\n')}`);
+});
+
 test('every allowed form passes', (t) => {
   const dir = mkdtempSync(join(tmpdir(), 'seldon-scaffold-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
