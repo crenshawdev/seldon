@@ -66,7 +66,7 @@ The eval cases live in `evals/`. Run them locally from the repository root:
 claude plugin eval . --trust-plugin --no-publish --ablation none --scaffold --allow-tools "Edit(.planning/seldon/**)" "Bash(node $PWD/lib/check.mjs:*)"
 ```
 
-The two `--allow-tools` rules are the whole grant. Seldon can write only inside `.planning/seldon/` and run only its own check, and nothing broader. Run from the root, `$PWD` is this repository, so the rule names the same `lib/check.mjs` the skill runs. `--scaffold` runs the case scripts that copy fixtures from `samples/` into the run, and `tests/scaffold.test.mjs` allows them nothing more. Apart from the shebang, `set -euo pipefail` and the line that finds the repository, every line must be `mkdir -p` or `cp [-R]` from `"$repo/samples/..."`, with targets inside the run. Any other line fails the test. So does a `case.yaml` that names its scaffold in a form the test can't read.
+The two `--allow-tools` rules are the whole grant. Seldon can write only inside `.planning/seldon/` and run its own check, though Claude Code may still let a read-only shell command, such as a file listing, through. Run from the root, `$PWD` is this repository, so the rule names the same `lib/check.mjs` the skill runs. `--scaffold` runs the case scripts that copy fixtures from `samples/` into the run, and `tests/scaffold.test.mjs` allows them nothing more. Apart from the shebang, `set -euo pipefail` and the line that finds the repository, every line must be `mkdir -p` or `cp [-R]` from `"$repo/samples/..."`, with targets inside the run. Any other line fails the test. So does a `case.yaml` that names its scaffold in a form the test can't read.
 
 - `fast-path` gives Seldon a full project description and checks that it recommends the fast path without asking through a menu.
 - `replay` resumes a saved `/seldon` session and checks that the reply uses a fact only that session holds.
@@ -100,6 +100,14 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `full-walk` resumes a session that confirmed the brief, the PRD and the spine, and checks that a bare `/seldon` names the spine first, writes epics that pass the check, ends on the epics confirm question and writes or edits no other file.
 - `epics-confirm` confirms epics Seldon just wrote and checks that it ends on the words suggesting `/clear` and then `/seldon`, with nothing written or edited.
 - `epics-no-spine` runs `/seldon epics` where a brief and a PRD are there and no spine, and checks that Seldon writes and edits nothing and points to `/seldon spine`.
+- `cadence-project` confirms the fast path on a project already under Cadence, with Cadence's planning files there and no `.planning/seldon/` yet, and checks that Seldon writes a brief that passes the check, with no edit and no write outside `.planning/seldon/`.
+- `cadence-dump` gives `/seldon` a dump on that same project, and checks that Seldon recommends the fast path rather than refusing, with nothing written or edited.
+- `new-design-name` gives `/seldon` a new dump on a project under Cadence whose first design is finished, and checks that Seldon writes and edits nothing and offers the dump its own folder on the line asking for a name.
+- `new-design-brief` confirms the fast path after that line was answered with `repair-log`, and checks that Seldon writes a brief that passes the check in `.planning/seldon/repair-log/`, with no write or edit anywhere else.
+- `which-design` runs a bare `/seldon` with one design at the top of `.planning/seldon/` and one in `.planning/seldon/sowlist/`, and checks that Seldon writes and edits nothing and ends on the which-design question.
+- `which-design-answer` answers that question with `sowlist`, and checks that Seldon names `.planning/seldon/sowlist/brief.md` first and then writes `.planning/seldon/sowlist/prd.md`.
+- `spine-who-relies` runs `/seldon spine` on a project under Cadence whose code settles the stack and the host, and checks that Seldon asks the who-relies question but neither the trust, the unattended-work nor the failure question, writes and edits nothing, and keeps the fake token in the project's `.env` out of the trace.
+- `spine-conventions` answers the who-relies question, and checks that Seldon writes a spine that passes the check, with the answer quoted in the decision for the part it names, a convention quoted from `src/tools.mjs` with the file named under it, and the fake token nowhere in the trace.
 
 Results go to `evals/results/`, which git ignores.
 
