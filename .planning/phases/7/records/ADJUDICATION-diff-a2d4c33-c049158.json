@@ -1,0 +1,35 @@
+{
+  "phase": "7",
+  "trigger": "diff",
+  "discriminator": "a2d4c33-c049158",
+  "round": 1,
+  "base": "a2d4c33",
+  "head": "c049158",
+  "base_id": "a2d4c338f166ff951afebe6ef690dc4c0fc8a8f0",
+  "head_id": "c04915886db368d618211b9f9e6aff23a579b041",
+  "voices": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "citations": {
+    "checked": true
+  },
+  "entries": [
+    {
+      "voice": "claude-subagent",
+      "model": "claude-opus-5-5",
+      "file": "skills/seldon/SKILL.md",
+      "line": 177,
+      "severity": "low",
+      "claim": "On a rerun, the go-ahead route works the change out again from the files and runs no second conflict check. Nothing ties the re-derived change to the one the report named, and the text gives no instruction for when the two differ. That lets a PRD edit undo a spine decision that was never named.",
+      "failure_scenario": "Seed samples/prd-rerun/brief.md, samples/prd.md and samples/spine.md, then run /seldon prd. It reports S-03 (LOAN-03 dropped) and ends on the conflict question. Before replying, the user hand-edits brief.md to also drop the quote 'something the volunteers can use at the counter to check tools out and back in', which section 12 (line 753) explicitly allows for. The user then replies 'yes'. Line 179 says to work the rerun's change out again from the files, so the change now also drops or alters the requirement that S-02 quotes. Line 182 says a go-ahead runs no second conflict check, so prd.md is edited and stamped with S-02 never named. That breaks the rule that each conflicting decision is named before anything is written. 'Apply exactly the change your report described' (line 177) and 'worked out again from the files' (line 179) now point at different changes, and neither the route nor 'The conflict check' says which wins or says to stop.",
+      "ruling": "survived",
+      "convergent": false,
+      "fix_commit": "1dedddc14dffc74dabb774e908b28daddb57bcc7",
+      "base_id": "a2d4c338f166ff951afebe6ef690dc4c0fc8a8f0",
+      "head_id": "c04915886db368d618211b9f9e6aff23a579b041"
+    }
+  ]
+}

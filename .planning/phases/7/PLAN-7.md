@@ -29,6 +29,9 @@ files:
   - evals/prd-conflict-apply/graders/stamps-brief-hash.md
   - evals/prd-conflict-apply/graders/check-passes.md
   - evals/prd-conflict-apply/graders/ends-on-confirm.md
+  - evals/prd-conflict-apply/graders/no-reused-id.md
+  - evals/prd-conflict-apply/graders/keeps-unchanged-lines.md
+  - evals/prd-conflict-apply/graders/scope-drops-id.md
   - evals/prd-change-conflict/case.yaml
   - evals/prd-change-conflict/prompt.md
   - evals/prd-change-conflict/seed.sh

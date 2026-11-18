@@ -7,6 +7,8 @@ requirements:
   - CHECK-04
 files:
   - README.md
+  - skills/seldon/SKILL.md
+  - tests/skill.test.mjs
 ---
 
 # Phase 7: PRD changes flow downstream - Plan 8: The README and the full suite

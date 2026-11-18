@@ -3,14 +3,9 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 7,
-    "status": "planned",
-    "next": "/cad-execute 7",
-    "updated": "2026-11-18",
-    "plan": {
-      "k": 1,
-      "j": 8,
-      "name": "The size probe"
-    }
+    "status": "executed",
+    "next": "/cad-verify 7",
+    "updated": "2026-11-18"
   },
   "phases": [
     {
@@ -201,39 +196,39 @@
       "n": 7,
       "name": "PRD changes flow downstream",
       "description": "Show what a PRD change conflicts with, and walk the documents built from a changed one again",
-      "status": "planned",
+      "status": "executed",
       "plans": [
         {
           "file": "PLAN-1.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-2.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-3.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-4.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-5.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-6.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-7.md",
-          "finished": false
+          "finished": true
         },
         {
           "file": "PLAN-8.md",
-          "finished": false
+          "finished": true
         }
       ]
     },
