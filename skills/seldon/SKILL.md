@@ -1306,12 +1306,14 @@ If it exits 1, fix each problem it names in `spine.md` with Edit, inside
 Then end the step the way "The check" says: name the file you wrote, repeat
 the check's result line word for word on a line of its own, and end your turn
 on one plain-prose question asking whether the user confirms the spine or
-wants changes. That same question names `/seldon architecture` as the way to
-ask for the full architecture document once the spine is confirmed, such as:
-do you confirm the spine, after which `/seldon architecture` can write the
-full architecture document if you want one, or do you want changes?
-Its question mark is the last thing in your turn: never move
-`/seldon architecture` into a sentence of its own after the question.
+wants changes. Just before that question, a sentence names
+`/seldon architecture` as the way to ask for the full architecture document
+once the spine is confirmed. It goes on the question's own line or on a line
+of its own just before it, such as: `/seldon architecture` can write the full
+architecture document once you confirm. Do you confirm the spine, or do you
+want changes?
+The question mark is the last thing in your turn: nothing comes after the
+question, `/seldon architecture` included.
 
 Naming it writes nothing. Only `/seldon architecture` itself writes the
 document, as "The architecture document" says, and a `/seldon architecture`

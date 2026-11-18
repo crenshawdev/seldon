@@ -434,3 +434,32 @@ test('the equal-copy check flags a planted pair one byte apart', () => {
   assert.deepEqual(unequal([{ name: 'a', bytes: a }, { name: 'b', bytes: b }]), ['b']);
   assert.deepEqual(unequal([{ name: 'a', bytes: a }, { name: 'a2', bytes: Buffer.from(a) }]), []);
 });
+
+// D-13's spine confirm ending: stale-spine's grader, with readiness-fix's two copies held to its bytes.
+const CONFIRM = ['stale-spine', 'readiness-fix', 'readiness-fix-answer'].map((c) => `evals/${c}/graders/ends-on-confirm.md`);
+const spineEnd = (tail) => `I wrote .planning/seldon/spine.md.\n\nseldon check: spine.md conforms\n\n${tail}`;
+const QUESTION = 'Do you confirm the spine, or do you want changes?';
+const OFFER = '`/seldon architecture` can write the full architecture document once you confirm.';
+
+test('the spine confirm grader passes the command in the question, in a sentence before it, and a paragraph above it', async (t) => {
+  const forms = [
+    ['command inside the question', 'Do you confirm the spine, after which `/seldon architecture` can write the full architecture document if you want one, or do you want changes?'],
+    ['sentence and question on one line', `${OFFER} ${QUESTION}`],
+    ['sentence a paragraph above', `${OFFER}\n\n${QUESTION}\n`],
+  ];
+  for (const [name, tail] of forms) await t.test(name, () => assert.equal(passes(load(CONFIRM[0]), spineEnd(tail)), true));
+});
+
+test('the spine confirm grader fails a trailing command sentence, a command far above, and a statement ending', async (t) => {
+  const forms = [
+    ['phase 7 split', `${QUESTION}\n\nOnce you confirm, \`/seldon architecture\` can write the full architecture document.`],
+    ['command only in an earlier paragraph', `${OFFER}\n\nThe spine fixes three decisions.\n\n${QUESTION}`],
+    ['no closing question', '`/seldon architecture` can write the full architecture document once you confirm the spine.'],
+  ];
+  for (const [name, tail] of forms) await t.test(name, () => assert.equal(passes(load(CONFIRM[0]), spineEnd(tail)), false));
+});
+
+test("the spine confirm grader's copies are equal bytes", () => {
+  const copies = CONFIRM.map((file) => ({ name: file, bytes: readFileSync(join(root, file)) }));
+  assert.deepEqual(unequal(copies), [], `copies differ from ${CONFIRM[0]}`);
+});
