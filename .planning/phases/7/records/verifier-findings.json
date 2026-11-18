@@ -1,0 +1,140 @@
+{
+  "status": "gaps",
+  "score": "10/11",
+  "truths": [
+    {
+      "n": 1,
+      "truth": "/seldon prd, when a change drops a requirement a spine decision relies on, names that decision by S- ID before writing anything, ends on the fixed conflict question, and a decline writes nothing (ROADMAP criterion 1, CHECK-03, AC1)",
+      "status": "VERIFIED",
+      "uat_item": 1,
+      "evidence": "Rests on full run 2, made at 65dc09a. `git diff --stat 65dc09a..HEAD -- skills evals lib samples tests docs` is empty, so the run's tree equals HEAD for everything it exercised. full-run-2.log: prd-conflict 1.00 (ends-on-question, names-decision, no-edit 0x, no-write 0x) and prd-conflict-decline 1.00 (says-decline-line, no-edit, no-write). I replayed every grader of both cases in plain node on /tmp/cad-6Rynn3/traces/full-run-2/{prd-conflict,prd-conflict-decline}.trace.jsonl, and all pass. The prd-conflict trace runs Glob, Read prd.md, brief.md and spine.md, then Bash `--stale`, then a final text naming S-03 by the shared quote \"a reminder when something's due\" (compared by quote, not ID, per D-07) and ending on 'Do you want me to apply this change to the PRD anyway?', with 0 Write and 0 Edit. It is a named step, and it routed on no stale line, as SKILL.md:498-503 says. The decline trace's only text is the brief decline line naming /seldon brief. Skill text: SKILL.md:859-883 (the conflict check) and :186-214 (the answer route). The live naming in a replayed conversation is also shown by prd-change-conflict (truth 2). Known and ruled to phase 9: the re-ask route when the brief changed (SKILL.md:177-186 in the SUMMARY's numbering, now :188-197) has no case. Not an AC: the 'Anything else' re-ask (SKILL.md:213-214) has no case either."
+    },
+    {
+      "n": 2,
+      "truth": "A go-ahead applies exactly the reported change (LOAN-03 on Retired:, stamp holds the seeded brief's hash, check line repeated, ends on PRD confirm), and a change named at the PRD confirm question gets the same report, whose decline ends on the nothing-changed line without /seldon brief (AC2)",
+      "status": "VERIFIED",
+      "uat_item": 2,
+      "evidence": "Same full run 2 at 65dc09a, with no later change to skills or evals. Log: prd-conflict-apply 1.00 (7 graders), prd-change-conflict 1.00 (4 graders) and prd-change-decline 1.00 (4 graders). I replayed every grader on the kept traces in plain node, and all pass. For the file graders, I rebuilt .planning/seldon from seed.sh plus the trace's own four Edit inputs. The rebuilt prd.md has 'Built from: brief.md sha256:38cbca64db3f39c8' on line 2 (= `node lib/check.mjs --stale` hash of samples/prd-rerun/brief.md), 'Retired: LOAN-03' on line 5, no LOAN-03 bullet, and LOAN-03 out of MVP scope. `--prd` on it prints 'seldon check: prd.md conforms', and it is byte-identical (cmp) to samples/spine-rerun/prd.md. The final message repeats the check line and ends 'Do you confirm the PRD, or do you want changes, such as removing the reminder from the user journey?'. The prd-change-conflict final message names S-03 and ends on the conflict question, with Write and Edit at 0. The prd-change-decline final message ends \"I've changed nothing, so the PRD stays as it was.\" and holds no '/seldon brief'. Known item (c), lib/check.mjs --prd accepting an ID on both Retired: and a live bullet, doesn't touch this run, because the rebuilt PRD has no LOAN-03 bullet."
+    },
+    {
+      "n": 3,
+      "truth": "node lib/check.mjs --stale names each stale link, exits 0 on samples and on unstamped documents, marks a child stale on one changed parent byte, per-file modes reject a malformed stamp, and a unit test fails on a wrong sample stamp (AC3)",
+      "status": "VERIFIED",
+      "uat_item": 3,
+      "evidence": "Spot checks from /code/seldon. `--stale samples` prints 'seldon check: no stale link' and exits 0. On folders seeded from evals/{prd-rerun,spine-rerun,epics-rerun}/seed.sh it prints exactly one stale line each ('stale: prd.md was built from an earlier brief.md', 'stale: spine.md ... prd.md', 'stale: epics.md ... spine.md') and exits 1. One flipped byte in brief.md makes prd.md stale. One changed digit in prd.md's own stamp makes spine.md stale too. Stamps stripped plus a changed brief exits 0. A missing dir, a file or no argument exits 2. `--prd`, `--spine` and `--epics` each exit 1 naming the problem on a bad hash, a 17-digit hash and a doubled stamp line, and so does the full check. lib/check.mjs:59-91 and :297-318 implement it. docs/FORMAT.md:255-273 and :453-473 document the stamp, the hash, the stale rule, skipping the stamp line and the brief and architecture.md carrying none. All 12 sample prd, spine and epics files carry one stamp on line 2. In a scratch copy with samples/spine-rerun/prd.md's stamp altered, tests/samples.test.mjs fails \"every sample PRD, spine and epics is stamped with its parent's current hash\", naming the file. Unit suite: 111/111, including the named --stale and stamp tests. Coverage command from test.yml (lcov written to scratch): exit 0, lib/check.mjs at 99.41% lines and 97.90% branches, both lcov guards hold (LF:340, no LH:0). These are the local equivalents. The CI node-test and coverage results on the pushed commit were not observed."
+    },
+    {
+      "n": 4,
+      "truth": "After an applied PRD change, the next bare /seldon resumes at the spine (spine stale line, S-03 retired, PRD hash stamped, check line, spine confirm question, epics.md untouched), and after the /clear words the next bare /seldon walks the epics (epics stale line, spine hash stamped, check line, no Read outside .planning/seldon/) (ROADMAP criterion 2, CHECK-04, AC4)",
+      "status": "VERIFIED",
+      "uat_item": 4,
+      "evidence": "Same full run 2 at 65dc09a, with no later change to skills or evals. Log: stale-spine 1.00 (7 graders) and stale-epics 1.00 (4 graders). I replayed every grader on the kept traces, and all pass. Rebuilt from seed plus trace Edits, spine.md holds 'Built from: prd.md sha256:afdfac3901d93404' (= hash of samples/spine-rerun/prd.md) and 'Retired: S-03'. It is byte-identical to samples/epics-rerun/spine.md, and 0 Write or Edit touched epics.md. The rebuilt epics.md holds 'Built from: spine.md sha256:b34a24394e5d8dcd' and 'Retired: E-03', and `--stale` then reads no stale link. The stale-epics trace has 0 Reads outside .planning/seldon/, and its seed equals evals/epics-rerun/seed.sh line for line. Mutation check: both says-stale-line graders stop matching when the fixed line is removed or when an Edit of the target is moved ahead of it. Known item (a), ruled to phase 9, which criterion 2 is counted against: evals/stale-spine/history.jsonl:2 is a /seldon prd reply that retires LOAN-03 and goes straight to the PRD confirm question, a path the skill at HEAD no longer takes because the conflict question comes first. The graded turn is the bare /seldon on the seeded files. Known item (d): in both traces a narration sentence (\"I'll check which designs and documents are in `.planning/seldon/`.\") precedes the stale line, though SKILL.md:368-370 says 'as the first text of your reply', and no grader holds that."
+    },
+    {
+      "n": 5,
+      "truth": "A bare /seldon over a stale PRD with no epics says the PRD stale line, not the epics resume line, and ends on the conflict question naming S-03 with nothing written (AC5)",
+      "status": "VERIFIED",
+      "uat_item": 5,
+      "evidence": "Same full run 2 at 65dc09a, with no later change to skills or evals. Log: stale-prd 1.00 (says-stale-line, no-epics-line, names-decision, ends-on-question, no-edit, no-write). I replayed all six on /tmp/cad-6Rynn3/traces/full-run-2/stale-prd.trace.jsonl, and all pass. Trace order: Glob, Glob, Bash `--stale` (result 'stale: prd.md was built from an earlier brief.md'), the PRD stale line, then Read prd.md, brief.md and spine.md, then a final text naming S-03 and ending on the conflict question, with 0 Write and 0 Edit. Mutation check: says-stale-line stops matching when the line is removed or when the Read of prd.md is moved ahead of it. Routes: SKILL.md:344-353 (earliest stale link wins, even over a missing later document). Known item (d): the narration \"I'll check which designs already exist under `.planning/seldon/`.\" precedes the stale line."
+    },
+    {
+      "n": 6,
+      "truth": "A kept eval session transcript shows the loaded skill byte for byte equal to SKILL.md as the phase leaves it, with nothing cut (AC6)",
+      "status": "VERIFIED",
+      "uat_item": 6,
+      "evidence": "For /tmp/cad-6Rynn3/traces/full-run-2/{fast-path,stale-prd}.session-transcript.jsonl, I took each isMeta user message's text, removed the 'Base directory for this skill: /code/seldon/skills/seldon' prefix, and compared it with skills/seldon/SKILL.md at HEAD. The comparison drops the frontmatter and leading blank line and substitutes only ${CLAUDE_PLUGIN_ROOT} -> /code/seldon and $ARGUMENTS -> the run's <command-args>. Result: strict string equality for both (74,820 and 73,400 chars), each ending '</process>\\n', with no leftover token. SKILL.md has not changed since 65dc09a, the run's tree. SKILL.md is 74,471 bytes, inside Plan 1's 90,000-byte budget."
+    },
+    {
+      "n": 7,
+      "truth": "The full eval suite passes at 1.00 with the README's command (48 cases, widened full-walk and spine-from-prd, rerun cases on stamped fixtures); each check mode passes samples/; allowed-tools is the pinned five; the unit suite passes under the coverage gate (AC7)",
+      "status": "VERIFIED",
+      "uat_item": 7,
+      "evidence": "full-run-2.log has 48 '^✓ <case>  score 1.00' lines, 0 '✗' case lines, '48 case(s) · 718s · $18.66' and 'EXIT 0'. Its case names equal the 48 folders under evals/ (results/ excluded). The run was at 65dc09a, and nothing under skills, evals, lib, samples, tests or docs has changed since. The log doesn't print its command line. plan-8.md:233 records it as README.md:70's command with --keep-temp added, and the log's markers fit that: the --scaffold note, a kept temp per case, plugin at /code/seldon, and no permission denial in any of the 48 traces. Widened graders: I replayed full-walk names-spine-first and spine-from-prd names-prd-first on their traces, and both match. Each stops matching when the resume line is removed, when a document Read is moved ahead of it or when another Bash call is moved ahead of it. Every Bash call in the phase 7 cases' traces is a lib/check.mjs command. The one non-check call in all 48 (`git ls-files ...`) is in spine-who-relies, a phase 6 case untouched by this phase, and README.md:73 states that read-only listings can get through. Locally: the full check, --brief, --prd, --spine, --epics and --stale each exit 0 on samples/. allowed-tools at SKILL.md:5-10 is the five entries, unchanged over 77e8e63..HEAD. The unit suite gives 111 pass and 0 fail (node v26.13.1), and the coverage command exits 0 with both guards. The CI node-test and coverage jobs on the pushed commit were not observed. A side note on the SUMMARY: it names one gitignored runner file, in prd-conflict-apply, but `git status --ignored` shows 24 such uuid .jsonl files across case folders. All are ignored and none is on the goal path."
+    },
+    {
+      "n": 8,
+      "truth": "SKILL.md holds $ARGUMENTS exactly once, on its own line inside <seldon-arguments> in section 1, tests/skill.test.mjs fails if it moves or reappears in prose, and the kept transcripts show an empty block on a bare run and the dump once on a dump run",
+      "status": "VERIFIED",
+      "uat_item": 8,
+      "evidence": "SKILL.md:56-58 is the block, inside '## 1. Where the conversation stands' (line 51) and before 'Before anything else, look at this run's arguments' (line 63). The named test '$ARGUMENTS appears once, on its own line inside the seldon-arguments markers' passes in the suite. I ran two mutations in a scratch copy, appending ' ($ARGUMENTS)' to line 63 and moving the block under section 2, and the test fails on each. Transcripts: in stale-prd's loaded skill the block holds a single empty line. In fast-path's, the 1,420-byte dump appears exactly once, and no $ARGUMENTS token is left."
+    },
+    {
+      "n": 9,
+      "truth": "README.md's case list names each of the 48 eval case folders exactly once, and its eval command and --allow-tools rules are unchanged by this phase",
+      "status": "VERIFIED",
+      "uat_item": 9,
+      "evidence": "Taking the '- `<case>` ' bullets in README.md's Evals section, sorted, and diffing them against `ls -d evals/*/` minus results/ shows no difference: 48 bullets and no duplicates. `git diff 77e8e63..HEAD -- README.md` has no added or removed line containing 'claude plugin eval' or 'allow-tools'. README.md:70 and :73 are the command and the grant text."
+    },
+    {
+      "n": 10,
+      "truth": "Every upstream rerun marks the documents built from it stale, so a changed PRD flows down the chain (goal, first half and the mechanism under CHECK-04)",
+      "status": "VERIFIED",
+      "uat_item": null,
+      "evidence": "Traced end to end from kept full-run-2 traces, rebuilding .planning/seldon from each case's seed plus the trace's own Write and Edit inputs, then running `node lib/check.mjs --stale` on the result. brief-rerun's edited brief leaves prd.md (untouched) reading 'stale: prd.md was built from an earlier brief.md'. prd-conflict-apply's PRD reads 'stale: spine.md was built from an earlier prd.md' and is byte-identical to samples/spine-rerun/prd.md, the PRD stale-spine seeds. stale-spine's spine reads 'stale: epics.md was built from an earlier spine.md' and is byte-identical to samples/epics-rerun/spine.md, the spine stale-epics seeds. stale-epics leaves 'seldon check: no stale link' with all four documents conforming. The named reruns prd-rerun, spine-rerun and epics-rerun each record the current parent stamp (line 2 equals the printed 'stamp for' value), though no grader of those cases checks it. Creates stamp too: resume, spine-answers and epics-from-spine pass their stamps-*-hash graders on the rebuilt files. Mechanism: lib/check.mjs:66-67 hashes raw bytes including the stamp line. Unit test '--stale reads a spine stale once the PRD it was built from takes a new stamp' passes."
+    },
+    {
+      "n": 11,
+      "truth": "A rerun over a stale link whose parent change touches nothing else in the document still records the new stamp, so the link reads fresh again and the change carries on down the chain (CONTEXT D-02; PLAN-4 must-be-true)",
+      "status": "FAILED",
+      "uat_item": null,
+      "evidence": "The text is there: SKILL.md:497 ('A rerun records the current stamp even when nothing else in the file changes'), :855, :1173 and :1378, and docs/FORMAT.md:267. CONTEXT.md:16 makes it durable decision D-02, and CONTEXT.md:52 predicts the whitespace-edit rerun that changes only the stamp. No automated check exercises this path. Every kept rerun trace (prd-conflict-apply, stale-spine, stale-epics, prd-rerun, spine-rerun, epics-rerun) changes content as well as the stamp, and no case seeds a stale link whose parent change leaves the child's content alone. No grader or unit test can tell whether the model makes the stamp-only Edit or reports nothing to change and leaves the link stale, which would send every later bare /seldon back into the same rerun and never mark the next document stale."
+    }
+  ],
+  "passes": [
+    {
+      "k": 1,
+      "name": "/seldon prd names the spine decision before writing, and a decline writes nothing",
+      "evidence": "full-run-2.log: prd-conflict 1.00 and prd-conflict-decline 1.00, both at 65dc09a with skills and evals unchanged since. Graders replayed on the kept traces all pass. The trace names S-03 by its shared quote and ends on the conflict question with 0 Write and 0 Edit, and the decline ends on the brief decline line naming /seldon brief. Skill text at SKILL.md:859-883 and :186-214."
+    },
+    {
+      "k": 2,
+      "name": "A go-ahead applies the change, and a change named in conversation gets the same conflict report",
+      "evidence": "full-run-2.log: prd-conflict-apply, prd-change-conflict and prd-change-decline each 1.00, and the replayed graders all pass. prd.md rebuilt from the trace's Edits has 'Retired: LOAN-03', stamp sha256:38cbca64db3f39c8 (= samples/prd-rerun/brief.md hash), passes --prd, and is byte-identical to samples/spine-rerun/prd.md. The prd-change-decline final message ends on the nothing-changed line with no /seldon brief."
+    },
+    {
+      "k": 3,
+      "name": "The --stale check names each stale link",
+      "evidence": "Local spot checks: --stale exits 0 on samples, exits 1 naming the one right link on each rerun seed, flags a one-byte parent change (including a change to the parent's own stamp line), exits 0 on unstamped docs, and exits 2 on a bad argument. The per-file modes exit 1 naming each malformed stamp. A mutated sample stamp makes tests/samples.test.mjs fail. Unit suite 111/111 and the coverage command with both guards pass locally. CI results were not observed."
+    },
+    {
+      "k": 4,
+      "name": "A bare /seldon reruns a stale spine, then stale epics",
+      "evidence": "full-run-2.log: stale-spine 1.00 and stale-epics 1.00, with graders replayed and passing. The rebuilt spine retires S-03, holds the PRD hash, matches samples/epics-rerun/spine.md byte for byte, and leaves epics.md untouched. The rebuilt epics hold the spine hash and leave no stale link, with 0 Reads outside .planning/seldon/. Named beside it: known item (a), the stale-spine history.jsonl:2 back-story, ruled to phase 9, and known item (d), narration before the stale line."
+    },
+    {
+      "k": 5,
+      "name": "A stale PRD is taken before missing epics",
+      "evidence": "full-run-2.log: stale-prd 1.00, with all six graders replayed and passing. The trace runs Glob, Glob, --stale, the PRD stale line, then the Reads, and ends on the conflict question naming S-03 with 0 Write and 0 Edit and no epics resume line. Mutations of says-stale-line fail as intended."
+    },
+    {
+      "k": 6,
+      "name": "The loaded skill equals SKILL.md byte for byte",
+      "evidence": "In the fast-path and stale-prd session transcripts, the isMeta text equals SKILL.md's body at HEAD exactly after the base-directory prefix and the plugin-root and argument substitutions. Both end on </process>, so nothing is cut. SKILL.md is 74,471 bytes, under the 90,000-byte budget."
+    },
+    {
+      "k": 7,
+      "name": "The full eval suite and the unit suite pass",
+      "evidence": "full-run-2.log: 48 case pass lines and 0 fail lines, '48 case(s) · 718s · $18.66', EXIT 0. The case names equal the 48 eval folders, and the run was at 65dc09a with nothing exercised changed since. Every check mode passes samples/, allowed-tools is the five, the unit suite is 111/111, and coverage is 99.41/97.90 with both guards. CI jobs were not observed."
+    },
+    {
+      "k": 8,
+      "name": "This run's arguments are stated once in the skill",
+      "evidence": "SKILL.md:56-58 holds the one $ARGUMENTS inside section 1. The named skill test passes and fails on both a prose and a moved-block mutation. The stale-prd transcript's block is empty, and fast-path's dump appears once."
+    },
+    {
+      "k": 9,
+      "name": "The README lists every eval case",
+      "evidence": "The README Evals bullets, sorted, equal the 48 evals/ folders with no duplicates, and git diff 77e8e63..HEAD changes neither the eval command (README.md:70) nor the --allow-tools text."
+    }
+  ],
+  "gaps": [
+    {
+      "name": "A rerun over a stale link that changes nothing else still records the new stamp (D-02)",
+      "reason": "behavior wrong: unproven. No automated check exercises it. The skill text says it, but no eval case seeds a stale link whose parent change leaves the child's content alone, so nothing shows whether the model makes the stamp-only Edit or leaves the link stale.",
+      "evidence": "skills/seldon/SKILL.md:497, :855, :1173 and :1378 and docs/FORMAT.md:267 state the rule. .planning/phases/7/CONTEXT.md:16 (D-02) and :52 make it a decision and predict the path. All six kept rerun traces in /tmp/cad-6Rynn3/traces/full-run-2/ change content as well as the stamp. No grader in evals/ and no test in tests/ covers a stamp-only rerun.",
+      "severity": "minor",
+      "missing": "One eval case. Seed a sample brief that differs from samples/brief.md only in a line no PRD requirement, quote or non-goal draws on, next to samples/prd.md and samples/spine.md, and run a bare /seldon. Graders: the PRD stale line (stale-prd's says-stale-line form), at least one Edit of prd.md, prd.md's stamp holding the new brief's hash, every requirement line byte-identical (prd-conflict-apply's keeps-unchanged-lines form) and no conflict question. Running it needs the coordinator's ruling on the spent eval budget."
+    }
+  ],
+  "human_checks": []
+}

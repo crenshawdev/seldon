@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 7,
-    "status": "executed",
-    "next": "/cad-verify 7",
+    "status": "phase complete",
+    "next": "/cad-context 8",
     "updated": "2026-11-18"
   },
   "phases": [
@@ -196,7 +196,7 @@
       "n": 7,
       "name": "PRD changes flow downstream",
       "description": "Show what a PRD change conflicts with, and walk the documents built from a changed one again",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -351,12 +351,12 @@
     {
       "id": "CHECK-03",
       "phase": 7,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "CHECK-04",
       "phase": 7,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }
