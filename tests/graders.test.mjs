@@ -11,6 +11,7 @@ const FULL = [
   { kind: 'size', case: 'epics-split', file: 'evals/epics-split/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'full-walk', file: 'evals/full-walk/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
+  { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md' },
 ];
 
 // The kinds D-01 holds to byte copies.
@@ -50,6 +51,96 @@ const load = (file) => readGrader(readFileSync(join(root, file), 'utf8'), file);
 function passes(grader, text) {
   const hit = new RegExp(grader.pattern, grader.flags).test(text);
   return grader.match === 'not_contains' ? !hit : hit;
+}
+
+// D-09: forms the runner's engine and Node read alike. \b is in on Daneel's ruling, ASCII IDs and no u flag.
+const ESCAPES = 'nrtsSwWdDb';
+const CLASS_ESCAPES = 'nrtsSwWdD';
+const META = '^$\\.*+?()[]{}|/-';
+const LOOKBEHIND = '^(?<![\\s\\S])';
+
+// Walks one class from just past its [ and returns the index past its ].
+function walkClass(pattern, i, bad) {
+  if (pattern[i] === '^') i += 1;
+  // [] and [^] are where engines part ways on what a leading ] means.
+  if (pattern[i] === ']') {
+    bad.push('empty class');
+    return i + 1;
+  }
+  while (i < pattern.length && pattern[i] !== ']') {
+    if (pattern[i] === '\\') {
+      const e = pattern[i + 1];
+      if (!CLASS_ESCAPES.includes(e) && !META.includes(e)) bad.push(`escape \\${e} in a class`);
+      i += 2;
+    } else {
+      if (pattern[i] === '[') bad.push('unescaped [ in a class');
+      i += 1;
+    }
+  }
+  return i + 1;
+}
+
+// Every form outside D-09, by name; an empty list means the pattern is in.
+function formProblems(pattern, flags) {
+  const bad = [];
+  for (const f of flags) if (f !== 'i' && f !== 'm') bad.push(`flag ${f}`);
+  try {
+    new RegExp(pattern, flags);
+  } catch {
+    bad.push("doesn't compile");
+  }
+  const multiline = flags.includes('m');
+  let i = 0;
+  while (i < pattern.length) {
+    const c = pattern[i];
+    if (c === '\\') {
+      const e = pattern[i + 1];
+      const property = pattern.slice(i).match(/^\\[pP]\{[^}]*\}/);
+      if (property) {
+        bad.push(`\\${e}{...}`);
+        i += property[0].length;
+        continue;
+      }
+      if (/^[1-9]$/.test(e)) bad.push(`backreference \\${e}`);
+      else if (e === 'k') bad.push('backreference \\k<name>');
+      else if (!ESCAPES.includes(e) && !META.includes(e)) bad.push(`escape \\${e}`);
+      i += 2;
+    } else if (c === '[') {
+      i = walkClass(pattern, i + 1, bad);
+    } else if (c === '(') {
+      if (/^\(\?[:=!]/.test(pattern.slice(i))) i += 3;
+      else if (/^\(\?<[=!]/.test(pattern.slice(i))) {
+        bad.push('lookbehind');
+        i += 4;
+      } else if (pattern.startsWith('(?<', i)) {
+        bad.push('named group');
+        i += 3;
+      } else if (pattern.startsWith('(?', i)) {
+        bad.push(`group (?${pattern[i + 2]}`);
+        i += 2;
+      } else {
+        bad.push('capturing group');
+        i += 1;
+      }
+    } else if (c === '^' || c === '$') {
+      if (!multiline) bad.push(`${c} without the m flag`);
+      i += c === '^' && pattern.startsWith(LOOKBEHIND, i) ? LOOKBEHIND.length : 1;
+    } else if (c === '.') {
+      bad.push('.');
+      i += 1;
+    } else if (c === '*' || c === '+' || c === '?' || c === '{') {
+      const quantifier = pattern.slice(i).match(/^(?:[*+?]|\{\d+(?:,\d*)?\})\??/);
+      if (quantifier) i += quantifier[0].length;
+      else {
+        bad.push('unescaped {');
+        i += 1;
+      }
+    } else {
+      if (c === '}' || c === ']') bad.push(`unescaped ${c}`);
+      i += 1;
+    }
+  }
+  return bad;
 }
 
 // Names every copy whose bytes differ from the first one's.
@@ -106,6 +197,42 @@ test('each size-grader copy fails an epic whose Requirements line holds 6 IDs', 
 test('each size-grader copy passes the same epics with 5 IDs on that line', () => {
   const five = epics(['CAT-01', 'CAT-02', 'LOAN-01', 'LOAN-02', 'LOAN-03'], ['NFR-01', 'NFR-02']);
   for (const { file } of of('size')) assert.equal(passes(load(file), five), true, file);
+});
+
+test("every full grader's pattern uses only D-09's forms", () => {
+  const problems = [];
+  for (const { file } of FULL) {
+    const { pattern, flags } = load(file);
+    for (const form of formProblems(pattern, flags)) problems.push(`${file}: D-09 form error: ${form}`);
+  }
+  assert.deepEqual(problems, [], `\n${problems.join('\n')}`);
+});
+
+test('the form check flags each refused form by name and passes one pattern holding every accepted form', () => {
+  const refused = [
+    ['a\\1', '', 'backreference \\1'],
+    ['a\\k<x>', '', 'backreference \\k<name>'],
+    ['(?<x>a)', '', 'named group'],
+    ['\\p{L}', '', '\\p{...}'],
+    ['\\P{L}', '', '\\P{...}'],
+    ['(?<=a)b', '', 'lookbehind'],
+    ['(?<!a)b', '', 'lookbehind'],
+    ['(?<![\\s\\S])a', 'm', 'lookbehind'],
+    ['(a)', '', 'capturing group'],
+    ['a.b', '', '.'],
+    ['^a', 'i', '^ without the m flag'],
+    ['a$', '', '$ without the m flag'],
+    ['^(?<![\\s\\S])a', '', '^ without the m flag'],
+    ['a[^]', 'm', 'empty class'],
+    ['a\\x41', '', 'escape \\x'],
+    ['[\\b]', '', 'escape \\b in a class'],
+    ...['s', 'u', 'g', 'y', 'd', 'v'].map((f) => ['a', `m${f}`, `flag ${f}`]),
+  ];
+  for (const [pattern, flags, form] of refused) {
+    assert.deepEqual(formProblems(pattern, flags), [form], `/${pattern}/${flags}`);
+  }
+  const every = '^(?<![\\s\\S])(?=[\\s\\S]*?\\bA\\.B\\b)(?![^\\n\\r\\t]+x)(?:a|b)*?c+?d??e{2}f{2,}?g{3,4}[a-z\\s\\S\\w\\W\\d\\D\\]\\-]\\n\\r\\t\\s\\S\\w\\W\\d\\D\\*\\(\\)\\[\\]\\{\\}\\|\\/\\$\\^\\\\\\+\\?\\.h$';
+  assert.deepEqual(formProblems(every, 'im'), []);
 });
 
 test('the copies of each held grader are equal bytes', () => {
