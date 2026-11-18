@@ -1,11 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BRIEF_OK_LINE, checkDir, EPICS_OK_LINE, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE } from '../lib/check.mjs';
+import { BRIEF_OK_LINE, checkDir, EPICS_OK_LINE, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE, STALE_OK_LINE } from '../lib/check.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const samples = join(root, 'samples');
@@ -219,7 +220,7 @@ test('a Retired line under the epics title passes the full check and --epics', (
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -383,4 +384,96 @@ test('--epics with no directory exits 2', () => {
   const r = run('--epics');
   assert.equal(r.status, 2);
   assert.match(r.stderr, /usage:/);
+});
+
+const DOCS = ['brief.md', 'prd.md', 'spine.md', 'epics.md'];
+
+// The samples with every stamp taken out, so these tests mean the same whether the samples carry stamps or not.
+function stripped(t, files = DOCS) {
+  const dir = temp(t);
+  for (const file of files) {
+    writeFileSync(join(dir, file), readFileSync(join(samples, file), 'utf8').replace(/^Built from:.*\r?\n/gm, ''));
+  }
+  return dir;
+}
+
+// Worked out here and never through the module, so a wrong hash in check.mjs can't agree with itself.
+const hash = (dir, file) => createHash('sha256').update(readFileSync(join(dir, file))).digest('hex').slice(0, 16);
+const stampLine = (parent, h) => `Built from: ${parent} sha256:${h}`;
+const underTitle = (line) => (s) => s.replace(/^# .*\n/, (title) => `${title}${line}\n`);
+const staleLines = (stdout) => stdout.split('\n').filter((l) => l.startsWith('stale: '));
+const OLD = '0'.repeat(16);
+
+test('--stale on unstamped samples exits 0 with no stale link and the stamp each step records', (t) => {
+  const dir = stripped(t);
+  const r = run('--stale', dir);
+  assert.equal(r.status, 0);
+  assert.deepEqual(r.stdout.trim().split('\n'), [
+    STALE_OK_LINE,
+    `stamp for prd.md: ${stampLine('brief.md', hash(dir, 'brief.md'))}`,
+    `stamp for spine.md: ${stampLine('prd.md', hash(dir, 'prd.md'))}`,
+    `stamp for epics.md: ${stampLine('spine.md', hash(dir, 'spine.md'))}`,
+  ]);
+});
+
+test("--stale reads a PRD stamped with the brief's hash fresh, and stale after one changed byte in the brief", (t) => {
+  const dir = stripped(t);
+  edit(dir, 'prd.md', underTitle(stampLine('brief.md', hash(dir, 'brief.md'))));
+  const fresh = run('--stale', dir);
+  assert.equal(fresh.status, 0);
+  assert.equal(fresh.stdout.split('\n')[0], STALE_OK_LINE);
+  edit(dir, 'brief.md', (s) => s.replace('drills', 'drillz'));
+  const r = run('--stale', dir);
+  assert.equal(r.status, 1);
+  assert.deepEqual(staleLines(r.stdout), ['stale: prd.md was built from an earlier brief.md']);
+});
+
+// Past its stamp the PRD never changes here, so only a hash over the stamp line carries the change down.
+test('--stale reads a spine stale once the PRD it was built from takes a new stamp', (t) => {
+  const dir = stripped(t);
+  edit(dir, 'prd.md', underTitle(stampLine('brief.md', hash(dir, 'brief.md'))));
+  edit(dir, 'spine.md', underTitle(stampLine('prd.md', hash(dir, 'prd.md'))));
+  const fresh = run('--stale', dir);
+  assert.equal(fresh.status, 0);
+  assert.deepEqual(staleLines(fresh.stdout), []);
+  edit(dir, 'brief.md', (s) => s.replace('drills', 'drillz'));
+  edit(dir, 'prd.md', (s) => s.replace(/^Built from: .*$/m, stampLine('brief.md', hash(dir, 'brief.md'))));
+  const r = run('--stale', dir);
+  assert.equal(r.status, 1);
+  assert.deepEqual(staleLines(r.stdout), ['stale: spine.md was built from an earlier prd.md']);
+});
+
+test('--stale prints two stale links in chain order', (t) => {
+  const dir = stripped(t);
+  edit(dir, 'epics.md', underTitle(stampLine('spine.md', OLD)));
+  edit(dir, 'prd.md', underTitle(stampLine('brief.md', OLD)));
+  const r = run('--stale', dir);
+  assert.equal(r.status, 1);
+  assert.deepEqual(staleLines(r.stdout), ['stale: prd.md was built from an earlier brief.md', 'stale: epics.md was built from an earlier spine.md']);
+});
+
+test('--stale on a folder holding only the brief exits 0 with only the PRD stamp', (t) => {
+  const dir = stripped(t, ['brief.md']);
+  const r = run('--stale', dir);
+  assert.equal(r.status, 0);
+  assert.deepEqual(r.stdout.trim().split('\n'), [STALE_OK_LINE, `stamp for prd.md: ${stampLine('brief.md', hash(dir, 'brief.md'))}`]);
+});
+
+test('--stale reads unstamped documents fresh after their parents change', (t) => {
+  const dir = stripped(t);
+  edit(dir, 'brief.md', (s) => s.replace('drills', 'drillz'));
+  edit(dir, 'prd.md', (s) => `${s}\n`);
+  edit(dir, 'spine.md', (s) => `${s}\n`);
+  const r = run('--stale', dir);
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.split('\n')[0], STALE_OK_LINE);
+});
+
+test('--stale with no directory or a file for one exits 2', () => {
+  const none = run('--stale');
+  assert.equal(none.status, 2);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale\] <dir>/);
+  const file = run('--stale', join(samples, 'brief.md'));
+  assert.equal(file.status, 2);
+  assert.match(file.stderr, /is not a directory/);
 });
