@@ -16,6 +16,9 @@ const FULL = [
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
   ...['resume-later', 'handoff-cadence', 'handoff-named', 'readiness-agent'].map((c) => ({ kind: 'last-message', case: c, file: `evals/${c}/graders/says-no-findings.md` })),
   ...['resume-later', 'handoff-cadence', 'handoff-named', 'readiness-agent'].map((c) => ({ kind: 'agent-result', case: c, file: `evals/${c}/graders/agent-finds-nothing.md` })),
+  { kind: 'recommend', case: 'fast-path', file: 'evals/fast-path/graders/recommends-fast-path.md' },
+  { kind: 'recommend', case: 'cadence-dump', file: 'evals/cadence-dump/graders/recommends-fast-path.md' },
+  { kind: 'recommend', case: 'asks-for-dump', file: 'evals/asks-for-dump/graders/recommends-a-path.md', coaching: true },
 ];
 
 // The kinds D-01 holds to byte copies.
@@ -296,6 +299,28 @@ test("each agent-result half passes a trace whose Agent result is the no-finding
 test('each agent-result half fails a trace whose Agent result holds a finding, though the last message says the no-findings line', () => {
   const trace = readinessTrace({ report: FINDINGS[0], summary: FINDINGS[0], last: `${NO_FINDINGS}\n\n${HANDOFF}` });
   for (const { file } of of('agent-result')) assert.equal(passes(load(file), trace), false, file);
+});
+
+// A recommendation reply in SKILL.md's shape, with the path line swapped for each form.
+const recommendation = (line) => `This is Toolshed, from your dump.\n\n${line}\n\nYou already know the catalog and the counter. Do you want the fast path, or would you rather walk through it with coaching?`;
+
+test('each recommendation grader passes the plain line on a line of its own', () => {
+  for (const { file } of of('recommend')) assert.equal(passes(load(file), recommendation('Recommended path: fast path')), true, file);
+  for (const { file } of of('recommend').filter((g) => g.coaching)) assert.equal(passes(load(file), recommendation('Recommended path: coaching')), true, file);
+});
+
+test('each recommendation grader fails a bold, a mid-sentence and a split recommendation', async (t) => {
+  const forms = [
+    ['bold line', '**Recommended path: fast path**'],
+    ['bold label', '**Recommended path:** fast path'],
+    ['mid-sentence', "I'd say the Recommended path: fast path, since you already know what you want."],
+    ['split', 'Recommended path:\nfast path'],
+  ];
+  for (const [name, line] of forms) {
+    await t.test(`fails the ${name}`, () => {
+      for (const { file } of of('recommend')) assert.equal(passes(load(file), recommendation(line)), false, file);
+    });
+  }
 });
 
 test("every full grader's pattern uses only D-09's forms", () => {

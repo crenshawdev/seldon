@@ -1,6 +1,6 @@
 ---
 type: regex
 target: last_message
-pattern: 'Recommended path:[\s*_`]*fast path'
-flags: i
+pattern: '^Recommended path: fast path[ \t]*$'
+flags: im
 ---
