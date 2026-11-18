@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: spine-who-relies
+description: A project under Cadence, with Toolshed's code at the root and the repair log's confirmed brief and PRD in .planning/seldon/, and no spine. The code settles the stack and the host, so /seldon spine has to ask only the fixed who-relies question, and write and edit nothing in that turn.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
