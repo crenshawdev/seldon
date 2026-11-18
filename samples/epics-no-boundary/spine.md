@@ -1,4 +1,5 @@
 # Plotwise - architecture spine
+Built from: prd.md sha256:303af6f1d0715c87
 
 ## S-01: One server-rendered web app
 Kind: design approach

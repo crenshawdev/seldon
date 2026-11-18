@@ -1,4 +1,5 @@
 # Toolshed - architecture spine
+Built from: prd.md sha256:afdfac3901d93404
 Retired: S-03
 
 ## S-01: Loans are an append-only event log

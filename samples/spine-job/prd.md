@@ -1,4 +1,5 @@
 # Sowlist - PRD
+Built from: brief.md sha256:9ada8259667d066a
 
 ## Requirements
 

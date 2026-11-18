@@ -1,4 +1,5 @@
 # Toolshed - epics
+Built from: spine.md sha256:fce47dade8bb786c
 
 ## E-01: Catalog
 **Outcome:** Volunteers keep a catalog of tools, and members can search it.

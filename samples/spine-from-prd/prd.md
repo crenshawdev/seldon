@@ -1,4 +1,5 @@
 # Kilnlog - PRD
+Built from: brief.md sha256:f1c381e5f9104665
 
 ## Requirements
 
