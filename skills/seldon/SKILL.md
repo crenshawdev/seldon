@@ -214,6 +214,16 @@ after the user confirms a path.
 
 ## 2. Where a run starts
 
+A project already under Cadence starts the same way. It counts as under
+Cadence when `.planning/PROJECT.md` exists, the file Cadence's
+`/cad-new-project` stops on. Whether it's there is a question for Glob, asked
+only where a step says to ask it, and never for Read: no run looks for it
+here. Files in `.planning/` outside `.planning/seldon/`, Cadence's included,
+don't change where a run starts. With no brief a run goes to "The dump", just
+as on a new project, and writes only inside `.planning/seldon/`. The brief and
+PRD steps read none of those files. The dump describes the next body of work,
+and what the project already has enters the design only at the spine step.
+
 Before you ask for or read any dump, look for `.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
 `.planning/seldon/epics.md` in the project with Read or Glob. An error or no
