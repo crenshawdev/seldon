@@ -7,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const workflows = join(root, '.github', 'workflows');
 
-// \s+ spans newlines too, so a folded >- block can't hide the command by splitting it.
-const EVAL = /\bclaude\s+plugin\s+eval\b/g;
+// Key on the subcommand: npx or a pinned package name still says "plugin eval", and \ or a folded >- can't split it.
+const EVAL = /\bplugin(?:\s|\\)+eval\b/gi;
 const MODEL_KEY = /ANTHROPIC_API_KEY/gi;
 // Every mention of secrets counts, not just secrets.X: toJSON(secrets) and secrets: inherit hand over the lot.
 const SECRETS = /\bsecrets\b/gi;
@@ -46,6 +46,8 @@ test('the eval command, a model key and any secret but GITHUB_TOKEN are each fla
   const flagged = [
     ['steps:\n  - run: claude plugin eval .\n', 2, 'runs claude plugin eval'],
     ['steps:\n  - run: >-\n      claude plugin\n      eval . --no-publish\n', 3, 'runs claude plugin eval'],
+    ['  - run: npx -y @anthropic-ai/claude-code@2.1.327 plugin eval .\n', 1, 'runs claude plugin eval'],
+    ['  - run: |\n      claude plugin \\\n        eval .\n', 2, 'runs claude plugin eval'],
     ['env:\n  ANTHROPIC_API_KEY: x\n', 2, 'names ANTHROPIC_API_KEY'],
     ['env:\n  KEY: ${{ secrets.MODEL_KEY }}\n', 2, 'reaches a secret other than GITHUB_TOKEN'],
     ["env:\n  KEY: ${{ secrets['CLAUDE_CODE_OAUTH_TOKEN'] }}\n", 2, 'reaches a secret other than GITHUB_TOKEN'],
