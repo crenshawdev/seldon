@@ -13,7 +13,7 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 - [x] **Phase 5: Epics and the full walk** - Small epics in build order, and /seldon walks all four steps end to end
 - [x] **Phase 6: Existing projects and design folders** - Design the next body of work under Cadence in its own folder, with the spine reading the existing code
 - [x] **Phase 7: PRD changes flow downstream** - Show what a PRD change conflicts with, and walk the documents built from a changed one again
-- [ ] **Phase 8: Readiness check and handoff** - An independent check before the handoff, then the exact Cadence command to run
+- [x] **Phase 8: Readiness check and handoff** - An independent check before the handoff, then the exact Cadence command to run
 - [ ] **Phase 9: The full graders** - The full graders check every run, and /cad-verify runs the whole eval suite locally
 
 ## Phase Details

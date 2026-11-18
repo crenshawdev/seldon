@@ -3,8 +3,8 @@
   "cycleOpen": true,
   "cursor": {
     "phase": 8,
-    "status": "executed",
-    "next": "/cad-verify 8",
+    "status": "phase complete",
+    "next": "/cad-context 9",
     "updated": "2026-11-18"
   },
   "phases": [
@@ -236,7 +236,7 @@
       "n": 8,
       "name": "Readiness check and handoff",
       "description": "An independent check before the handoff, then the exact Cadence command to run",
-      "status": "executed",
+      "status": "complete",
       "plans": [
         {
           "file": "PLAN-1.md",
@@ -390,17 +390,17 @@
     {
       "id": "CHECK-01",
       "phase": 8,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "CHECK-02",
       "phase": 8,
-      "status": "Pending"
+      "status": "Complete"
     },
     {
       "id": "FLOW-08",
       "phase": 8,
-      "status": "Pending"
+      "status": "Complete"
     }
   ]
 }
