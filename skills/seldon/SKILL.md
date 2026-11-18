@@ -270,8 +270,8 @@ these in order:
   - **Go on from the brief:** look for the files again, as "Where a run
     starts" says, and follow its routes for a brief with this run's arguments
     counted empty, exactly as a bare `/seldon` does: the stale check and its
-    three stale routes first, then the resume lines and the later-release
-    line. Going on runs a step over a document that's there only as the rerun
+    three stale routes first, then the resume lines and the readiness
+    check. Going on runs a step over a document that's there only as the rerun
     a stale link calls for. The text from the question's turn isn't input to
     the PRD, the spine or the epics.
 
@@ -335,8 +335,8 @@ user just chose a design at it for this run: then "Design chosen" has already
 settled the working folder, so use that folder and don't ask again. Then look
 for `.planning/seldon/brief.md`,
 `.planning/seldon/prd.md`, `.planning/seldon/spine.md` and
-`.planning/seldon/epics.md` in the project with Read or Glob. An error or no
-match means that file isn't there. A brief on disk counts as confirmed, so
+`.planning/seldon/epics.md` in the project with Glob, never Read. No match
+means that file isn't there. A brief on disk counts as confirmed, so
 there's no record of a confirmation to look for. This run's arguments count as
 empty when they hold nothing but blanks. Then:
 
@@ -404,13 +404,7 @@ empty when they hold nothing but blanks. Then:
   Never Write `epics.md` on a resume until that line is in your reply. Then go
   to "The epics step".
 - **All four documents, nothing stale, and empty arguments:** write
-  nothing. End your
-  message with exactly these words, on a line of their own, with nothing after
-  them. This is the later-release line:
-
-  ```
-  All four documents are there. The readiness check and the handoff to Cadence come in a later release, so I've written nothing this time.
-  ```
+  nothing, and go to "The readiness check".
 
 - **A brief, and this run's arguments aren't empty:** write nothing, run no
   stale check, and go to "A dump when documents are there".
@@ -1522,5 +1516,70 @@ stand now. It holds nothing of its own to keep.
 **The ending.** Name the file you wrote, and say that every decision in it is
 the spine's and that a change to one goes in the spine. End there, without a
 question: this route never ends a turn on one.
+
+## 22. The readiness check
+
+A bare `/seldon` with all four documents there and nothing stale comes here.
+An independent check reads the finished design, and you repeat what it
+reports. Write and edit nothing, and never Read `prd.md`, `spine.md` or
+`epics.md` yourself, before the check or after it.
+
+**The start.** Start exactly one agent, `seldon:readiness`, with the Agent
+tool, and start no other agent. Its prompt is the paths of the working
+folder's `prd.md`, `spine.md` and `epics.md`, one per line, and nothing else:
+
+```
+.planning/seldon/prd.md
+.planning/seldon/spine.md
+.planning/seldon/epics.md
+```
+
+**One message.** Every tool call this route makes comes before the first line
+of its report: the stale check, the agent start and, when the handoff follows,
+the handoff's Glob for `.planning/PROJECT.md`. Once the agent's reply is in
+hand, do that Glob before you write any line of the report. Then the report,
+the handoff's lead-in and the command are one final message, with no tool call
+after its first line. Text written before a tool call isn't in the message the
+user sees last.
+
+**The reply.** It's either the no-findings line alone:
+
+```
+The readiness check found nothing to fix.
+```
+
+or one or more finding lines, each starting with one of three kind labels and
+ending with the step that fixes it, in these forms:
+
+```
+Requirement no epic names: <requirement ID>. Fixed by rerunning /seldon epics.
+Epic crossing a boundary the spine didn't fix: <epic ID> (<categories>). Fixed by rerunning /seldon spine.
+Decision left open: <epic IDs, comma-separated> (<the choice, in a few words>). Fixed by rerunning /seldon spine.
+```
+
+- **No findings:** say the no-findings line on a line of its own, ask nothing,
+  and give the handoff as "The handoff" says.
+- **Findings:** repeat each finding line word for word, each on a line of its
+  own, adding none and dropping none. Then end on the readiness question, in
+  exactly these words, on a line of their own. Its question mark is the last
+  thing in the turn, and nothing follows it:
+
+  ```
+  Do you want to fix these, or hand off the design as it is?
+  ```
+
+- **Did not run:** the start is denied or refused, the Agent tool isn't there,
+  or the reply isn't in those forms. Never say the no-findings line, and ask
+  nothing. Say the did-not-run line with the reason in a few words, then the
+  not-checked line, each on a line of its own, then give the handoff. A later
+  bare `/seldon` tries the check again.
+
+  ```
+  The readiness check did not run: <the reason, in a few words>.
+  ```
+
+  ```
+  The design was not checked before this handoff.
+  ```
 
 </process>
