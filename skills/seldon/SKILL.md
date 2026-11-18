@@ -177,9 +177,13 @@ these in order:
   - **A go-ahead:** apply exactly the change your report described, with
     Edit, never a fresh Write. A change named at the PRD's confirm question
     comes from the conversation. A rerun's change is worked out again from
-    the files, as "The PRD rerun" says. Then record the stamp as "Stamps and
-    stale links" says, run "The PRD check", and end the step the way it says,
-    on the PRD's confirm question. A go-ahead runs no second conflict check.
+    the files, as "The PRD rerun" says. When that differs from the change your
+    report described, the brief changed since: write and edit nothing, record
+    no stamp, report the new change as "A conflict" in "The conflict check"
+    says, and end on the conflict question again. Otherwise record the stamp
+    as "Stamps and stale links" says, run "The PRD check", and end the step
+    the way it says, on the PRD's confirm question. A go-ahead on the change
+    your report described runs no second conflict check.
   - **A decline:** write and edit nothing. When the change came from the
     brief, through the PRD rerun however it's reached or "PRD questions
     answered" carrying one on, end your message with the brief decline line.
