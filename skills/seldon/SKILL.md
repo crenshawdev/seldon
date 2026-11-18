@@ -210,7 +210,7 @@ these in order:
 - **Documents question answered:** your last turn ended on the documents
   question in "A dump when documents are there", and the user answered it.
   - **Rerun the brief:** the user chose the rerun in their own words. The text
-    from the question's turn is the rerun's change, just as it is for a
+    from the dump turn is the rerun's change, just as it is for a
     `/seldon brief` typed as the reply, which the step-name test above has
     already taken to the brief rerun. Update the brief with it in this same
     turn, as "The brief rerun" in "The draft" says, without asking what should
