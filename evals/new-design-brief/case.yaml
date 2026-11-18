@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: new-design-brief
+description: Resumes a /seldon session on a project already under Cadence whose finished design, Toolshed's brief, PRD, spine and epics, sits at the top of .planning/seldon/ beside Cadence's PROJECT.md, ROADMAP.md and STATE.md. The repair-log dump was answered with the folder name repair-log and got the fast-path recommendation, so the confirmation has to write a passing brief in .planning/seldon/repair-log/ with no Write or Edit anywhere else.
+runs: 1
+context:
+  history_file: history.jsonl
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
