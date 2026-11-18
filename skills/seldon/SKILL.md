@@ -39,9 +39,10 @@ epics in build order, from the PRD and the spine alone, at
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
-- The only commands you run are the four checks, the brief's in "The
+- The only commands you run are five: the four checks, the brief's in "The
   check", the PRD's in "The PRD check", the spine's in "The spine check" and
-  the epics' in "The epics check", each exactly as written there.
+  the epics' in "The epics check", and the stale check in "Stamps and stale
+  links", each exactly as written there.
 - No persona and no role-play. Speak as Seldon, plainly.
 </rules>
 
@@ -398,6 +399,42 @@ Which design do you want to work on?
 The question needs only the Glob that found the designs, so read nothing else
 for it.
 
+### Stamps and stale links
+
+`prd.md`, `spine.md` and `epics.md` each record the file they were built from
+on one stamp line, the line right after the `# ` title, above a `Retired:`
+line under the title when there is one. `prd.md` is built from `brief.md`,
+`spine.md` from `prd.md` and `epics.md` from `spine.md`. A link is stale when
+its parent has changed since the stamp was written, a hand edit included.
+
+The stale check names the stale links and gives each stamp. Run exactly this
+from the project root, with the path unquoted:
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --stale .planning/seldon
+```
+
+It prints one line per stale link, in chain order, such as
+`stale: spine.md was built from an earlier prd.md`, and exits 1, or
+`seldon check: no stale link` and exits 0. A stale link isn't a problem to fix
+in the file. Then it prints, for each of the three whose parent is there,
+the stamp it records if written now, such as
+`stamp for prd.md: Built from: brief.md sha256:c5fe3e61100c2e40`.
+
+- **What it holds:** the text after `stamp for <file>: ` in that output,
+  copied exactly. Never work out, shorten or retype a hash.
+- **Writes:** every Write of one of these files puts the stamp line in. Every
+  Edit route that changes one makes its stamp line hold the current stamp,
+  adding the line when the file has none and replacing it when it differs. A
+  rerun records the current stamp even when nothing else in the file changes.
+- **Which output:** the stamp comes from this turn's output of the stale
+  check. A route that writes one of these files and hasn't run it in this turn
+  runs it right before its first Write or Edit. There it uses the output only
+  for its stamp line and says nothing about any `stale:` line.
+- **Whose stamp:** a step records only its own file's stamp. The brief and
+  `architecture.md` carry none, and a brief rerun still never writes or edits
+  `prd.md`.
+
 ## 3. The dump
 
 On a new run the text in `$ARGUMENTS` is the user's dump. If it is empty, ask
@@ -702,9 +739,10 @@ that's there, and all three do it with Edit, never a fresh Write:
   quote the user's new words as "The user's own words" below says, then run
   "The PRD check" again.
 
-Every other route that reaches this step and finds `prd.md` writes nothing and
-ends on the PRD's create guard line, on a line of its own, with nothing after
-it.
+Each of the three keeps the stamp line current, as "Stamps and stale links"
+says. Every other route that reaches this step and finds `prd.md` writes
+nothing and ends on the PRD's create guard line, on a line of its own, with
+nothing after it.
 
 **The PRD rerun.** A `/seldon prd` that finds `prd.md` there brings it in line
 with the brief as it stands now. Read `prd.md` first, the previous version of
@@ -735,6 +773,7 @@ it, so a line the change doesn't touch is never typed again:
 - Non-goals and MVP scope follow the brief too. A refusal the brief gained
   becomes a non-goal bullet with its quote, as "Non-goals" below says, and MVP
   scope stops naming a retired ID.
+- The stamp line takes the current stamp, even when nothing else changes.
 
 Then run "The PRD check" and end the step the way it says.
 
@@ -742,6 +781,7 @@ The PRD has this shape, and the check holds it to it:
 
 - It opens with a `# ` title naming the project, in the form
   `# <Project> - PRD`.
+- The stamp line follows the title, as "Stamps and stale links" says.
 - Then come exactly five `## ` sections, in this order and this spelling:
 
   ```
@@ -990,6 +1030,8 @@ these routes:
   `spine.md` with Edit, quote the user's new words as "The user's own words"
   below says, then run "The spine check" again.
 
+Each of these keeps the stamp line current, as "Stamps and stale links" says.
+
 **The spine rerun.** A `/seldon spine` that finds `spine.md` there brings it
 in line with the brief and the PRD as they stand now. Read `spine.md` first,
 the previous version of this document, then `brief.md` and `prd.md`, plus the
@@ -1011,7 +1053,7 @@ touch is never typed again:
   new quote or tag.
 - A decision that no longer applies is removed, its heading and its whole
   body. Its ID goes on the `Retired:` line, one prose line directly under the
-  `# ` title, before the first decision:
+  stamp line, before the first decision:
 
   ```
   Retired: S-03
@@ -1022,6 +1064,7 @@ touch is never typed again:
 - A new decision takes the next unused number. Never give it an ID that's in
   use or on the `Retired:` line: the epics and the phases built from them cite
   decisions by ID, so a retired ID stays retired.
+- The stamp line takes the current stamp, even when nothing else changes.
 
 Then run "The spine check" and end the step the way it says.
 
@@ -1029,6 +1072,7 @@ The spine has this shape, as `docs/FORMAT.md` fixes it, and the check holds it
 to it:
 
 - It opens with a `# ` title in the form `# <Project> - architecture spine`.
+- The stamp line follows the title, as "Stamps and stale links" says.
 - Then comes one `## ` section per decision, in exactly this form, numbered
   from `S-01` with two or more digits:
 
@@ -1194,6 +1238,8 @@ through these routes:
   the epics confirm question with changes. Make those changes in `epics.md`
   with Edit, with no quote, then run "The epics check" again.
 
+Each of these keeps the stamp line current, as "Stamps and stale links" says.
+
 **The epics rerun.** A `/seldon epics` that finds `epics.md` there brings it
 in line with the PRD and the spine as they stand now. Read `epics.md` first,
 the previous version of this document, then `prd.md` and `spine.md`, and
@@ -1207,7 +1253,7 @@ again:
   ID leaving its `**Spine decisions:**` is one such change.
 - An epic with nothing left to build is removed, its heading and its whole
   body. Its ID goes on the `Retired:` line, one prose line directly under the
-  `# ` title, before the first epic:
+  stamp line, before the first epic:
 
   ```
   Retired: E-03
@@ -1219,6 +1265,7 @@ again:
   it sits in build order, so E- numbers need not ascend through the file.
   Never give it an ID that's in use or on the `Retired:` line: Cadence's
   phases are built from the epics by ID, so a retired ID stays retired.
+- The stamp line takes the current stamp, even when nothing else changes.
 
 The sizing in "The epics step", its stop when no boundary cuts a capability
 included, and the build order and citations below hold on a rerun too. Then
@@ -1228,6 +1275,7 @@ The epics file has this shape, as `docs/FORMAT.md` fixes it, and the check
 holds it to it:
 
 - It opens with a `# ` title in the form `# <Project> - epics`.
+- The stamp line follows the title, as "Stamps and stale links" says.
 - Then comes one `## ` section per epic, in exactly this form, with two or
   more digits:
 
@@ -1342,7 +1390,7 @@ dump, and not the conversation.
 take every decision in `spine.md`, in the spine's order, and expand on each
 one under its S- ID: what it means for the parts the PRD describes, what in
 the brief and the PRD leads to it, and what it rules out. Name every decision
-in the spine, and draw on those three files only.
+in the spine, and draw on those three files only. It carries no stamp line.
 
 **No decision of its own.** Every decision in the document is the spine's,
 cited by its S- ID. Add no decision, give nothing an ID of its own, and cite
