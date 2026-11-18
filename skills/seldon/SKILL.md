@@ -852,13 +852,13 @@ The spine is built from `.planning/seldon/brief.md` and
 `.planning/seldon/prd.md`, plus the existing code on a project under Cadence.
 Ask whether it's under Cadence here, with Glob for `.planning/PROJECT.md` as
 "Where a run starts" says, never Read. Under Cadence, also read the files
-outside `.planning/`, with Read, Glob and Grep, enough to find the conventions
-"What the spine holds" asks for. Otherwise read those two files and nothing
-more. Either way, never read `docs/design/` or any other design folder,
-anything in `.planning/` but this design's brief, PRD and spine, the dump, or
-the earlier conversation, whatever it holds. In the code, never Read or Grep
-inside a `.env*` file or a key or credential file: skip it by name, even where
-Glob lists it. Never quote a line elsewhere that holds a password, token, key,
+outside `.planning/`, with Read, Glob and Grep only, never a shell command,
+enough to find the conventions "What the spine holds" asks for. Otherwise read
+those two files and nothing more. Either way, never read `docs/design/` or any
+other design folder, anything in `.planning/` but this design's brief, PRD and
+spine, the dump, or the earlier conversation, whatever it holds. In the code,
+never read inside a `.env*` file or a key or credential file with any tool or
+command: skip it by name, even where Glob lists it. Never quote a line elsewhere that holds a password, token, key,
 or a connection string with credentials. A fact from a design folder
 reaches the spine only through a quote the brief already carries. A stack or
 hosting word the user said reaches it only through the brief's `> ` quotes,
