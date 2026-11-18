@@ -146,7 +146,8 @@ these in order:
     PRD draft" says, or for the spine as "The spine draft" says. For the
     epics, make them in `epics.md` and quote nothing, since epics carry no
     quotes. For the PRD this is one of the three routes "The PRD draft" lets
-    change a `prd.md` that's there, so the PRD's create guard doesn't stop it.
+    change a `prd.md` that's there, so the PRD's create guard doesn't stop it,
+    and "The conflict check" there runs before the first Edit.
     For the spine it's one of the routes "The spine draft" names for changing
     a `spine.md` that's there, and for the epics one of the routes "The epics
     draft" names for changing an `epics.md` that's there. Then run that step's
@@ -167,9 +168,10 @@ these in order:
 - **PRD questions answered:** your last turn asked the PRD step's questions,
   and the user answered. When that turn was a rerun over a `prd.md` that's
   there, from `/seldon prd` or a stale `prd.md`, go to "The PRD rerun" in
-  "The PRD draft" and carry
-  the rerun on with those answers, changing `prd.md` with Edit, never a fresh
-  Write. Otherwise go to "The PRD draft" and draft with those answers.
+  "The PRD draft" and carry the rerun on with those answers. Run "The
+  conflict check" there before the first Edit, then change `prd.md` with
+  Edit, never a fresh Write. Otherwise go to "The PRD draft" and draft with
+  those answers.
 - **Who-relies question answered:** your last turn asked the who-relies
   question in "The spine's questions", alone or with the spine's other
   questions, and the user answered. Carry the step on with those answers just
@@ -719,7 +721,9 @@ file and nothing more for it: never `docs/design/` or any other design folder,
 never the dump, and never the earlier conversation, whatever it holds. A fact
 from a design folder reaches the PRD only through a quote the brief already
 carries. The one other file a PRD step reads is the `prd.md` a rerun
-updates, as "The PRD rerun" says.
+updates, as "The PRD rerun" says, along with `spine.md` when it's there. It
+reads the spine only to name conflicts, as "The conflict check" in "The PRD
+draft" says, and nothing from the spine enters the PRD.
 
 The brief on disk is the confirmed one, even where it differs from something
 said earlier in this conversation: the user may have edited the file by hand
@@ -763,9 +767,9 @@ that's there, and all three do it with Edit, never a fresh Write:
   that asked those questions was such a rerun. It carries that rerun
   on with the user's answers, as "The PRD rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
-  the PRD's own confirm question with changes. Make those changes with Edit,
-  quote the user's new words as "The user's own words" below says, then run
-  "The PRD check" again.
+  the PRD's own confirm question with changes. Run "The conflict check" below
+  first. Then make those changes with Edit, quote the user's new words as "The
+  user's own words" below says, and run "The PRD check" again.
 
 Each of the three keeps the stamp line current, as "Stamps and stale links"
 says. Every other route that reaches this step and finds `prd.md` writes
@@ -775,11 +779,13 @@ nothing after it.
 **The PRD rerun.** A `/seldon prd` that finds `prd.md` there, or a bare
 `/seldon` whose stale check found `prd.md` stale, brings it in line with the
 brief as it stands now. Read `prd.md` first, the previous version of
-this document, then `brief.md`, and nothing else: not a design folder, and
-not the conversation. The one thing it takes from the conversation is the
-user's answers to its own questions, when the rerun stopped to ask them as
-"The PRD step" says. Change the PRD with Edit only, never a fresh Write over
-it, so a line the change doesn't touch is never typed again:
+this document, then `brief.md`, then `spine.md` when it's there, only for
+"The conflict check" below, and nothing else: not a design folder, and not the
+conversation. The one thing it takes from the conversation is the user's
+answers to its own questions, when the rerun stopped to ask them as "The PRD
+step" says. Work out the change, then run "The conflict check" below before
+the first Edit. Change the PRD with Edit only, never a fresh Write over it, so
+a line the change doesn't touch is never typed again:
 
 - A requirement the brief's change doesn't touch keeps its bullet line and its
   quote or tag lines byte-identical: the same ID, the same text, the same
@@ -805,6 +811,32 @@ it, so a line the change doesn't touch is never typed again:
 - The stamp line takes the current stamp, even when nothing else changes.
 
 Then run "The PRD check" and end the step the way it says.
+
+**The conflict check.** It stops a PRD change that would undo a spine decision
+before anything is written. It runs where a change to a `prd.md` that's there
+is worked out: the PRD rerun, however it's reached, "PRD questions answered"
+when it carries a rerun on, and "Names changes" at the PRD's confirm question.
+It runs once the change is worked out and before the first Edit, and only when
+`spine.md` is there: look for it with Read or Glob. The spine is read only to
+name conflicts, and nothing from it enters the PRD.
+
+- **What conflicts:** a spine decision conflicts when its text or one of its
+  `> ` quotes states or quotes something the change alters or drops. Compare
+  each decision's text and quotes with the requirement text and quotes the
+  change alters or drops. Never compare by requirement ID, since a spine
+  decision names none. The plain case is a decision quoting the same brief
+  line as a requirement the change drops.
+- **No conflict:** carry the change on with Edit, as that route says.
+- **A conflict:** write and edit nothing. Name each conflicting decision by its
+  S- ID, saying what it states or quotes and what the change alters or drops.
+  Then end your message with exactly these words, on a line of their own, with
+  nothing after them. This is the conflict question:
+
+  ```
+  Do you want me to apply this change to the PRD anyway?
+  ```
+
+The check never writes or edits `spine.md` or `epics.md`.
 
 The PRD has this shape, and the check holds it to it:
 
