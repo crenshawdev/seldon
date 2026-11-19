@@ -196,9 +196,10 @@ these in order:
   - **A decline:** write and edit nothing. When the change came from the
     brief, through the PRD rerun however it's reached, end your message with the
     brief decline line.
-    When it was named at the PRD's confirm question, end with the
-    nothing-changed line. Either goes on a line of its own, with nothing after
-    it. These are the brief decline line and the nothing-changed line:
+    When it was named at the PRD's confirm question, first name a bare
+    `/seldon`, in backticks with no step after it, as what goes on from the
+    PRD as it is, never `/seldon brief`, then end with the nothing-changed
+    line. Either line goes on a line of its own, with nothing after it. These are the brief decline line and the nothing-changed line:
 
     ```
     I've changed nothing, so the PRD stays behind the brief. To take the change back out of the brief, run /seldon brief.
