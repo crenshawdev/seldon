@@ -463,3 +463,74 @@ test("the spine confirm grader's copies are equal bytes", () => {
   const copies = CONFIRM.map((file) => ({ name: file, bytes: readFileSync(join(root, file)) }));
   assert.deepEqual(unequal(copies), [], `copies differ from ${CONFIRM[0]}`);
 });
+
+// A bare /seldon's run up to the line and past it, in readinessTrace's event shape with invented ids.
+function lineTrace({ text, reads, change }) {
+  const events = [];
+  const call = (id, name, input) => events.push({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id, name, input }] }, parent_tool_use_id: null });
+  const result = (id, content) => events.push({ type: 'user', message: { role: 'user', content: [{ tool_use_id: id, type: 'tool_result', content }] }, parent_tool_use_id: null });
+  call('toolu_01TestSkill', 'Skill', { skill: 'seldon:seldon' });
+  result('toolu_01TestSkill', 'Launching skill: seldon:seldon');
+  call('toolu_01TestGlob', 'Glob', { pattern: '.planning/seldon/{brief,prd,spine,epics}.md' });
+  result('toolu_01TestGlob', '.planning/seldon/brief.md\n.planning/seldon/prd.md');
+  call('toolu_01TestStale', 'Bash', { command: 'node /code/seldon/lib/check.mjs --stale .planning/seldon', description: 'Check for stale links' });
+  result('toolu_01TestStale', 'seldon check: no stale link');
+  events.push({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text }] }, parent_tool_use_id: null });
+  reads.forEach((file, i) => {
+    call(`toolu_01TestRead${i}`, 'Read', { file_path: `/tmp/cwd/${file}` });
+    result(`toolu_01TestRead${i}`, '1\t# Toolshed');
+  });
+  const body = change.tool === 'Edit' ? { old_string: 'Built from: old', new_string: 'Built from: new' } : { content: '# Toolshed' };
+  call('toolu_01TestChange', change.tool, { file_path: `/tmp/cwd/${change.file}`, ...body });
+  return `${events.map((e) => JSON.stringify(e)).join('\n')}\n`;
+}
+
+// D-10's lines by their parts, each with the sentence it used to be held to word for word.
+const LINES = [
+  {
+    file: 'evals/full-walk/graders/names-spine-first.md',
+    old: "I'm building the epics from .planning/seldon/spine.md, the spine that's already there, and the PRD. To revise the spine instead, run /seldon spine.",
+    doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
+    reads: ['.planning/seldon/prd.md', '.planning/seldon/spine.md'], change: { tool: 'Write', file: '.planning/seldon/epics.md' },
+  },
+  {
+    file: 'evals/spine-from-prd/graders/names-prd-first.md',
+    old: "I'm building the spine from .planning/seldon/prd.md, the PRD that's already there, and the brief. To revise the PRD instead, run /seldon prd.",
+    doc: 'spine', path: '.planning/seldon/prd.md', cmd: '/seldon prd',
+    reads: ['.planning/seldon/brief.md', '.planning/seldon/prd.md'], change: { tool: 'Write', file: '.planning/seldon/spine.md' },
+  },
+  {
+    file: 'evals/resume/graders/names-brief-first.md',
+    old: "I'm building the PRD from .planning/seldon/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.",
+    doc: 'PRD', path: '.planning/seldon/brief.md', cmd: '/seldon brief',
+    reads: ['.planning/seldon/brief.md'], change: { tool: 'Write', file: '.planning/seldon/prd.md' },
+  },
+  {
+    file: 'evals/which-design-answer/graders/names-brief-first.md',
+    old: "I'm building the PRD from .planning/seldon/sowlist/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.",
+    doc: 'PRD', path: '.planning/seldon/sowlist/brief.md', cmd: '/seldon brief',
+    reads: ['.planning/seldon/sowlist/brief.md'], change: { tool: 'Write', file: '.planning/seldon/sowlist/prd.md' },
+  },
+];
+
+const paraphrase = ({ doc, path, cmd }) => `Picking up where this left off, the ${doc} comes next, worked from ${path}, which is already there.\n\nIf that file needs changing first, run ${cmd}.`;
+
+// Each part dropped in turn; the command goes to a longer one, which mustn't count as it.
+const DROPS = [
+  ['document', (l) => ({ ...l, doc: 'next document' })],
+  ['path', (l) => ({ ...l, path: 'the file' })],
+  ['command', (l) => ({ ...l, cmd: `${l.cmd}-x` })],
+];
+
+test('each regraded line grader passes the old sentence and a paraphrase that carries its parts, and fails each part dropped', async (t) => {
+  for (const line of LINES) {
+    const grader = load(line.file);
+    const run = (text) => passes(grader, lineTrace({ text, reads: line.reads, change: line.change }));
+    const caught = grader.match === 'not_contains';
+    await t.test(`${line.file} on the old sentence`, () => assert.equal(run(line.old), !caught));
+    await t.test(`${line.file} on a paraphrase`, () => assert.equal(run(paraphrase(line)), !caught));
+    for (const [part, drop] of DROPS) {
+      await t.test(`${line.file} with the ${part} dropped`, () => assert.equal(run(paraphrase(drop(line))), caught));
+    }
+  }
+});
