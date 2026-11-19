@@ -511,6 +511,31 @@ const LINES = [
     doc: 'PRD', path: '.planning/seldon/sowlist/brief.md', cmd: '/seldon brief',
     reads: ['.planning/seldon/sowlist/brief.md'], change: { tool: 'Write', file: '.planning/seldon/sowlist/prd.md' },
   },
+  {
+    file: 'evals/stale-prd/graders/says-stale-line.md',
+    old: "I'm updating the PRD, because .planning/seldon/brief.md has changed since the PRD was built from it. To revise the brief instead, run /seldon brief.",
+    doc: 'PRD', path: '.planning/seldon/brief.md', cmd: '/seldon brief',
+    reads: ['.planning/seldon/prd.md', '.planning/seldon/brief.md'], change: { tool: 'Edit', file: '.planning/seldon/prd.md' },
+  },
+  {
+    file: 'evals/stale-spine/graders/says-stale-line.md',
+    old: "I'm updating the spine, because .planning/seldon/prd.md has changed since the spine was built from it. To revise the PRD instead, run /seldon prd.",
+    doc: 'spine', path: '.planning/seldon/prd.md', cmd: '/seldon prd',
+    reads: ['.planning/seldon/spine.md', '.planning/seldon/prd.md'], change: { tool: 'Edit', file: '.planning/seldon/spine.md' },
+  },
+  {
+    file: 'evals/stale-epics/graders/says-stale-line.md',
+    old: "I'm updating the epics, because .planning/seldon/spine.md has changed since the epics were built from it. To revise the spine instead, run /seldon spine.",
+    doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
+    reads: ['.planning/seldon/epics.md', '.planning/seldon/spine.md'], change: { tool: 'Edit', file: '.planning/seldon/epics.md' },
+  },
+  // not_contains: it catches the epics resume line in any wording, on stale-prd's run.
+  {
+    file: 'evals/stale-prd/graders/no-epics-line.md',
+    old: "I'm building the epics from .planning/seldon/spine.md, the spine that's already there, and the PRD. To revise the spine instead, run /seldon spine.",
+    doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
+    reads: ['.planning/seldon/prd.md', '.planning/seldon/brief.md'], change: { tool: 'Edit', file: '.planning/seldon/prd.md' },
+  },
 ];
 
 const paraphrase = ({ doc, path, cmd }) => `Picking up where this left off, the ${doc} comes next, worked from ${path}, which is already there.\n\nIf that file needs changing first, run ${cmd}.`;
