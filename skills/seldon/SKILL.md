@@ -790,8 +790,17 @@ Then end the step. Every step ends the same way, in your final message:
 
 1. Name the file you wrote.
 2. Repeat the check's result line word for word, on a line of its own.
-3. Ask, in one plain-prose question, whether the user confirms the document
-   or wants changes. That question ends your message and your turn.
+3. For the brief, the PRD and the spine, name each `[ASSUMPTION]` guess the
+   draft carries that only the user can settle and whose answer would change
+   the document, and ask about it in your own words. This goes before the
+   confirm question, and before any sentence a step puts just before it.
+4. Ask, in one plain-prose question, whether the user confirms the document
+   or wants changes. That question ends your message and your turn, so it's
+   always the last thing in it.
+
+An answer to a guess's question comes back at the confirm question as a
+change, so "Names changes" in "Where the conversation stands" carries it with
+Edit: the user's words go on a quoted line where the tag was.
 
 ## 12. The PRD step
 
