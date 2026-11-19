@@ -70,10 +70,15 @@ holds wherever the conversation stands and whatever files exist, so don't look
 at the conversation for it.
 
 Each route settles the working folder before it looks for files. With more
-than one design, write nothing and end on the which-design question, as
-"Which design" says, unless the user just chose a design at it for this run,
-which stops the route asking again. With one design it's that design's folder,
-and with none the top-level folder:
+than one design, a step goes on with the one design holding the file it builds
+from, and doesn't ask: a PRD for `spine`, and a spine for `epics` and
+`architecture`. Find it with Glob for that file at the top of
+`.planning/seldon/` and in `.planning/seldon/*/`. When no design or more than
+one holds it, or the step is `brief` or `prd`, which every design can take,
+write nothing and end on the which-design question, as "Which design" says,
+unless the user just chose a design at it for this run, which stops the route
+asking again. With one design it's that design's folder, and with none the
+top-level folder:
 
 - **`architecture`:** the full architecture document, built from the brief,
   the PRD and the spine. Look for `brief.md`, `prd.md` and `spine.md` with
