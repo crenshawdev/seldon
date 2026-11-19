@@ -1458,8 +1458,9 @@ replace it whole with Write, from the brief, the PRD and the spine as they
 stand now. It holds nothing of its own to keep.
 
 **The ending.** Name the file you wrote, and say that every decision in it is
-the spine's and that a change to one goes in the spine. End there, without a
-question: this route never ends a turn on one.
+the spine's and that a change to one goes in the spine. Then name a bare
+`/seldon`, in backticks with no step after it, as what goes on from where the
+design stands. Still no question: this route never ends a turn on one.
 
 ## 22. The readiness check
 
