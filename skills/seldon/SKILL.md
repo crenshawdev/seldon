@@ -178,9 +178,9 @@ these in order:
 - **Path chosen:** your last turn gave your recommendation, and the user
   answered it. Go to "After the answer" with the path the user chose. Never
   recommend again.
-- **Interview under way:** your last turn asked the fast-path questions, asked
-  again about What it refuses after their answers, or asked a coaching
-  question, and the user answered. Carry on from there.
+- **Interview under way:** your last turn asked the refusals question in "The
+  fast path questions", or asked it again, or asked a coaching question, and
+  the user answered. Carry on from there.
 - **PRD questions answered:** your last turn asked the PRD step's questions,
   and the user answered. When that turn was a rerun over a `prd.md` that's
   there, from `/seldon prd` or a stale `prd.md`, go to "The PRD rerun" in
@@ -625,34 +625,21 @@ Before drafting, sort the brief's eight sections by what the dump says, and
 any design folder you read:
 
 - **Stated:** write it from those words, quoted as "The draft" says.
-- **Touched but thin, or never mentioned but inferable** from the rest of the
-  dump: draft it as a guess tagged `[ASSUMPTION]`.
-- **Never mentioned, and only the user can decide:** ask about it before
-  drafting. Who it serves and What it refuses are always in this group when
-  the dump never states them. An unstated refusal is asked about, never
-  guessed.
+- **Anything else,** Who it serves included: draft it as a guess tagged
+  `[ASSUMPTION]`, except What it refuses.
 
-That last group is the decisions the dump left open that the brief needs, so
-your questions cover what the user didn't write, not only what they did.
+What it refuses is never guessed. When the dump doesn't state it, ask what
+the project won't do, and why, in one plain-prose message that ends your
+turn, and write nothing in that turn. That's the refusals question. Once the
+user answers, if the answer leaves it unsettled, ask again as "The draft" says
+under What it refuses, and write nothing in that turn. Once it's settled,
+draft with the answer word for word on the refusals' quoted lines, every
+other section as sorted above, then run "The check".
 
-When that group has anything in it, ask every one of those questions in one
-plain-prose message that ends your turn, and write nothing in that turn. When
-who it serves is one of them, ask it with exactly these words, on a line of
-their own:
-
-```
-Who is it for?
-```
-
-Ask about refusals as what the project won't do, and why. Once the user answers, look at What it
-refuses first: if the answers leave it unsettled, ask again as "The draft"
-says under What it refuses, and write nothing in that turn. Once it's settled,
-draft with those answers: each item an answer settles carries that answer word
-for word on its quoted line, and any other section still thin gets a tag. What
-it refuses never gets one. Then run "The check".
-
-When that group is empty, nothing blocks the brief: draft it right away, in
-the turn the user confirmed the path, then run "The check".
+When the dump states its refusals, nothing blocks the brief: draft it right
+away, in the turn the user confirmed the path, then run "The check". Either
+way, a guess only the user can settle gets its question just before the
+brief's confirm question, as "The check" says.
 
 ## 9. The coaching walk
 
