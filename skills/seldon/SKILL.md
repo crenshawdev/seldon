@@ -1056,11 +1056,13 @@ an epic that cites it, as "Citations" in "The epics draft" says.
 
 **The spine's questions.** Draft the spine in this same turn, as "The spine
 draft" says, a rerun and a project under Cadence included. The spine asks only
-about a `stack` or `hosting` choice the design needs that the brief's `> `
-quotes and, on a project under Cadence, the code don't settle. Draft that
-decision as a guess tagged `[ASSUMPTION]`, and ask about it in your own words
-in the confirm turn, as "The check" says. Every other open decision is drafted
-as a tagged guess and not asked: the user corrects it at the confirm question.
+about the language or runtime the code is written in and the machine or
+service it runs on, when the brief's `> ` quotes and, on a project under
+Cadence, the code don't name them. Draft that decision as a guess tagged
+`[ASSUMPTION]`, and ask about it in your own words in the confirm turn, as "The
+check" says. Every other open decision, including any other stack decision
+such as how mail is sent or a file format, is drafted as a tagged guess, named
+as a statement, and not asked: the user corrects it at the confirm question.
 
 **Stack and hosting.** The brief's `> ` quotes are the only place the user
 settled a stack or host, since the PRD leaves those words out. On a project
