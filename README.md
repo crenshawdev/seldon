@@ -81,7 +81,7 @@ The two `--allow-tools` rules are the whole grant. Seldon can write only inside 
 - `fast-path-brief` confirms the fast path and checks that Seldon writes a brief that tags its guesses, says what the project refuses and passes the check.
 - `no-dump` runs a bare `/seldon` and checks that it asks for the dump in plain prose and writes nothing.
 - `asks-for-dump` answers that ask with a dump and checks that Seldon recommends a path and writes nothing.
-- `asks-who-for` confirms the fast path on a dump that never says who the project is for, and checks that Seldon asks that before writing anything.
+- `asks-who-for` confirms the fast path on a dump that states what it refuses but never says who the project is for, and checks that Seldon writes the brief in that turn with who it serves tagged as a guess, and that it passes the check.
 - `coaching-brief` answers the last coaching question and checks that the brief quotes the user's answers and passes the check.
 - `write-scope` asks for the brief in `docs/` with a README link, and checks that Seldon writes only inside `.planning/seldon/`.
 - `design-folder` points the dump at a design folder and checks that Seldon names the project only that folder names, with no edit, no write outside `.planning/seldon/` and no command but the check.
