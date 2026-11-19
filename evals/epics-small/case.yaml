@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: epics-small
+description: A /seldon epics in a fresh session where a confirmed brief for one small switch, a setting that turns a backup tool's progress bar on or off, its PRD with every requirement under one category and its two-decision spine are already at .planning/seldon/, copied from samples/switch/, and no epics. Seldon has to write a .planning/seldon/epics.md that passes the epics check as one epic, with at most five requirement IDs on it.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]

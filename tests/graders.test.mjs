@@ -11,6 +11,7 @@ const FULL = [
   { kind: 'size', case: 'epics-split', file: 'evals/epics-split/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'full-walk', file: 'evals/full-walk/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
+  { kind: 'size', case: 'epics-small', file: 'evals/epics-small/graders/at-most-five-ids.md' },
   { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
@@ -417,7 +418,7 @@ test('the placement check flags a size-grader copy in another case and a renamed
   const size = planted.find((f) => f.path === 'graders/at-most-five-ids.md').bytes;
   const half = planted.find((f) => f.path === 'graders/says-no-findings.md').bytes;
   assert.deepEqual(misplaced([...planted, { case: 'spine-from-prd', path: 'graders/at-most-five-ids.md', bytes: size }], FULL), [
-    'evals/spine-from-prd/graders/at-most-five-ids.md: at-most-five-ids.md belongs only in epics-split, full-walk, epics-from-spine',
+    'evals/spine-from-prd/graders/at-most-five-ids.md: at-most-five-ids.md belongs only in epics-split, full-walk, epics-from-spine, epics-small',
     'evals/spine-from-prd/graders/at-most-five-ids.md: a byte copy of the size grader outside its cases',
   ]);
   assert.deepEqual(misplaced([...planted, { case: 'stale-epics', path: 'graders/readiness-ok.md', bytes: half }], FULL), [
