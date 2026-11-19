@@ -342,6 +342,17 @@ A step under way keeps the working folder its run settled, which the
 conversation shows. A run writes and edits only inside its working folder, and
 never touches another design.
 
+Once the working folder holds a brief, every message of a run names the
+working design by its brief's `# ` title. Before there's a brief, every turn
+names the project the way the dump names it, every coaching question and every
+What it refuses question or re-ask included. A step that reads the brief anyway
+takes the title from that read. Any other route takes it with one Grep for
+`^# ` on the working folder's `brief.md`, never a Read, made after any line the
+route must say before its next tool call, such as a resume or stale line. A
+later turn of a step under way names it as the conversation already does, with
+no tool call. A line that must end a message, such as the `/clear` words or a
+handoff command, keeps its place, and the title goes earlier in the message.
+
 A project already under Cadence starts the same way. It counts as under
 Cadence when `.planning/PROJECT.md` exists, the file Cadence's
 `/cad-new-project` stops on. Whether it's there is a question for Glob, asked
@@ -1335,7 +1346,8 @@ more for it: never the brief, never `docs/design/` or any other design folder,
 never the dump, and never the earlier conversation, whatever it holds, except
 the finding lines that name the epics on a fix from the readiness question.
 The one other file an epics step reads is the `epics.md` a rerun updates, as "The
-epics rerun" says.
+epics rerun" says. Its one read of the brief is the title Grep "Designs and the
+working folder" names.
 
 The PRD and the spine on disk are the confirmed ones, even where they differ
 from something said earlier in this conversation, as "The PRD step" says of
@@ -1583,7 +1595,8 @@ folder's `prd.md`, `spine.md` and `epics.md`, one per line, and nothing else:
 ```
 
 **One message.** Every tool call this route makes comes before the first line
-of its report: the stale check, the agent start and, when the handoff follows,
+of its report: the stale check, the title Grep on `brief.md`, the agent start
+and, when the handoff follows,
 the handoff's Glob for `.planning/PROJECT.md`. Once the agent's reply is in
 hand, do that Glob before you write any line of the report. Then the report,
 the handoff's lead-in and the command are one final message, with no tool call
