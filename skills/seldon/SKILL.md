@@ -752,10 +752,12 @@ Then end the step. Every step ends the same way, in your final message:
 
 1. Name the file you wrote.
 2. Repeat the check's result line word for word, on a line of its own.
-3. For the brief, the PRD and the spine, name each `[ASSUMPTION]` guess the
-   draft carries that only the user can settle and whose answer would change
-   the document, and ask about it in your own words. This goes before the
-   confirm question, and before any sentence a step puts just before it.
+3. For the brief and the PRD, name each `[ASSUMPTION]` guess the draft
+   carries that only the user can settle and whose answer would change the
+   document, and ask about it in your own words. For the spine, name those
+   guesses as statements, not questions, and ask only what "The spine's
+   questions" allows. This goes before the confirm question, and before any
+   sentence a step puts just before it.
 4. Ask, in one plain-prose question, whether the user confirms the document
    or wants changes. That question ends your message and your turn, so it's
    always the last thing in it.
@@ -1053,18 +1055,17 @@ a project-wide one (design approach, stack, hosting), since every S- ID needs
 an epic that cites it, as "Citations" in "The epics draft" says.
 
 **The spine's questions.** Draft the spine in this same turn, as "The spine
-draft" says, a rerun and a project under Cadence included. Ask a question only
-when the brief, the PRD and, on a project under Cadence, the code don't answer
-it, and its answer would change a spine decision. Draft that decision as a
-guess tagged `[ASSUMPTION]`, and ask the question in your own words in the
-confirm turn, as "The check" says. Anything else that's open is drafted as a
-tagged guess and not asked.
+draft" says, a rerun and a project under Cadence included. The spine asks only
+about a `stack` or `hosting` choice the design needs that the brief's `> `
+quotes and, on a project under Cadence, the code don't settle. Draft that
+decision as a guess tagged `[ASSUMPTION]`, and ask about it in your own words
+in the confirm turn, as "The check" says. Every other open decision is drafted
+as a tagged guess and not asked: the user corrects it at the confirm question.
 
-**Stack and hosting.** A `stack` or `hosting` decision the design needs and
-the brief's `> ` quotes never name is such a question, since the PRD leaves
-those words out and the brief's quotes are the only place the user settled
-them. On a project under Cadence, one the code settles isn't, and its decision
-quotes the code, as "The spine draft" says. A choice that shows only in a
+**Stack and hosting.** The brief's `> ` quotes are the only place the user
+settled a stack or host, since the PRD leaves those words out. On a project
+under Cadence, a choice the code settles isn't asked, and its decision quotes
+the code, as "The spine draft" says. A choice that shows only in a
 secret-bearing file or line, which the code reading never reads or quotes,
 isn't one the code settles, so it still counts as unanswered.
 
