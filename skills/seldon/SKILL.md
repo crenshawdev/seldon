@@ -311,9 +311,9 @@ them to. With no design it's the top-level folder, so a project's first brief
 goes where it always has. With one design it's that design's folder. With
 more than one, "Which design" settles it.
 
-Every `.planning/seldon/` file path in this skill, fixed lines and check
-commands included, names that file in the working folder. With the top-level
-design every line reads exactly as written. With a named design it names that
+Every `.planning/seldon/` file path in this skill, the lines a run says and
+check commands included, names that file in the working folder. With the
+top-level design every path reads exactly as written. With a named design it names that
 folder instead: the PRD resume line names `.planning/seldon/<name>/brief.md`,
 the PRD's create guard line names `.planning/seldon/<name>/prd.md`, and a
 check runs on `.planning/seldon/<name>`, unquoted.
@@ -363,64 +363,41 @@ empty when they hold nothing but blanks. Then:
   "Stamps and stale links". The earliest stale link wins, even over a missing
   later document:
   - **`prd.md` stale:** say the PRD stale line, then go to "The PRD rerun" in
-    "The PRD draft":
-
-    ```
-    I'm updating the PRD, because .planning/seldon/brief.md has changed since the PRD was built from it. To revise the brief instead, run /seldon brief.
-    ```
-
+    "The PRD draft". It names `.planning/seldon/brief.md` and `/seldon brief`.
   - **Otherwise, `spine.md` stale:** say the spine stale line, then go to "The
-    spine rerun" in "The spine draft":
-
-    ```
-    I'm updating the spine, because .planning/seldon/prd.md has changed since the spine was built from it. To revise the PRD instead, run /seldon prd.
-    ```
-
+    spine rerun" in "The spine draft". It names `.planning/seldon/prd.md` and
+    `/seldon prd`.
   - **Otherwise, `epics.md` stale:** say the epics stale line, then go to "The
-    epics rerun" in "The epics draft":
+    epics rerun" in "The epics draft". It names `.planning/seldon/spine.md` and
+    `/seldon spine`.
 
-    ```
-    I'm updating the epics, because .planning/seldon/spine.md has changed since the epics were built from it. To revise the spine instead, run /seldon spine.
-    ```
-
-  Say a stale line the way a resume line is said: exactly those words, on a
-  line of their own, as the first text of your reply, before your next tool
-  call and before you read any document. Never Edit that document until its
-  line is in your reply. The stamp the rerun records comes from this same
-  output. With nothing stale, the routes below run.
-- **A brief, no PRD and empty arguments:** this is a resume. Before your
-  next tool call, and before you read the brief, draft or write anything, say
-  exactly these words, on a line of their own, as the first text of your
-  reply. This is the PRD resume line:
-
-  ```
-  I'm building the PRD from .planning/seldon/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.
-  ```
-
+  A stale line says in your own words that you're updating that document
+  because the file it's built from, named by its path, has changed since it
+  was built from it, and that the command it names revises that file instead.
+  Say it on a line of its own, as the first text of your reply, before your
+  next tool call and before you read any document. Never Edit that document
+  until its line is in your reply. The stamp the rerun records comes from this
+  same output. With nothing stale, the routes below run.
+- **A brief, no PRD and empty arguments:** this is a resume. Say the PRD
+  resume line: you're building the PRD from `.planning/seldon/brief.md`, the
+  brief that's already there, and `/seldon brief` revises the brief instead.
   Never Write `prd.md` on a resume until that line is in your reply. Then go
   to "The PRD step".
 - **A brief and a PRD, no spine, and empty arguments:** this is a resume
-  too. Before your next tool call, and before you read the brief or the PRD,
-  draft or write anything, say exactly these words, on a line of their own, as
-  the first text of your reply. This is the spine resume line:
-
-  ```
-  I'm building the spine from .planning/seldon/prd.md, the PRD that's already there, and the brief. To revise the PRD instead, run /seldon prd.
-  ```
-
-  Never Write `spine.md` on a resume until that line is in your reply. Then go
-  to "The spine step".
+  too. Say the spine resume line: you're building the spine from
+  `.planning/seldon/prd.md`, the PRD that's already there, and the brief, and
+  `/seldon prd` revises the PRD instead. Never Write `spine.md` on a resume
+  until that line is in your reply. Then go to "The spine step".
 - **A brief, a PRD and a spine, no epics, and empty arguments:** this is a
-  resume too. Before your next tool call, and before you read the PRD or the
-  spine, draft or write anything, say exactly these words, on a line of their
-  own, as the first text of your reply. This is the epics resume line:
+  resume too. Say the epics resume line: you're building the epics from
+  `.planning/seldon/spine.md`, the spine that's already there, and the PRD,
+  and `/seldon spine` revises the spine instead. Never Write `epics.md` on a
+  resume until that line is in your reply. Then go to "The epics step".
 
-  ```
-  I'm building the epics from .planning/seldon/spine.md, the spine that's already there, and the PRD. To revise the spine instead, run /seldon spine.
-  ```
-
-  Never Write `epics.md` on a resume until that line is in your reply. Then go
-  to "The epics step".
+  Say each of these three resume lines in your own words, with its path and
+  its command, on a
+  line of its own, as the first text of your reply, before your next tool call
+  and before you read, draft or write anything.
 - **All four documents, nothing stale, and empty arguments:** write
   nothing, and go to "The readiness check".
 
@@ -803,12 +780,10 @@ tagged `[ASSUMPTION]`. Never ask a question about the stakes.
 Write `.planning/seldon/prd.md` with the Write tool, and use Write only to
 create a `prd.md` that isn't there yet. Right before that Write, whatever route
 brought you here, look for `.planning/seldon/prd.md` with Read or Glob. If it's
-there, write nothing. End your message with exactly these words, on a line
-of their own, with nothing after them. This is the PRD's create guard line:
-
-```
-.planning/seldon/prd.md is already there, so I've written nothing this time. To revise the PRD, run /seldon prd.
-```
+there, write nothing. End your message with the PRD's create guard line, on a
+line of its own, with nothing after it. It says in your own words that
+`.planning/seldon/prd.md` is already there, that you've written nothing, and
+that `/seldon prd` revises the PRD.
 
 That guard is about creating a PRD with Write. These routes change a PRD
 that's there, and each does it with Edit, never a fresh Write:
