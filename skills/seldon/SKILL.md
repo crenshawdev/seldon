@@ -768,12 +768,15 @@ open. A decision only the user can make is drafted as a guess tagged
 `[ASSUMPTION]`, and its question rides on the PRD's confirm question, as "The
 check" says.
 
-**The stakes.** Read them from the brief's Who it serves, Success criteria and
-Scope: who depends on the product, and what breaks if it's wrong. Size the PRD
-to them: how many requirements and categories, and how much goes into
-Non-functional requirements and User journeys. When the brief doesn't show the
-stakes, put one line in MVP scope saying what size you drafted the PRD for,
-tagged `[ASSUMPTION]`. Never ask a question about the stakes.
+**The size of the work.** Read it from the brief's Solution and Scope: how
+many separate things the work does. Size the PRD to that: how many
+requirements and `### ` categories, and how much goes into Non-functional
+requirements and User journeys. A small body of work, such as one switch
+turned on or off, gets a few requirements in one `### ` category, which
+"Cutting the epics" in "The epics step" makes one epic. The stakes never add
+requirements. When the brief doesn't show the stakes, put one line in MVP
+scope saying what size you drafted the PRD for, tagged `[ASSUMPTION]`. Never
+ask a question about the size or the stakes.
 
 ## 13. The PRD draft
 
