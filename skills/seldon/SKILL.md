@@ -781,11 +781,12 @@ check" says.
 many separate things the work does. Size the PRD to that: how many
 requirements and `### ` categories, and how much goes into Non-functional
 requirements and User journeys. A small body of work, such as one switch
-turned on or off, gets a few requirements in one `### ` category, which
-"Cutting the epics" in "The epics step" makes one epic. The stakes never add
-requirements. When the brief doesn't show the stakes, put one line in MVP
-scope saying what size you drafted the PRD for, tagged `[ASSUMPTION]`. Never
-ask a question about the size or the stakes.
+turned on or off, gets at most 5 requirement IDs in all, non-functional ones
+included, in one `### ` category, so "Cutting the epics" in "The epics step"
+keeps it one epic. The stakes never add requirements. When the brief doesn't
+show the stakes, put one line in MVP scope saying what size you drafted the
+PRD for, tagged `[ASSUMPTION]`. Never ask a question about the size or the
+stakes.
 
 ## 13. The PRD draft
 
