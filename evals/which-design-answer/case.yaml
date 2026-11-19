@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: which-design-answer
-description: Resumes a /seldon session that ended on the which-design question, with Toolshed's four finished documents at the top of .planning/seldon/ and a Sowlist brief in .planning/seldon/sowlist/. The answer names sowlist, so Seldon has to go back to the bare run for that design, say the PRD resume line naming .planning/seldon/sowlist/brief.md before it writes .planning/seldon/sowlist/prd.md, and leave the top-level design alone.
+description: Resumes a /seldon session that ended on the which-design question, which named both designs by their briefs' titles, Toolshed with its four finished documents at the top of .planning/seldon/ and Sowlist with a brief in .planning/seldon/sowlist/. The answer names sowlist, so Seldon has to go back to the bare run for that design, say the PRD resume line naming .planning/seldon/sowlist/brief.md before it writes .planning/seldon/sowlist/prd.md, name Sowlist in its last message, and leave the top-level design alone.
 runs: 1
 context:
   history_file: history.jsonl
