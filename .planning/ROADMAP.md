@@ -15,6 +15,7 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 - [x] **Phase 7: PRD changes flow downstream** - Show what a PRD change conflicts with, and walk the documents built from a changed one again
 - [x] **Phase 8: Readiness check and handoff** - An independent check before the handoff, then the exact Cadence command to run
 - [x] **Phase 9: The full graders** - The full graders check every run that writes what they grade, and a unit test proves the suite command covers every case
+- [ ] **Phase 10: Sized to the work** - Fix the five problems the 2026-11-18 run on Cadence found: the wrong-design mix-up, the fixed spine questions, the no-write stops, friendliness, and size
 
 ## Phase Details
 
@@ -105,3 +106,15 @@ Seldon gets built the way it tells others to build, in small phases with one cap
 2. One eval case drives one user turn, so no single case runs the whole walk. full-walk replays the fast path from a full project description through the spine confirm, and its graded turn's epics pass the document, trace and size graders. The clean handoff cases (resume-later, handoff-cadence, handoff-named, readiness-agent) pass the readiness-passes grader.
 3. A unit test fails when the README's eval command carries a case filter or its case list doesn't match the case folders under `evals/`, so the documented command runs every case phases 1 to 8 added, with nothing for a person to check by hand. The one full run happens at release, after Cadence's reader of the Seldon folder ships.
 4. No workflow under `.github/workflows/` runs the eval suite or references a model key.
+
+### Phase 10: Sized to the work
+**Goal:** Fix the five problems the 2026-11-18 run on Cadence found, the five todos in `.planning/CAPTURE.md` from that day: the wrong-design mix-up (priority), the spine's fixed-trigger questions, the no-write stops, friendliness, and size. Keep the fix as small as the todos: change what they name, nothing more.
+**Depends on:** Phase 9
+**Requirements:** none
+**Success Criteria:**
+1. With more than one design, the which-design question names each design by its brief's title, a reply that matches none is asked again, and every turn names the project it's working on.
+2. The spine asks a question only when the brief, the PRD and the code don't answer it and the answer would change a spine decision; anything else is drafted as a tagged guess.
+3. The only turns that stop without writing are the path confirm and the refusals question; every other step drafts first and takes corrections at its confirm question.
+4. Every turn that ends a step names the next command, the architecture route included.
+5. Each document is sized to the work the brief describes: a small body of work can be one epic, and a dump too small to need Seldon is told so up front.
+6. The eval cases these changes touch pass, and their graders are updated where a fixed line changed.

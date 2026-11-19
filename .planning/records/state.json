@@ -2,10 +2,10 @@
   "layout": 1,
   "cycleOpen": true,
   "cursor": {
-    "phase": 9,
-    "status": "phase complete",
-    "next": "/cad-milestone",
-    "updated": "2026-11-18"
+    "phase": 10,
+    "status": "ready to plan",
+    "next": "/cad-context 10",
+    "updated": "2026-11-19"
   },
   "phases": [
     {
@@ -291,6 +291,13 @@
           "finished": true
         }
       ]
+    },
+    {
+      "n": 10,
+      "name": "Sized to the work",
+      "description": "Fix the five problems the 2026-11-18 run on Cadence found: the wrong-design mix-up, the fixed spine questions, the no-write stops, friendliness, and size",
+      "status": "unplanned",
+      "plans": []
     }
   ],
   "requirements": [
