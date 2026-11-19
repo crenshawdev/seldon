@@ -1604,8 +1604,8 @@ of its report: the stale check, the title Grep on `brief.md`, the agent start
 and, when the handoff follows,
 the handoff's Glob for `.planning/PROJECT.md`. Once the agent's reply is in
 hand, do that Glob before you write any line of the report. Then the report,
-the handoff's lead-in and the command are one final message, with no tool call
-after its first line. Text written before a tool call isn't in the message the
+the handoff's delete-or-move sentence, its lead-in and the command are one
+final message, with no tool call after its first line. Text written before a tool call isn't in the message the
 user sees last.
 
 **The reply.** It's either the no-findings line alone:
@@ -1655,6 +1655,14 @@ whether `.planning/PROJECT.md` exists with Glob, never Read, as "The spine
 step" does. That Glob comes before the handoff's first line, and before any
 report line when the readiness check leads here. No tool call follows the
 lead-in. Read none of Cadence's files to decide anything.
+
+Before the lead-in, on a line of its own, say in one sentence that once
+Cadence has this design the user should delete or move it out of
+`.planning/seldon/`, so a later `/seldon` never offers a finished design. A
+named design's sentence names its folder, `.planning/seldon/<name>/`. The
+top-level design's names its documents at the top of `.planning/seldon/`,
+never the folder itself, since every named design sits inside it. It's a
+statement with no question mark, and Seldon itself deletes and moves nothing.
 
 Say the lead-in on a line of its own, then the command on a line of its own:
 
