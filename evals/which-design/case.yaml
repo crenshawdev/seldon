@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: which-design
-description: A bare /seldon in a fresh session with two designs, Toolshed's four finished documents at the top of .planning/seldon/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md, and a Sowlist brief in .planning/seldon/sowlist/, seeded from samples/spine-job/brief.md, so Seldon has to write and edit nothing and end on the fixed which-design question rather than go on with either design.
+description: A bare /seldon in a fresh session with two designs, Toolshed's four finished documents at the top of .planning/seldon/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md, and a Sowlist brief in .planning/seldon/sowlist/, seeded from samples/spine-job/brief.md, so Seldon has to write and edit nothing, name both designs by their briefs' titles, Toolshed and Sowlist, and end on the fixed which-design question rather than go on with either design.
 runs: 1
 context:
   scaffold_script: seed.sh

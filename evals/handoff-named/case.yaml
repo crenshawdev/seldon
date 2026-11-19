@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: handoff-named
-description: A bare /seldon in a fresh session on a project already under Cadence, where the one design is a finished one in .planning/seldon/repair-log/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md with nothing at the top of .planning/seldon/, beside Cadence's PROJECT.md, ROADMAP.md and STATE.md, and none of it is stale, so Seldon has to work in repair-log/, run the readiness check, say its no-findings line, write and edit nothing, and end on the under-Cadence command naming .planning/seldon/repair-log and the already-built sentence.
+description: A bare /seldon in a fresh session on a project already under Cadence, where the one design is a finished one in .planning/seldon/repair-log/, seeded from samples/brief.md, samples/prd.md, samples/spine.md and samples/epics.md with nothing at the top of .planning/seldon/, beside Cadence's PROJECT.md, ROADMAP.md and STATE.md, and none of it is stale, so Seldon has to work in repair-log/, run the readiness check, say its no-findings line, write and edit nothing, tell the user to delete or move .planning/seldon/repair-log/ once Cadence has it, before the lead-in, and end on the under-Cadence command naming .planning/seldon/repair-log and the already-built sentence.
 runs: 1
 context:
   scaffold_script: seed.sh

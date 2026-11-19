@@ -2,5 +2,5 @@
 type: regex
 target: trace
 match: not_contains
-pattern: '"role":"assistant","content":\[\{"type":"text","text":"(?:[^"\\]|\\.)*?I.m building the epics from \.planning/seldon/spine\.md'
+pattern: '"role":"assistant","content":\[\{"type":"text","text":"(?=(?:[^"\\]|\\.)*?[Ee]pics)(?=(?:[^"\\]|\\.)*?\.planning/seldon/spine\.md)(?=(?:[^"\\]|\\.)*?/seldon spine(?![\w-]))'
 ---

@@ -23,7 +23,7 @@ A passenger's report and the found item sit side by side, so a match doesn't dep
 
 ## Scope
 The passengers' report page, the staff matching screen and the found log.
-> the report page, our matching screen and the found log, and it can run on the harbour board's server in the back office
+> the report page, our matching screen and the found log
 
 ## What it refuses
 - It won't show reports to the public, because a report holds a passenger's phone number and what they lost.

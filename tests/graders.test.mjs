@@ -11,6 +11,8 @@ const FULL = [
   { kind: 'size', case: 'epics-split', file: 'evals/epics-split/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'full-walk', file: 'evals/full-walk/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
+  { kind: 'size', case: 'epics-small', file: 'evals/epics-small/graders/at-most-five-ids.md' },
+  { kind: 'prd-size', case: 'prd-small', file: 'evals/prd-small/graders/at-most-five-prd-ids.md' },
   { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
@@ -282,6 +284,17 @@ test('each size-grader copy passes the same epics with 5 IDs on that line', () =
   for (const { file } of of('size')) assert.equal(passes(load(file), five), true, file);
 });
 
+// The switch PRD sits at the cap, so one more non-functional bullet is the sixth ID that splits the epic.
+test('the PRD size grader passes the switch PRD at 5 IDs and fails it with a sixth', () => {
+  const prd = readFileSync(join(root, 'samples/switch/prd.md'), 'utf8');
+  const six = prd.replace(/^(- \*\*NFR-01\*\*:.*\n)/m, '$1- **NFR-02**: Turning the bar off adds no time to a backup.\n');
+  assert.notEqual(six, prd, 'samples/switch/prd.md has no NFR-01 bullet to add after');
+  for (const { file } of of('prd-size')) {
+    assert.equal(passes(load(file), prd), true, file);
+    assert.equal(passes(load(file), six), false, file);
+  }
+});
+
 test('each trace grader passes epics with every seeded PRD ID on exactly one Requirements line', () => {
   for (const { file, prd } of of('trace')) {
     const ids = prdIds(prd);
@@ -417,7 +430,7 @@ test('the placement check flags a size-grader copy in another case and a renamed
   const size = planted.find((f) => f.path === 'graders/at-most-five-ids.md').bytes;
   const half = planted.find((f) => f.path === 'graders/says-no-findings.md').bytes;
   assert.deepEqual(misplaced([...planted, { case: 'spine-from-prd', path: 'graders/at-most-five-ids.md', bytes: size }], FULL), [
-    'evals/spine-from-prd/graders/at-most-five-ids.md: at-most-five-ids.md belongs only in epics-split, full-walk, epics-from-spine',
+    'evals/spine-from-prd/graders/at-most-five-ids.md: at-most-five-ids.md belongs only in epics-split, full-walk, epics-from-spine, epics-small',
     'evals/spine-from-prd/graders/at-most-five-ids.md: a byte copy of the size grader outside its cases',
   ]);
   assert.deepEqual(misplaced([...planted, { case: 'stale-epics', path: 'graders/readiness-ok.md', bytes: half }], FULL), [
@@ -436,7 +449,7 @@ test('the equal-copy check flags a planted pair one byte apart', () => {
 });
 
 // D-13's spine confirm ending: stale-spine's grader, with readiness-fix's two copies held to its bytes.
-const CONFIRM = ['stale-spine', 'readiness-fix', 'readiness-fix-answer'].map((c) => `evals/${c}/graders/ends-on-confirm.md`);
+const CONFIRM = ['stale-spine', 'readiness-fix'].map((c) => `evals/${c}/graders/ends-on-confirm.md`);
 const spineEnd = (tail) => `I wrote .planning/seldon/spine.md.\n\nseldon check: spine.md conforms\n\n${tail}`;
 const QUESTION = 'Do you confirm the spine, or do you want changes?';
 const OFFER = '`/seldon architecture` can write the full architecture document once you confirm.';
@@ -462,4 +475,121 @@ test('the spine confirm grader fails a trailing command sentence, a command far 
 test("the spine confirm grader's copies are equal bytes", () => {
   const copies = CONFIRM.map((file) => ({ name: file, bytes: readFileSync(join(root, file)) }));
   assert.deepEqual(unequal(copies), [], `copies differ from ${CONFIRM[0]}`);
+});
+
+// A bare /seldon's run up to the line and past it, in readinessTrace's event shape with invented ids.
+function lineTrace({ text, reads, change }) {
+  const events = [];
+  const call = (id, name, input) => events.push({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id, name, input }] }, parent_tool_use_id: null });
+  const result = (id, content) => events.push({ type: 'user', message: { role: 'user', content: [{ tool_use_id: id, type: 'tool_result', content }] }, parent_tool_use_id: null });
+  call('toolu_01TestSkill', 'Skill', { skill: 'seldon:seldon' });
+  result('toolu_01TestSkill', 'Launching skill: seldon:seldon');
+  call('toolu_01TestGlob', 'Glob', { pattern: '.planning/seldon/{brief,prd,spine,epics}.md' });
+  result('toolu_01TestGlob', '.planning/seldon/brief.md\n.planning/seldon/prd.md');
+  call('toolu_01TestStale', 'Bash', { command: 'node /code/seldon/lib/check.mjs --stale .planning/seldon', description: 'Check for stale links' });
+  result('toolu_01TestStale', 'seldon check: no stale link');
+  events.push({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text }] }, parent_tool_use_id: null });
+  reads.forEach((file, i) => {
+    call(`toolu_01TestRead${i}`, 'Read', { file_path: `/tmp/cwd/${file}` });
+    result(`toolu_01TestRead${i}`, '1\t# Toolshed');
+  });
+  const body = change.tool === 'Edit' ? { old_string: 'Built from: old', new_string: 'Built from: new' } : { content: '# Toolshed' };
+  call('toolu_01TestChange', change.tool, { file_path: `/tmp/cwd/${change.file}`, ...body });
+  return `${events.map((e) => JSON.stringify(e)).join('\n')}\n`;
+}
+
+// D-10's lines by their parts, each with the sentence it used to be held to word for word.
+// A stale line's `stale` names its document's resume grader, whose line it mustn't pass for.
+const LINES = [
+  {
+    file: 'evals/full-walk/graders/names-spine-first.md',
+    old: "I'm building the epics from .planning/seldon/spine.md, the spine that's already there, and the PRD. To revise the spine instead, run /seldon spine.",
+    doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
+    reads: ['.planning/seldon/prd.md', '.planning/seldon/spine.md'], change: { tool: 'Write', file: '.planning/seldon/epics.md' },
+  },
+  {
+    file: 'evals/spine-from-prd/graders/names-prd-first.md',
+    old: "I'm building the spine from .planning/seldon/prd.md, the PRD that's already there, and the brief. To revise the PRD instead, run /seldon prd.",
+    doc: 'spine', path: '.planning/seldon/prd.md', cmd: '/seldon prd',
+    reads: ['.planning/seldon/brief.md', '.planning/seldon/prd.md'], change: { tool: 'Write', file: '.planning/seldon/spine.md' },
+  },
+  {
+    file: 'evals/resume/graders/names-brief-first.md',
+    old: "I'm building the PRD from .planning/seldon/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.",
+    doc: 'PRD', path: '.planning/seldon/brief.md', cmd: '/seldon brief',
+    reads: ['.planning/seldon/brief.md'], change: { tool: 'Write', file: '.planning/seldon/prd.md' },
+  },
+  {
+    file: 'evals/which-design-answer/graders/names-brief-first.md',
+    old: "I'm building the PRD from .planning/seldon/sowlist/brief.md, the brief that's already there. To revise the brief instead, run /seldon brief.",
+    doc: 'PRD', path: '.planning/seldon/sowlist/brief.md', cmd: '/seldon brief',
+    reads: ['.planning/seldon/sowlist/brief.md'], change: { tool: 'Write', file: '.planning/seldon/sowlist/prd.md' },
+  },
+  {
+    file: 'evals/stale-prd/graders/says-stale-line.md',
+    old: "I'm updating the PRD, because .planning/seldon/brief.md has changed since the PRD was built from it. To revise the brief instead, run /seldon brief.",
+    doc: 'PRD', path: '.planning/seldon/brief.md', cmd: '/seldon brief',
+    reads: ['.planning/seldon/prd.md', '.planning/seldon/brief.md'], change: { tool: 'Edit', file: '.planning/seldon/prd.md' },
+    stale: 'evals/resume/graders/names-brief-first.md',
+  },
+  {
+    file: 'evals/stale-spine/graders/says-stale-line.md',
+    old: "I'm updating the spine, because .planning/seldon/prd.md has changed since the spine was built from it. To revise the PRD instead, run /seldon prd.",
+    doc: 'spine', path: '.planning/seldon/prd.md', cmd: '/seldon prd',
+    reads: ['.planning/seldon/spine.md', '.planning/seldon/prd.md'], change: { tool: 'Edit', file: '.planning/seldon/spine.md' },
+    stale: 'evals/spine-from-prd/graders/names-prd-first.md',
+  },
+  {
+    file: 'evals/stale-epics/graders/says-stale-line.md',
+    old: "I'm updating the epics, because .planning/seldon/spine.md has changed since the epics were built from it. To revise the spine instead, run /seldon spine.",
+    doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
+    reads: ['.planning/seldon/epics.md', '.planning/seldon/spine.md'], change: { tool: 'Edit', file: '.planning/seldon/epics.md' },
+    stale: 'evals/full-walk/graders/names-spine-first.md',
+  },
+  // not_contains: it catches the epics resume line in any wording, on stale-prd's run.
+  {
+    file: 'evals/stale-prd/graders/no-epics-line.md',
+    old: "I'm building the epics from .planning/seldon/spine.md, the spine that's already there, and the PRD. To revise the spine instead, run /seldon spine.",
+    doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
+    reads: ['.planning/seldon/prd.md', '.planning/seldon/brief.md'], change: { tool: 'Edit', file: '.planning/seldon/prd.md' },
+  },
+];
+
+const resumeParaphrase = ({ doc, path, cmd }) => `Picking up where this left off, the ${doc} comes next, worked from ${path}, which is already there.\n\nIf that file needs changing first, run ${cmd}.`;
+// A stale line carries a fourth part: the file it's built from has changed.
+const staleParaphrase = ({ doc, path, cmd }) => `${path} has changed since the ${doc} was built from it, so the ${doc} gets reworked now.\n\nIf you'd rather work on that file first, run ${cmd}.`;
+const paraphrase = (line) => (line.stale ? staleParaphrase : resumeParaphrase)(line);
+
+// Each part dropped in turn; the command goes to a longer one, which mustn't count as it.
+const DROPS = [
+  ['document', (l) => ({ ...l, doc: 'next document' })],
+  ['path', (l) => ({ ...l, path: 'the file' })],
+  ['command', (l) => ({ ...l, cmd: `${l.cmd}-x` })],
+];
+
+test('each regraded line grader passes the old sentence and a paraphrase that carries its parts, and fails each part dropped', async (t) => {
+  for (const line of LINES) {
+    const grader = load(line.file);
+    const run = (text) => passes(grader, lineTrace({ text, reads: line.reads, change: line.change }));
+    const caught = grader.match === 'not_contains';
+    await t.test(`${line.file} on the old sentence`, () => assert.equal(run(line.old), !caught));
+    await t.test(`${line.file} on a paraphrase`, () => assert.equal(run(paraphrase(line)), !caught));
+    for (const [part, drop] of DROPS) {
+      await t.test(`${line.file} with the ${part} dropped`, () => assert.equal(run(paraphrase(drop(line))), caught));
+    }
+  }
+});
+
+// A resume line carries a stale line's other three parts, so only the change clause tells them apart.
+test('each stale-line grader fails its document\'s resume line, said with revise or change, and passes a stale line', async (t) => {
+  for (const line of LINES.filter((l) => l.stale)) {
+    const grader = load(line.file);
+    const run = (text) => passes(grader, lineTrace({ text, reads: line.reads, change: line.change }));
+    const resume = LINES.find((l) => l.file === line.stale).old;
+    const changeWorded = resume.replace('To revise', 'To change');
+    assert.notEqual(changeWorded, resume, `${line.stale} has no "To revise" to reword`);
+    await t.test(`${line.file} on ${line.stale}'s sentence`, () => assert.equal(run(resume), false));
+    await t.test(`${line.file} on that sentence with "To change"`, () => assert.equal(run(changeWorded), false));
+    await t.test(`${line.file} on a stale line`, () => assert.equal(run(staleParaphrase(line)), true));
+  }
 });

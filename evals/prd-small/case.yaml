@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: prd-small
+description: A /seldon prd in a fresh session where a confirmed brief for one small switch, a setting that turns a backup tool's progress bar on or off, sits at .planning/seldon/brief.md, copied from samples/switch/brief.md, so Seldon has to size the PRD to that one switch and write a .planning/seldon/prd.md that passes the PRD check with every requirement under one category.
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
