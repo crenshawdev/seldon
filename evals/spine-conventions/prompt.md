@@ -1,1 +1,0 @@
-/seldon Members only browse the catalog page from home and send nothing in through it, and it must never show them the repair notes or who has a tool out. The parish newsletter copies the tool records every Sunday night to print which tools are out on loan. Nothing else outside this repository relies on Toolshed.

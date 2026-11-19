@@ -436,7 +436,7 @@ test('the equal-copy check flags a planted pair one byte apart', () => {
 });
 
 // D-13's spine confirm ending: stale-spine's grader, with readiness-fix's two copies held to its bytes.
-const CONFIRM = ['stale-spine', 'readiness-fix', 'readiness-fix-answer'].map((c) => `evals/${c}/graders/ends-on-confirm.md`);
+const CONFIRM = ['stale-spine', 'readiness-fix'].map((c) => `evals/${c}/graders/ends-on-confirm.md`);
 const spineEnd = (tail) => `I wrote .planning/seldon/spine.md.\n\nseldon check: spine.md conforms\n\n${tail}`;
 const QUESTION = 'Do you confirm the spine, or do you want changes?';
 const OFFER = '`/seldon architecture` can write the full architecture document once you confirm.';
