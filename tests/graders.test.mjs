@@ -13,6 +13,7 @@ const FULL = [
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-small', file: 'evals/epics-small/graders/at-most-five-ids.md' },
   { kind: 'prd-size', case: 'prd-small', file: 'evals/prd-small/graders/at-most-five-prd-ids.md' },
+  { kind: 'brief-tag', case: 'asks-who-for', file: 'evals/asks-who-for/graders/tags-who-it-serves.md' },
   { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
