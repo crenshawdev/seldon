@@ -12,6 +12,7 @@ const FULL = [
   { kind: 'size', case: 'full-walk', file: 'evals/full-walk/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-small', file: 'evals/epics-small/graders/at-most-five-ids.md' },
+  { kind: 'prd-size', case: 'prd-small', file: 'evals/prd-small/graders/at-most-five-prd-ids.md' },
   { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'epics-split', file: 'evals/epics-split/graders/every-requirement-traced.md', prd: 'samples/epics-split/prd.md' },
@@ -281,6 +282,17 @@ test('each size-grader copy fails an epic whose Requirements line holds 6 IDs', 
 test('each size-grader copy passes the same epics with 5 IDs on that line', () => {
   const five = epics([['CAT-01', 'CAT-02', 'LOAN-01', 'LOAN-02', 'LOAN-03'], ['NFR-01', 'NFR-02']]);
   for (const { file } of of('size')) assert.equal(passes(load(file), five), true, file);
+});
+
+// The switch PRD sits at the cap, so one more non-functional bullet is the sixth ID that splits the epic.
+test('the PRD size grader passes the switch PRD at 5 IDs and fails it with a sixth', () => {
+  const prd = readFileSync(join(root, 'samples/switch/prd.md'), 'utf8');
+  const six = prd.replace(/^(- \*\*NFR-01\*\*:.*\n)/m, '$1- **NFR-02**: Turning the bar off adds no time to a backup.\n');
+  assert.notEqual(six, prd, 'samples/switch/prd.md has no NFR-01 bullet to add after');
+  for (const { file } of of('prd-size')) {
+    assert.equal(passes(load(file), prd), true, file);
+    assert.equal(passes(load(file), six), false, file);
+  }
 });
 
 test('each trace grader passes epics with every seeded PRD ID on exactly one Requirements line', () => {
