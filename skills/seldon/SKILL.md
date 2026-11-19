@@ -541,12 +541,20 @@ breaks or costs money if it's wrong, and how hard a wrong call is to undo.
   On this path Seldon walks through each decision with the user, one question
   at a time.
 
+Also judge whether the dump is too small for Seldon: it describes one small
+change to something that already exists, such as a switch turned on or off,
+with no two parts that would clash if built separately, so a spine would have
+nothing to fix. It still gets a path by the rules above.
+
 ## 6. The recommendation
 
 Name the project the way the dump or the design folder names it. If you read
 a design folder, say which one and what from it you'll carry into the brief,
-so the user confirms that along with the path. Then put the recommendation on a
-line of its own, in exactly this form, plain text with no bold or other
+so the user confirms that along with the path. When the dump looks too small
+for Seldon, say so next, in one sentence of your own on one line: that it looks
+too small to need Seldon and that Cadence can take it directly. The rest of
+the turn stays as below, so the user can still go on. Then put the
+recommendation on a line of its own, in exactly this form, plain text with no bold or other
 markup, naming exactly one path:
 
 ```
