@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: spine-outside-input
-description: Resumes a /seldon session that confirmed the Quaylost PRD and ended on the /clear words, with a confirmed brief and PRD in .planning/seldon/ whose design takes lost-item reports from passengers and runs nothing with nobody there, and no spine. A bare /seldon has to reach the spine step and ask the fixed trust-boundary question, neither the unattended-work nor the failure question, and write and edit nothing in that turn.
+description: Resumes a /seldon session that confirmed the Quaylost PRD and ended on the /clear words, with a confirmed brief and PRD in .planning/seldon/ and no spine. The design takes lost-item reports from the public, and the brief settles who sees them but not where it runs. A bare /seldon has to write a spine that passes the check in that turn, with its hosting decision tagged as a guess, ask about hosting before the /seldon architecture sentence, and end on the spine confirm question.
 runs: 1
 context:
   history_file: history.jsonl

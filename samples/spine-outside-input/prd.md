@@ -1,5 +1,5 @@
 # Quaylost - PRD
-Built from: brief.md sha256:4948ae8e5c9ec574
+Built from: brief.md sha256:21f15a531063927a
 
 ## Requirements
 
