@@ -260,14 +260,20 @@ these in order:
   Either way, carry the change on: update `brief.md` with it, as "The brief
   rerun" in "The draft" says, changing it with Edit, never a fresh Write.
 - **Design chosen:** your last turn ended on the which-design question, and
-  the user named one of the designs, by its folder or in their own words. That
-  design's folder is the working folder. Go back to the run that asked:
+  the whole reply, ignoring case, equals exactly one design's title or a named
+  design's folder name, or is the number that design has in the question. A
+  title the reply only contains, or that only contains the reply, doesn't
+  match, so `Toolshed` never picks `Toolshed repair log`, and two designs with
+  the same title are told apart by number. That design's folder is the working
+  folder. Go back to the run that asked:
   - For a bare `/seldon`, go to "Where a run starts" for that design, with
     this run's arguments counted empty.
   - For a step name, take that name's route for that design.
 
-  A reply naming none of them writes nothing and ends on the which-design
-  question again.
+  A reply matching none, or more than one, writes nothing, names the designs
+  by title again as "Which design" says, and ends on the which-design question
+  again. Every design's folder sits in `.planning/seldon/`, so `seldon` or
+  `.planning/seldon` alone names no one design and is asked again.
 - **Name given:** your last turn ended on the name line, or on the documents
   question with the name line above it, and the reply is a folder name rather
   than a choice to rerun the brief or go on.
@@ -469,8 +475,9 @@ step. Never make up a name from the dump: only the user names a design.
 ### Which design
 
 With more than one design, a run that needs one asks which first. In one
-prose sentence, name each design by its folder: the top-level design as the
-one at the top of `.planning/seldon/`, and each named design as its own
+prose sentence, name each design by its brief's `# ` title, numbered from 1
+inside the sentence, with its folder beside it: the top-level design's as the
+one at the top of `.planning/seldon/`, and each named design's as its own
 `.planning/seldon/<name>/`. No list or menu. Then end your message with
 exactly these words, on a line of their own, with nothing after them. This is
 the which-design question:
@@ -479,8 +486,8 @@ the which-design question:
 Which design do you want to work on?
 ```
 
-The question needs only the Glob that found the designs, so read nothing else
-for it.
+Take the titles with one Grep, in content mode, for `^# ` in
+`.planning/seldon/` with the glob `**/brief.md`, never a Read.
 
 ### Stamps and stale links
 
