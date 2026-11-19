@@ -486,6 +486,7 @@ function lineTrace({ text, reads, change }) {
 }
 
 // D-10's lines by their parts, each with the sentence it used to be held to word for word.
+// A stale line's `stale` names its document's resume grader, whose line it mustn't pass for.
 const LINES = [
   {
     file: 'evals/full-walk/graders/names-spine-first.md',
@@ -516,18 +517,21 @@ const LINES = [
     old: "I'm updating the PRD, because .planning/seldon/brief.md has changed since the PRD was built from it. To revise the brief instead, run /seldon brief.",
     doc: 'PRD', path: '.planning/seldon/brief.md', cmd: '/seldon brief',
     reads: ['.planning/seldon/prd.md', '.planning/seldon/brief.md'], change: { tool: 'Edit', file: '.planning/seldon/prd.md' },
+    stale: 'evals/resume/graders/names-brief-first.md',
   },
   {
     file: 'evals/stale-spine/graders/says-stale-line.md',
     old: "I'm updating the spine, because .planning/seldon/prd.md has changed since the spine was built from it. To revise the PRD instead, run /seldon prd.",
     doc: 'spine', path: '.planning/seldon/prd.md', cmd: '/seldon prd',
     reads: ['.planning/seldon/spine.md', '.planning/seldon/prd.md'], change: { tool: 'Edit', file: '.planning/seldon/spine.md' },
+    stale: 'evals/spine-from-prd/graders/names-prd-first.md',
   },
   {
     file: 'evals/stale-epics/graders/says-stale-line.md',
     old: "I'm updating the epics, because .planning/seldon/spine.md has changed since the epics were built from it. To revise the spine instead, run /seldon spine.",
     doc: 'epics', path: '.planning/seldon/spine.md', cmd: '/seldon spine',
     reads: ['.planning/seldon/epics.md', '.planning/seldon/spine.md'], change: { tool: 'Edit', file: '.planning/seldon/epics.md' },
+    stale: 'evals/full-walk/graders/names-spine-first.md',
   },
   // not_contains: it catches the epics resume line in any wording, on stale-prd's run.
   {
@@ -538,7 +542,10 @@ const LINES = [
   },
 ];
 
-const paraphrase = ({ doc, path, cmd }) => `Picking up where this left off, the ${doc} comes next, worked from ${path}, which is already there.\n\nIf that file needs changing first, run ${cmd}.`;
+const resumeParaphrase = ({ doc, path, cmd }) => `Picking up where this left off, the ${doc} comes next, worked from ${path}, which is already there.\n\nIf that file needs changing first, run ${cmd}.`;
+// A stale line carries a fourth part: the file it's built from has changed.
+const staleParaphrase = ({ doc, path, cmd }) => `${path} has changed since the ${doc} was built from it, so the ${doc} gets reworked now.\n\nIf you'd rather work on that file first, run ${cmd}.`;
+const paraphrase = (line) => (line.stale ? staleParaphrase : resumeParaphrase)(line);
 
 // Each part dropped in turn; the command goes to a longer one, which mustn't count as it.
 const DROPS = [
@@ -557,5 +564,19 @@ test('each regraded line grader passes the old sentence and a paraphrase that ca
     for (const [part, drop] of DROPS) {
       await t.test(`${line.file} with the ${part} dropped`, () => assert.equal(run(paraphrase(drop(line))), caught));
     }
+  }
+});
+
+// A resume line carries a stale line's other three parts, so only the change clause tells them apart.
+test('each stale-line grader fails its document\'s resume line, said with revise or change, and passes a stale line', async (t) => {
+  for (const line of LINES.filter((l) => l.stale)) {
+    const grader = load(line.file);
+    const run = (text) => passes(grader, lineTrace({ text, reads: line.reads, change: line.change }));
+    const resume = LINES.find((l) => l.file === line.stale).old;
+    const changeWorded = resume.replace('To revise', 'To change');
+    assert.notEqual(changeWorded, resume, `${line.stale} has no "To revise" to reword`);
+    await t.test(`${line.file} on ${line.stale}'s sentence`, () => assert.equal(run(resume), false));
+    await t.test(`${line.file} on that sentence with "To change"`, () => assert.equal(run(changeWorded), false));
+    await t.test(`${line.file} on a stale line`, () => assert.equal(run(staleParaphrase(line)), true));
   }
 });
