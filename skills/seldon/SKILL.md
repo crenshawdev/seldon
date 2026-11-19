@@ -181,13 +181,6 @@ these in order:
 - **Interview under way:** your last turn asked the refusals question in "The
   fast path questions", or asked it again, or asked a coaching question, and
   the user answered. Carry on from there.
-- **PRD questions answered:** your last turn asked the PRD step's questions,
-  and the user answered. When that turn was a rerun over a `prd.md` that's
-  there, from `/seldon prd` or a stale `prd.md`, go to "The PRD rerun" in
-  "The PRD draft" and carry the rerun on with those answers. Run "The
-  conflict check" there before the first Edit, then change `prd.md` with
-  Edit, never a fresh Write. Otherwise go to "The PRD draft" and draft with
-  those answers.
 - **Conflict question answered:** your last turn ended on the conflict
   question in "The conflict check" in "The PRD draft", and the user answered.
   - **A go-ahead:** apply exactly the change your report described, with
@@ -201,8 +194,8 @@ these in order:
     the way it says, on the PRD's confirm question. A go-ahead on the change
     your report described runs no second conflict check.
   - **A decline:** write and edit nothing. When the change came from the
-    brief, through the PRD rerun however it's reached or "PRD questions
-    answered" carrying one on, end your message with the brief decline line.
+    brief, through the PRD rerun however it's reached, end your message with the
+    brief decline line.
     When it was named at the PRD's confirm question, end with the
     nothing-changed line. Either goes on a line of its own, with nothing after
     it. These are the brief decline line and the nothing-changed line:
@@ -809,9 +802,10 @@ Running this step is the go-ahead. Recommend no path and ask for no
 confirmation first. Every section of the brief counts as answered, its
 `[ASSUMPTION]` guesses included, so never ask the brief's questions again.
 
-Draft the PRD in this same turn, as "The PRD draft" says, unless something
-only the user can decide is still open. Then ask every such question in one
-plain-prose message that ends your turn, and write nothing in that turn.
+Draft the PRD in this same turn, as "The PRD draft" says, whatever is still
+open. A decision only the user can make is drafted as a guess tagged
+`[ASSUMPTION]`, and its question rides on the PRD's confirm question, as "The
+check" says.
 
 **The stakes.** Read them from the brief's Who it serves, Success criteria and
 Scope: who depends on the product, and what breaks if it's wrong. Size the PRD
@@ -838,9 +832,6 @@ that's there, and each does it with Edit, never a fresh Write:
 - A rerun, from `/seldon prd` or from a bare `/seldon` whose stale check
   found `prd.md` stale, as "The PRD rerun" below says. It's the only route
   into the PRD step that updates a PRD that's there.
-- "PRD questions answered" in "Where the conversation stands", when the turn
-  that asked those questions was such a rerun. It carries that rerun
-  on with the user's answers, as "The PRD rerun" below says.
 - "Names changes" in "Where the conversation stands", when the user answers
   the PRD's own confirm question with changes. Run "The conflict check" below
   first. Then make those changes with Edit, quote the user's new words as "The
@@ -859,9 +850,7 @@ nothing after it.
 brief as it stands now. Read `prd.md` first, the previous version of
 this document, then `brief.md`, then `spine.md` when it's there, only for
 "The conflict check" below, and nothing else: not a design folder, and not the
-conversation. The one thing it takes from the conversation is the user's
-answers to its own questions, when the rerun stopped to ask them as "The PRD
-step" says. Work out the change, then run "The conflict check" below before
+conversation. Work out the change, then run "The conflict check" below before
 the first Edit. Change the PRD with Edit only, never a fresh Write over it, so
 a line the change doesn't touch is never typed again:
 
@@ -892,8 +881,8 @@ Then run "The PRD check" and end the step the way it says.
 
 **The conflict check.** It stops a PRD change that would undo a spine decision
 before anything is written. It runs where a change to a `prd.md` that's there
-is worked out: the PRD rerun, however it's reached, "PRD questions answered"
-when it carries a rerun on, and "Names changes" at the PRD's confirm question.
+is worked out: the PRD rerun, however it's reached, and "Names changes" at the
+PRD's confirm question.
 It runs once the change is worked out and before the first Edit, and only when
 `spine.md` is there: look for it with Read or Glob. The spine is read only to
 name conflicts, and nothing from it enters the PRD.
@@ -984,7 +973,7 @@ A PRD quote comes from one of two sources, and nowhere else:
 - The brief's `> ` lines, word for word. A quote is a whole `> ` line or one
   unbroken run of that line's exact words. Where the brief's quote had a
   `(docs/design/...)` line under it, keep that line under the PRD's quote too.
-- The user's replies to this step's own questions.
+- The user's words at this step's confirm question.
 
 The brief's item text is Seldon's wording, not the user's, so it's never
 quoted. Never paraphrase a quote and never tidy it. When a brief quote holds a
