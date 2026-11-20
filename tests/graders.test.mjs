@@ -13,6 +13,8 @@ const FULL = [
   { kind: 'size', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/at-most-five-ids.md' },
   { kind: 'size', case: 'epics-small', file: 'evals/epics-small/graders/at-most-five-ids.md' },
   { kind: 'prd-size', case: 'prd-small', file: 'evals/prd-small/graders/at-most-five-prd-ids.md' },
+  { kind: 'past-project', case: 'prd-past-project', file: 'evals/prd-past-project/graders/numbers-past-project.md' },
+  { kind: 'past-project', case: 'prd-past-project', file: 'evals/prd-past-project/graders/no-project-id.md' },
   { kind: 'brief-tag', case: 'asks-who-for', file: 'evals/asks-who-for/graders/tags-who-it-serves.md' },
   { kind: 'trace', case: 'epics-from-spine', file: 'evals/epics-from-spine/graders/every-requirement-once.md', prd: 'samples/prd.md' },
   { kind: 'trace', case: 'full-walk', file: 'evals/full-walk/graders/every-requirement-traced.md', prd: 'samples/prd.md' },
@@ -293,6 +295,34 @@ test('the PRD size grader passes the switch PRD at 5 IDs and fails it with a six
   for (const { file } of of('prd-size')) {
     assert.equal(passes(load(file), prd), true, file);
     assert.equal(passes(load(file), six), false, file);
+  }
+});
+
+// Written out, never read from the fixture: the seed's highest are CAT 4, LOAN 7 and NFR 4, so these are the first free.
+const PAST = { 'CAT-01': 'CAT-05', 'CAT-02': 'CAT-06', 'LOAN-01': 'LOAN-08', 'LOAN-02': 'LOAN-09', 'LOAN-03': 'LOAN-10', 'NFR-01': 'NFR-05', 'NFR-02': 'NFR-06' };
+
+function pastPrd() {
+  const prd = readFileSync(join(root, 'samples/prd.md'), 'utf8');
+  return { prd, past: prd.replace(/\b(?:CAT|LOAN|NFR)-0\d\b/g, (id) => PAST[id] ?? id) };
+}
+
+test('both past-project graders pass the sample PRD numbered past the seeded IDs, and fail it as it is', () => {
+  const { prd, past } = pastPrd();
+  for (const id of Object.values(PAST)) assert.match(past, new RegExp(`^- \\*\\*${id}\\*\\*:`, 'm'), `the renumbered PRD has no ${id} bullet`);
+  for (const { file } of of('past-project')) {
+    assert.equal(passes(load(file), past), true, file);
+    assert.equal(passes(load(file), prd), false, file);
+  }
+});
+
+// The top of each seeded range, one at a time: an off-by-one in the grader lets exactly one of these through.
+test('the no-project-id grader fails the renumbered PRD with any one bullet set back to CAT-04, LOAN-07 or NFR-04', () => {
+  const { past } = pastPrd();
+  const grader = load('evals/prd-past-project/graders/no-project-id.md');
+  for (const [from, to] of [['CAT-05', 'CAT-04'], ['LOAN-08', 'LOAN-07'], ['NFR-05', 'NFR-04']]) {
+    const back = past.replace(`- **${from}**:`, `- **${to}**:`);
+    assert.notEqual(back, past, `the renumbered PRD has no ${from} bullet`);
+    assert.equal(passes(grader, back), false, to);
   }
 });
 
