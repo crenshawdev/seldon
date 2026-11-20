@@ -14,7 +14,8 @@ allowed-tools:
 Read the user's dump, judge whether it is ready for a drafted brief or needs a
 walk through each decision, and recommend one path. Once the user confirms a
 path, write the project's brief to `.planning/seldon/brief.md`. Then build the
-PRD from that brief alone, at `.planning/seldon/prd.md`. Then take the spine
+PRD from that brief alone, at `.planning/seldon/prd.md`, and on a project under
+Cadence number its requirements past the IDs the project already uses. Then take the spine
 step: record the architecture decisions that would clash if two parts were
 built separately, from the brief and the PRD, plus the existing code on a
 project under Cadence, at `.planning/seldon/spine.md`. Then take the epics step: cut the work into small
@@ -39,10 +40,11 @@ epics in build order, from the PRD and the spine alone, at
 - When the user asks for the brief, or anything else, somewhere else - a
   `docs/` file, the README - say that you write only inside `.planning/seldon/`,
   and don't do it.
-- The only commands you run are five: the four checks, the brief's in "The
+- The only commands you run are six: the four checks, the brief's in "The
   check", the PRD's in "The PRD check", the spine's in "The spine check" and
-  the epics' in "The epics check", and the stale check in "Stamps and stale
-  links", each exactly as written there.
+  the epics' in "The epics check", the stale check in "Stamps and stale
+  links", and the IDs check in "The project's IDs", each exactly as written
+  there.
 - No persona and no role-play. Speak as Seldon, plainly.
 </rules>
 
@@ -340,8 +342,10 @@ Cadence when `.planning/PROJECT.md` exists, the file Cadence's
 only where a step says to ask it, and never for Read: no run looks for it
 here. Files in `.planning/` outside `.planning/seldon/`, Cadence's included,
 don't change where a run starts. With no brief a run goes to "The dump", just
-as on a new project, and writes only inside `.planning/seldon/`. The brief and
-PRD steps read none of those files. The dump describes the next body of work,
+as on a new project, and writes only inside `.planning/seldon/`. The brief step
+reads none of those files, and the PRD step only runs the IDs check on
+`.planning/REQUIREMENTS.md`, as "The project's IDs" in "The PRD step" says,
+never a Read. The dump describes the next body of work,
 and what the project has already built enters the design only at the spine
 step, and a design folder still enters at the brief as "The design folder"
 says.
@@ -761,7 +765,9 @@ from a design folder reaches the PRD only through a quote the brief already
 carries. The one other file a PRD step reads is the `prd.md` a rerun
 updates, as "The PRD rerun" says, along with `spine.md` when it's there. It
 reads the spine only to name conflicts, as "The conflict check" in "The PRD
-draft" says, and nothing from the spine enters the PRD.
+draft" says, and nothing from the spine enters the PRD. On a project under
+Cadence the step also runs the IDs check, as "The project's IDs" below says.
+That's its one read of a project file, and it gives numbers only.
 
 The brief on disk is the confirmed one, even where it differs from something
 said earlier in this conversation: the user may have edited the file by hand
@@ -787,6 +793,43 @@ keeps it one epic. The stakes never add requirements. When the brief doesn't
 show the stakes, put one line in MVP scope saying what size you drafted the
 PRD for, tagged `[ASSUMPTION]`. Never ask a question about the size or the
 stakes.
+
+**The project's IDs.** On a project under Cadence, a new requirement ID goes
+past the IDs the project's `.planning/REQUIREMENTS.md` already uses, so the
+design goes into Cadence without a clash. Whether the project is under Cadence
+is a question for Glob, for `.planning/PROJECT.md`, never Read, asked in the
+turn that gives a requirement a new ID. Without it, number as before: a first
+draft starts each prefix at 01, and a later new ID goes past the design's own.
+
+Under Cadence, run exactly this from the project root, with the path unquoted:
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --ids .planning
+```
+
+The path stays `.planning` whatever the working folder is: it names the
+project's folder, not a design's.
+
+- **When:** in the same turn as the first Write or Edit that gives a
+  requirement a new ID, and before it. That's the first draft, the PRD rerun,
+  "Names changes" at the PRD's confirm question, and "Conflict question
+  answered". Only this turn's output counts, as "Which output" in "Stamps and
+  stale links" says for a stamp.
+- **What it holds:** one line per prefix the file uses, such as
+  `highest for CAT: 4`. Copy each number exactly. Never work one out yourself,
+  and never Read, Grep or Glob inside `.planning/REQUIREMENTS.md`. Only the
+  numbers enter the PRD. On `seldon check: no project IDs`, or for a prefix
+  the output doesn't name, number as you would without Cadence.
+- **The rule:** a new ID takes the number after the higher of two: the
+  project's highest for its prefix, and the design's own highest for it in
+  `prd.md`, the `Retired:` line included. Never fill a gap. Use two or more
+  digits, so the ID after `AUTH-7` is `AUTH-08`. Never renumber an ID already
+  in `prd.md`, even one the project now uses: Cadence refuses that clash at
+  `/cad-phase add`.
+- **A non-zero exit:** write and edit nothing, and record no stamp. Say its
+  line word for word, on a line of its own. Then say that you can't number
+  the design's requirements without reading `.planning/REQUIREMENTS.md`, so
+  you've written nothing, and end your turn with no question.
 
 ## 13. The PRD draft
 
@@ -822,7 +865,8 @@ nothing after it.
 brief as it stands now. Read `prd.md` first, the previous version of
 this document, then `brief.md`, then `spine.md` when it's there, only for
 "The conflict check" below, and nothing else: not a design folder, and not the
-conversation. Work out the change, then run "The conflict check" below before
+conversation. Under Cadence it also runs the IDs check, as "The project's IDs"
+in "The PRD step" says. Work out the change, then run "The conflict check" below before
 the first Edit. Change the PRD with Edit only, never a fresh Write over it, so
 a line the change doesn't touch is never typed again:
 
@@ -841,8 +885,8 @@ a line the change doesn't touch is never typed again:
 
   Make the line when the first ID retires, and add each later one to its end,
   plain and comma-separated.
-- A new requirement takes the next unused number for its prefix. Never give it
-  an ID that's in use or on the `Retired:` line: IDs carry into Cadence's
+- A new requirement takes its number as "The project's IDs" in "The PRD step"
+  says. Never give it an ID that's in use or on the `Retired:` line: IDs carry into Cadence's
   `REQUIREMENTS.md` unchanged, so a retired ID stays retired.
 - Non-goals and MVP scope follow the brief too. A refusal the brief gained
   becomes a non-goal bullet with its quote, as "Non-goals" below says, and MVP
@@ -907,7 +951,9 @@ exactly this form, with only the ID inside the bold:
   subheading.
 - An ID is a prefix of 2 to 8 uppercase letters or digits with at least one
   letter, a dash, and two or more digits, such as `CAT-01` or `NFR-01`. Each
-  ID appears once across both sections.
+  ID appears once across both sections. A first draft starts each prefix at
+  01, or past the project's highest, as "The project's IDs" in "The PRD step"
+  says.
 - Each of the two sections holds at least one bullet. Write no indented
   bullets in either.
 
