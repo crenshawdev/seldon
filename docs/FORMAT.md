@@ -110,6 +110,13 @@ A requirement ID is a prefix, a dash and a number:
 
 Examples: `**CAT-01**`, `**SYNC-03**`, `**NFR-01**`, `**2FA-01**`.
 
+A new requirement ID takes the number one past its prefix's highest in the design, the `Retired:` line included. On a project under Cadence it also goes past the highest its prefix has in `.planning/REQUIREMENTS.md`, as "The project's IDs" reports.
+
+- Gaps aren't filled: with `CAT-01` and `CAT-05` in use, the next is `CAT-06`.
+- A prefix in neither starts at `01`.
+- The new number has two or more digits, so after `AUTH-7` comes `AUTH-08`.
+- An ID already in `prd.md` is never renumbered, even one the project has since come to use.
+
 ### Non-goals
 
 Each refusal in the brief's `## What it refuses` carries into `## Non-goals` in the brief refusal's own shape: a `- ` bullet that says what the product won't do, then `because` and the reason. The brief's quote for that refusal sits under it, word for word:
@@ -216,7 +223,7 @@ The check reads the spelling of all three ID fields, holds `**Requirements:**` t
 
 ## IDs are stable
 
-An ID is never renumbered or reused. When a requirement, decision or epic is removed, its ID stays retired, and the next new one takes the next unused number. Everything downstream, Cadence's `REQUIREMENTS.md` and the phases built from the epics, refers to these IDs.
+An ID is never renumbered or reused. When a requirement, decision or epic is removed, its ID stays retired. A new requirement ID takes a number past the highest its prefix already has (see "Requirement IDs"), and a new decision or epic takes the next unused number. Everything downstream, Cadence's `REQUIREMENTS.md` and the phases built from the epics, refers to these IDs.
 
 When a rerun drops a requirement, `prd.md` keeps its ID on one prose line directly under `## Requirements`, before the first `### ` category, so it belongs to no category and a reader finds it in one place:
 
@@ -226,7 +233,7 @@ Retired: CAT-03, LOAN-02
 
 - The IDs are plain, not bold, separated by commas and listed in the order they were retired.
 - The line is absent until an ID is retired. A later retirement extends the same line.
-- A retired ID is never reused, by a requirement or a non-functional requirement, because IDs carry into Cadence's `REQUIREMENTS.md` unchanged.
+- A retired ID is never reused, by a requirement or a non-functional requirement, because IDs carry into Cadence's `REQUIREMENTS.md` unchanged. On a project under Cadence, a new requirement ID never takes a number at or below the project's highest for its prefix either (see "The project's IDs").
 - The check reads only `- ` bullets in the requirement sections, so to it this line is prose.
 
 When a spine rerun drops a decision, `spine.md` keeps its ID on one prose line directly under the `# ` title, or under the stamp line when there is one (see "Stamps"), before the first `## ` decision:
@@ -471,6 +478,30 @@ It never reports `architecture.md`, which is outside the chain. A folder holding
 stale: prd.md was built from an earlier brief.md
 stamp for prd.md: Built from: brief.md sha256:<hash>
 stamp for spine.md: Built from: prd.md sha256:<hash>
+```
+
+### The project's IDs
+
+```
+node lib/check.mjs --ids <dir>
+```
+
+This is for the PRD step on a project under Cadence, with `<dir>` the project's `.planning/`: it says how high each requirement ID prefix already goes there, so a new ID can go past it (see "Requirement IDs").
+
+- It reads only `<dir>/REQUIREMENTS.md`, Cadence's file, and writes nothing.
+- It counts every token in Cadence's admission shape anywhere in the file, in a table cell, a bullet, parentheses or prose: a prefix of 2 to 8 uppercase letters or digits with at least one letter, a dash, and one or more digits. A token is matched whole, so a longer run is never read as a shorter prefix. A date's `2026-03` has no letter and `S-05` has a one-letter prefix, so neither counts.
+- Numbers compare as integers, so `GH-12` is higher than `GH-9`.
+- It prints one line per prefix, `highest for <PREFIX>: <n>`, sorted by prefix in code-unit order, and exits 0. Nothing else from the file is printed.
+- With no `REQUIREMENTS.md`, or no ID in it, it prints one line, `seldon check: no project IDs`, and exits 0.
+- When the file is there but can't be read, it prints `REQUIREMENTS.md: cannot read (<code>)`, such as `(EISDIR)` for a folder by that name, and exits 1. Unlike "Stale links", it doesn't read that as absent: an ID is never renumbered, so a design numbered without the file couldn't be put right.
+- It exits 2 when the directory argument is missing or isn't a directory.
+
+It's no format check, and `--prd` doesn't hold a PRD to the numbering rule: an ID already in `prd.md` is never renumbered, so a design numbered before the project gained that ID could never pass. A `REQUIREMENTS.md` that goes up to `CAT-4`, `LOAN-07` and `NFR-04` prints:
+
+```
+highest for CAT: 4
+highest for LOAN: 7
+highest for NFR: 4
 ```
 
 ## Examples
