@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: prd-past-project
+description: "A /seldon prd first draft on a project under Cadence whose .planning/REQUIREMENTS.md already goes up to CAT 4, LOAN 7 and NFR 4, so Seldon has to run check.mjs --ids .planning, number every new requirement past those, and read, write and edit nothing outside .planning/seldon/."
+runs: 1
+context:
+  scaffold_script: seed.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Skill, Read, Glob, Grep]
