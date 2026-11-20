@@ -2,11 +2,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BRIEF_OK_LINE, checkDir, EPICS_OK_LINE, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE, STALE_OK_LINE } from '../lib/check.mjs';
+import { BRIEF_OK_LINE, checkDir, EPICS_OK_LINE, NO_IDS_LINE, OK_LINE, PRD_OK_LINE, SPINE_OK_LINE, STALE_OK_LINE } from '../lib/check.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const samples = join(root, 'samples');
@@ -220,7 +220,7 @@ test('a Retired line under the epics title passes the full check and --epics', (
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -472,8 +472,72 @@ test('--stale reads unstamped documents fresh after their parents change', (t) =
 test('--stale with no directory or a file for one exits 2', () => {
   const none = run('--stale');
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids\] <dir>/);
   const file = run('--stale', join(samples, 'brief.md'));
+  assert.equal(file.status, 2);
+  assert.match(file.stderr, /is not a directory/);
+});
+
+// Toolshed's REQUIREMENTS.md after v1.0, laid out the way Cadence writes it.
+const PROJECT = join(samples, 'prd-past-project', 'planning');
+
+function project(t) {
+  const dir = temp(t);
+  cpSync(PROJECT, dir, { recursive: true });
+  return dir;
+}
+
+// Every path under dir with its bytes, so a stray write or a new file shows up as a difference.
+const snapshot = (dir) => readdirSync(dir, { recursive: true }).map(String).sort()
+  .map((p) => [p, readFileSync(join(dir, p)).toString('base64')]);
+
+test("--ids prints each prefix's highest number in REQUIREMENTS.md, sorted, and exits 0", (t) => {
+  const r = run('--ids', project(t));
+  assert.equal(r.status, 0);
+  // Each line is a wrong scan's tell: CAT-4 is one digit, LOAN-07 sits only in Out of Scope, 2FA opens with a digit,
+  // GH-9 against GH-12 is a string compare, and no 2026, S or E means dates and one-letter prefixes stay out.
+  assert.deepEqual(r.stdout.trim().split('\n'), [
+    'highest for 2FA: 2',
+    'highest for CAT: 4',
+    'highest for GH: 12',
+    'highest for LOAN: 7',
+    'highest for NFR: 4',
+    'highest for SMS: 1',
+  ]);
+});
+
+test('--ids leaves the folder and REQUIREMENTS.md byte for byte as they were', (t) => {
+  const dir = project(t);
+  const before = snapshot(dir);
+  assert.equal(run('--ids', dir).status, 0);
+  assert.deepEqual(snapshot(dir), before);
+});
+
+test('--ids on a folder with no REQUIREMENTS.md, or one with no ID, exits 0 with no project IDs', (t) => {
+  const none = run('--ids', temp(t));
+  assert.equal(none.status, 0);
+  assert.equal(none.stdout.trim(), NO_IDS_LINE);
+  const dir = temp(t);
+  // A date, a one-letter prefix, lowercase and a nine-letter run: none of them is an ID, nor any piece of them.
+  writeFileSync(join(dir, 'REQUIREMENTS.md'), '# Requirements\n\nDefined 2026-03-02. S-05 picked cat-01 over ABCDEFGHI-01.\n');
+  const prose = run('--ids', dir);
+  assert.equal(prose.status, 0);
+  assert.equal(prose.stdout.trim(), NO_IDS_LINE);
+});
+
+test('--ids on a REQUIREMENTS.md it cannot read exits 1, naming the file', (t) => {
+  const dir = temp(t);
+  mkdirSync(join(dir, 'REQUIREMENTS.md'));
+  const r = run('--ids', dir);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), 'REQUIREMENTS.md: cannot read (EISDIR)');
+});
+
+test('--ids with no directory or a file for one exits 2', () => {
+  const none = run('--ids');
+  assert.equal(none.status, 2);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids\] <dir>/);
+  const file = run('--ids', join(PROJECT, 'REQUIREMENTS.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
 });
