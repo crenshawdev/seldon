@@ -336,16 +336,25 @@ later turn of a step under way names it as the conversation already does, with
 no tool call. A line that must end a message, such as the `/clear` words or a
 handoff command, keeps its place, and the title goes earlier in the message.
 
-A project already under Cadence starts the same way. It counts as under
-Cadence when `.planning/PROJECT.md` exists, the file Cadence's
-`/cad-new-project` stops on. Whether it's there is a question for Glob, asked
-only where a step says to ask it, and never for Read: no run looks for it
-here. Files in `.planning/` outside `.planning/seldon/`, Cadence's included,
-don't change where a run starts. With no brief a run goes to "The dump", just
-as on a new project, and writes only inside `.planning/seldon/`. The brief step
-reads none of those files, and the PRD step only runs the IDs check on
-`.planning/REQUIREMENTS.md`, as "The project's IDs" in "The PRD step" says,
-never a Read. The dump describes the next body of work,
+A project already under Cadence starts the same way. Whether it's under
+Cadence, and on which of Cadence's two paths, is a question for the path
+check, asked only where a step says to ask it: no run asks it here. Run exactly
+this from the project root, with the path unquoted:
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/lib/check.mjs --cadence .planning
+```
+
+`cadence: agile` is Cadence's new path and `cadence: old` its old one, and
+either means the project is under Cadence. `cadence: none` means it isn't.
+Never Read, Grep or Glob for Cadence's files to decide it. On a non-zero exit,
+write and edit nothing, say its line word for word on a line of its own, and
+end your turn with no question. Files in `.planning/` outside
+`.planning/seldon/`, Cadence's included, don't change where a run starts. With
+no brief a run goes to "The dump", just as on a new project, and writes only
+inside `.planning/seldon/`. The brief step reads none of those files, and the
+PRD step only runs the IDs check on Cadence's requirements, as "The project's
+IDs" in "The PRD step" says, never a Read. The dump describes the next body of work,
 and what the project has already built enters the design only at the spine
 step, and a design folder still enters at the brief as "The design folder"
 says.
@@ -795,10 +804,10 @@ PRD for, tagged `[ASSUMPTION]`. Never ask a question about the size or the
 stakes.
 
 **The project's IDs.** On a project under Cadence, a new requirement ID goes
-past the IDs the project's `.planning/REQUIREMENTS.md` already uses, so the
-design goes into Cadence without a clash. Whether the project is under Cadence
-is a question for Glob, for `.planning/PROJECT.md`, never Read, asked in the
-turn that gives a requirement a new ID. Without it, number as before: a first
+past the IDs the project's Cadence requirements already use, so the design
+goes into Cadence without a clash. Whether the project is under Cadence is the
+path check's answer, as "Where a run starts" says, asked in the turn that gives
+a requirement a new ID. Without it, number as before: a first
 draft starts each prefix at 01, and a later new ID goes past the design's own.
 
 Under Cadence, run exactly this from the project root, with the path unquoted:
@@ -817,18 +826,18 @@ project's folder, not a design's.
   stale links" says for a stamp.
 - **What it holds:** one line per prefix the file uses, such as
   `highest for CAT: 4`. Copy each number exactly. Never work one out yourself,
-  and never Read, Grep or Glob inside `.planning/REQUIREMENTS.md`. Only the
+  and never Read, Grep or Glob inside Cadence's requirements files. Only the
   numbers enter the PRD. On `seldon check: no project IDs`, or for a prefix
   the output doesn't name, number as you would without Cadence.
 - **The rule:** a new ID takes the number after the higher of two: the
   project's highest for its prefix, and the design's own highest for it in
   `prd.md`, the `Retired:` line included. Never fill a gap. Use two or more
   digits, so the ID after `AUTH-7` is `AUTH-08`. Never renumber an ID already
-  in `prd.md`, even one the project now uses: Cadence refuses that clash at
-  `/cad-phase add`.
+  in `prd.md`, even one the project now uses: Cadence refuses that clash when
+  the design is handed to it.
 - **A non-zero exit:** write and edit nothing, and record no stamp. Say its
   line word for word, on a line of its own. Then say that you can't number
-  the design's requirements without reading `.planning/REQUIREMENTS.md`, so
+  the design's requirements without reading Cadence's requirements, so
   you've written nothing, and end your turn with no question.
 
 ## 13. The PRD draft
@@ -1036,8 +1045,8 @@ changes.
 
 The spine is built from `.planning/seldon/brief.md` and
 `.planning/seldon/prd.md`, plus the existing code on a project under Cadence.
-Ask whether it's under Cadence here, with Glob for `.planning/PROJECT.md` as
-"Where a run starts" says, never Read. Under Cadence, also read the files
+Ask whether it's under Cadence here, with the path check as "Where a run
+starts" says, never Read. Under Cadence, also read the files
 outside `.planning/`, with Read, Glob and Grep only, never a shell command,
 enough to find the conventions "What the spine holds" asks for. Otherwise read
 those two files and nothing more. Either way, never read `docs/design/` or any
@@ -1534,8 +1543,8 @@ folder's `prd.md`, `spine.md` and `epics.md`, one per line, and nothing else:
 **One message.** Every tool call this route makes comes before the first line
 of its report: the stale check, the title Grep on `brief.md`, the agent start
 and, when the handoff follows,
-the handoff's Glob for `.planning/PROJECT.md`. Once the agent's reply is in
-hand, do that Glob before you write any line of the report. Then the report,
+the handoff's path check. Once the agent's reply is in hand, run that check
+before you write any line of the report. Then the report,
 the handoff's delete-or-move sentence, its lead-in and the command are one
 final message, with no tool call after its first line. Text written before a tool call isn't in the message the
 user sees last.
@@ -1583,9 +1592,9 @@ Decision left open: <epic IDs, comma-separated> (<the choice, in a few words>). 
 ## 23. The handoff
 
 "The readiness check" and a hand-off answer to its question end here. Ask
-whether `.planning/PROJECT.md` exists with Glob, never Read, as "The spine
-step" does. That Glob comes before the handoff's first line, and before any
-report line when the readiness check leads here. No tool call follows the
+which path the project is on with the path check, as "Where a run starts"
+says. That check comes before the handoff's first line, and before any report
+line when the readiness check leads here. No tool call follows the
 lead-in. Read none of Cadence's files to decide anything.
 
 Before the lead-in, on a line of its own, say in one sentence that once
@@ -1596,19 +1605,41 @@ top-level design's names its documents at the top of `.planning/seldon/`,
 never the folder itself, since every named design sits inside it. It's a
 statement with no question mark, and Seldon itself deletes and moves nothing.
 
-Say the lead-in on a line of its own, then the command on a line of its own:
+Say the lead-in on a line of its own, then each command on a line of its own:
 
 ```
 To hand this design to Cadence, run:
 ```
 
-- **No `.planning/PROJECT.md`:** the command is the last line of the turn:
+- **`cadence: none`:** both of Cadence's ways in, the new path's first. Its
+  command, then the old path's line, then the old path's command as the last
+  line of the turn:
+
+  ```
+  /cad-agile --brief .planning/seldon
+  ```
+
+  ```
+  Or, to start it on Cadence's old path instead:
+  ```
 
   ```
   /cad-new-project --brief .planning/seldon
   ```
 
-- **`.planning/PROJECT.md` there:** the command, then the already-built
+- **`cadence: agile`:** the new path's command, then the already-built
+  sentence on a line of its own as the last thing in the turn, for a named
+  design too:
+
+  ```
+  /cad-agile --brief .planning/seldon
+  ```
+
+  ```
+  If Cadence has already built this design, there's nothing to hand off.
+  ```
+
+- **`cadence: old`:** the old path's command, then the same already-built
   sentence on a line of its own as the last thing in the turn, for a named
   design too:
 
@@ -1620,7 +1651,7 @@ To hand this design to Cadence, run:
   If Cadence has already built this design, there's nothing to hand off.
   ```
 
-With a named design both commands name `.planning/seldon/<name>`, unquoted and
+With a named design every command names `.planning/seldon/<name>`, unquoted and
 with no trailing slash, as "Designs and the working folder" says.
 
 The handoff writes and edits nothing and leaves no record, so a later bare

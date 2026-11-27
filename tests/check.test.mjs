@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -220,7 +220,7 @@ test('a Retired line under the epics title passes the full check and --epics', (
 test('a missing or non-directory argument exits 2', () => {
   const none = run();
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids \| --cadence\] <dir>/);
   const file = run(join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -472,7 +472,7 @@ test('--stale reads unstamped documents fresh after their parents change', (t) =
 test('--stale with no directory or a file for one exits 2', () => {
   const none = run('--stale');
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids \| --cadence\] <dir>/);
   const file = run('--stale', join(samples, 'brief.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
@@ -487,9 +487,9 @@ function project(t) {
   return dir;
 }
 
-// Every path under dir with its bytes, so a stray write or a new file shows up as a difference.
+// Every path under dir with its bytes, so a stray write or a new file shows up as a difference; a folder has none.
 const snapshot = (dir) => readdirSync(dir, { recursive: true }).map(String).sort()
-  .map((p) => [p, readFileSync(join(dir, p)).toString('base64')]);
+  .map((p) => [p, statSync(join(dir, p)).isDirectory() ? 'folder' : readFileSync(join(dir, p)).toString('base64')]);
 
 test("--ids prints each prefix's highest number in REQUIREMENTS.md, sorted, and exits 0", (t) => {
   const r = run('--ids', project(t));
@@ -536,10 +536,178 @@ test('--ids on a REQUIREMENTS.md it cannot read exits 1, naming the file', (t) =
 test('--ids with no directory or a file for one exits 2', () => {
   const none = run('--ids');
   assert.equal(none.status, 2);
-  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids\] <dir>/);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids \| --cadence\] <dir>/);
   const file = run('--ids', join(PROJECT, 'REQUIREMENTS.md'));
   assert.equal(file.status, 2);
   assert.match(file.stderr, /is not a directory/);
+});
+
+// A .planning folder holding just the named files, each with a line in it.
+function planning(t, ...files) {
+  const dir = temp(t);
+  for (const f of files) {
+    mkdirSync(dirname(join(dir, f)), { recursive: true });
+    writeFileSync(join(dir, f), `# ${f}\n`);
+  }
+  return dir;
+}
+
+test('--cadence names the path: agile beats PROJECT.md, PROJECT.md alone is old, neither is none, and nothing changes', (t) => {
+  for (const [files, want] of [
+    [['agile/project.md'], 'cadence: agile'],
+    [['agile/project.md', 'PROJECT.md'], 'cadence: agile'],
+    [['PROJECT.md'], 'cadence: old'],
+    [[], 'cadence: none'],
+  ]) {
+    const dir = planning(t, ...files);
+    const before = snapshot(dir);
+    const r = run('--cadence', dir);
+    assert.equal(r.status, 0, files.join(', '));
+    assert.equal(r.stdout.trim(), want, files.join(', '));
+    assert.deepEqual(snapshot(dir), before);
+  }
+});
+
+test('--cadence counts only a file: an agile folder with no project.md, or a file named agile, is not the new path', (t) => {
+  const empty = planning(t, 'PROJECT.md');
+  mkdirSync(join(empty, 'agile'));
+  assert.equal(run('--cadence', empty).stdout.trim(), 'cadence: old');
+  const flat = planning(t, 'agile');
+  assert.equal(run('--cadence', flat).stdout.trim(), 'cadence: none');
+  const folder = planning(t);
+  mkdirSync(join(folder, 'agile', 'project.md'), { recursive: true });
+  assert.equal(run('--cadence', folder).stdout.trim(), 'cadence: none');
+});
+
+test('--cadence on a folder it cannot look inside exits 1, naming the file', { skip: process.getuid?.() === 0 && 'root reads anything' }, (t) => {
+  const dir = planning(t);
+  mkdirSync(join(dir, 'agile'), { mode: 0o000 });
+  let r;
+  try {
+    r = run('--cadence', dir);
+  } finally {
+    // before temp's cleanup, which can't remove a folder it can't open
+    chmodSync(join(dir, 'agile'), 0o700);
+  }
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), `${join('agile', 'project.md')}: cannot read (EACCES)`);
+});
+
+test('--cadence with no directory or a file for one exits 2', (t) => {
+  const none = run('--cadence');
+  assert.equal(none.status, 2);
+  assert.match(none.stderr, /usage: node lib\/check\.mjs \[--brief \| --prd \| --spine \| --epics \| --stale \| --ids \| --cadence\] <dir>/);
+  const file = run('--cadence', join(planning(t, 'PROJECT.md'), 'PROJECT.md'));
+  assert.equal(file.status, 2);
+  assert.match(file.stderr, /is not a directory/);
+});
+
+// The new path's requirements file as Cadence writes it: rows, then deferred rows, then the earlier releases' highest.
+const AGILE_REQUIREMENTS = `# Requirements
+
+## Requirements
+
+- **HAND-01**: Seldon treats a project on the new path as under Cadence.
+- **HAND-03**: Seldon hands off the new path's start command.
+
+## Deferred
+
+- **MOD-04**: Prefix bare stems only on a Cadence turn (dropped from v3.8.0 on 2026-10-04)
+
+## Highest IDs of earlier releases
+
+- CUT-08
+- NFR-04
+`;
+
+test('--ids on the new path reads agile/REQUIREMENTS.md, deferred rows and earlier releases included, and not the file beside it', (t) => {
+  const dir = planning(t, 'agile/project.md');
+  writeFileSync(join(dir, 'agile', 'REQUIREMENTS.md'), AGILE_REQUIREMENTS);
+  // the old path's file left beside it, higher on HAND and with a prefix of its own, must not count
+  writeFileSync(join(dir, 'REQUIREMENTS.md'), '- **HAND-50**: old\n- **ZZZ-99**: old\n');
+  const before = snapshot(dir);
+  const r = run('--ids', dir);
+  assert.equal(r.status, 0);
+  assert.deepEqual(r.stdout.trim().split('\n'), [
+    'highest for CUT: 8',
+    'highest for HAND: 3',
+    'highest for MOD: 4',
+    'highest for NFR: 4',
+  ]);
+  assert.deepEqual(snapshot(dir), before);
+});
+
+test('--ids on the new path with no agile/REQUIREMENTS.md has no project IDs, and one it cannot read exits 1, naming it', (t) => {
+  const none = planning(t, 'agile/project.md', 'REQUIREMENTS.md');
+  writeFileSync(join(none, 'REQUIREMENTS.md'), '- **HAND-50**: old\n');
+  const empty = run('--ids', none);
+  assert.equal(empty.status, 0);
+  assert.equal(empty.stdout.trim(), NO_IDS_LINE);
+  const dir = planning(t, 'agile/project.md');
+  mkdirSync(join(dir, 'agile', 'REQUIREMENTS.md'));
+  const r = run('--ids', dir);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), `${join('agile', 'REQUIREMENTS.md')}: cannot read (EISDIR)`);
+});
+
+test('--ids on the new path counts each closed release under agile/releases/, with or without an open release', (t) => {
+  // between releases, the state a design is handed off in: the close moved the file and nothing replaced it
+  const between = planning(t, 'agile/project.md');
+  mkdirSync(join(between, 'agile', 'releases', '4.4'), { recursive: true });
+  mkdirSync(join(between, 'agile', 'releases', '4.5'), { recursive: true });
+  writeFileSync(join(between, 'agile', 'releases', '4.4', 'REQUIREMENTS.md'), '- **OLD-07**: shipped in 4.4\n- **HAND-09**');
+  writeFileSync(join(between, 'agile', 'releases', '4.5', 'REQUIREMENTS.md'), AGILE_REQUIREMENTS);
+  // a stray file and a release folder with no requirements file are passed over, not refused
+  writeFileSync(join(between, 'agile', 'releases', 'notes.md'), '- **ZZZ-99**: not a release\n');
+  mkdirSync(join(between, 'agile', 'releases', '4.3'));
+  const before = snapshot(between);
+  const r = run('--ids', between);
+  assert.equal(r.status, 0);
+  assert.deepEqual(r.stdout.trim().split('\n'), [
+    'highest for CUT: 8',
+    'highest for HAND: 9',
+    'highest for MOD: 4',
+    'highest for NFR: 4',
+    'highest for OLD: 7',
+  ]);
+  assert.deepEqual(snapshot(between), before);
+  writeFileSync(join(between, 'agile', 'REQUIREMENTS.md'), '- **HAND-12**: the open release\n');
+  const open = run('--ids', between);
+  assert.equal(open.status, 0);
+  assert.ok(open.stdout.split('\n').includes('highest for HAND: 12'), open.stdout);
+  assert.ok(open.stdout.split('\n').includes('highest for OLD: 7'), open.stdout);
+});
+
+test('--ids exits 1 on a closed release file or a releases folder it cannot read, naming it', (t) => {
+  const file = planning(t, 'agile/project.md');
+  mkdirSync(join(file, 'agile', 'releases', '4.5', 'REQUIREMENTS.md'), { recursive: true });
+  const r = run('--ids', file);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), `${join('agile', 'releases', '4.5', 'REQUIREMENTS.md')}: cannot read (EISDIR)`);
+  if (process.getuid?.() === 0) return;
+  const folder = planning(t, 'agile/project.md');
+  mkdirSync(join(folder, 'agile', 'releases'), { mode: 0o000 });
+  let locked;
+  try {
+    locked = run('--ids', folder);
+  } finally {
+    chmodSync(join(folder, 'agile', 'releases'), 0o700);
+  }
+  assert.equal(locked.status, 1);
+  assert.equal(locked.stdout.trim(), `${join('agile', 'releases')}: cannot read (EACCES)`);
+});
+
+test('--ids on a folder it cannot look inside for the path exits 1, naming the file', { skip: process.getuid?.() === 0 && 'root reads anything' }, (t) => {
+  const dir = planning(t, 'REQUIREMENTS.md');
+  mkdirSync(join(dir, 'agile'), { mode: 0o000 });
+  let r;
+  try {
+    r = run('--ids', dir);
+  } finally {
+    chmodSync(join(dir, 'agile'), 0o700);
+  }
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), `${join('agile', 'project.md')}: cannot read (EACCES)`);
 });
 
 // The mode, the file it reads, that file's parent and the line it passes with.

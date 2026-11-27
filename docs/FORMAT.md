@@ -110,7 +110,7 @@ A requirement ID is a prefix, a dash and a number:
 
 Examples: `**CAT-01**`, `**SYNC-03**`, `**NFR-01**`, `**2FA-01**`.
 
-A new requirement ID takes the number one past its prefix's highest in the design, the `Retired:` line included. On a project under Cadence it also goes past the highest its prefix has in `.planning/REQUIREMENTS.md`, as "The project's IDs" reports.
+A new requirement ID takes the number one past its prefix's highest in the design, the `Retired:` line included. On a project under Cadence it also goes past the highest its prefix has in Cadence's requirements, as "The project's IDs" reports.
 
 - Gaps aren't filled: with `CAT-01` and `CAT-05` in use, the next is `CAT-06`.
 - A prefix in neither starts at `01`.
@@ -361,7 +361,7 @@ A spine quote comes from one of three sources, and nowhere else:
 
 - The brief's `> ` lines, word for word. A quote is a whole `> ` line or one unbroken run of that line's exact words. Where the brief's quote had a design-file source line under it, the spine's quote keeps that source line under it too, as the PRD's does.
 - The user's replies to the spine step's own questions.
-- On a project already under Cadence, one with `.planning/PROJECT.md`, the project's existing code outside `.planning/`, quoted word for word from the file. The line right after the quote names the file, relative to the project root, in parentheses and indented like the quote, as words from a design folder do.
+- On a project already under Cadence, on either of its paths as "The project's Cadence path" tells them apart, the project's existing code outside `.planning/`, quoted word for word from the file. The line right after the quote names the file, relative to the project root, in parentheses and indented like the quote, as words from a design folder do.
 
 A convention quoted from the code carries no `[ASSUMPTION]`, because what the code shows isn't a guess.
 
@@ -488,12 +488,12 @@ node lib/check.mjs --ids <dir>
 
 This is for the PRD step on a project under Cadence, with `<dir>` the project's `.planning/`: it says how high each requirement ID prefix already goes there, so a new ID can go past it (see "Requirement IDs").
 
-- It reads only `<dir>/REQUIREMENTS.md`, Cadence's file, and writes nothing.
+- It reads Cadence's requirements files and writes nothing. On Cadence's new path, where `--cadence` prints `cadence: agile`, those are the open release's `<dir>/agile/REQUIREMENTS.md` and the `REQUIREMENTS.md` in each folder under `<dir>/agile/releases/`, where a close moves a release's file, so a design made between releases still goes past them. Their deferred rows and lists of earlier releases' highest IDs count like any other. Otherwise it reads `<dir>/REQUIREMENTS.md` alone. The other path's file is never read, even when it's there.
 - It counts every token in Cadence's admission shape anywhere in the file, in a table cell, a bullet, parentheses or prose: a prefix of 2 to 8 uppercase letters or digits with at least one letter, a dash, and one or more digits. A token is matched whole, so a longer run is never read as a shorter prefix. A date's `2026-03` has no letter and `S-05` has a one-letter prefix, so neither counts.
 - Numbers compare as integers, so `GH-12` is higher than `GH-9`.
 - It prints one line per prefix, `highest for <PREFIX>: <n>`, sorted by prefix in code-unit order, and exits 0. Nothing else from the file is printed.
-- With no `REQUIREMENTS.md`, or no ID in it, it prints one line, `seldon check: no project IDs`, and exits 0.
-- When the file is there but can't be read, it prints `REQUIREMENTS.md: cannot read (<code>)`, such as `(EISDIR)` for a folder by that name, and exits 1. Unlike "Stale links", it doesn't read that as absent: an ID is never renumbered, so a design numbered without the file couldn't be put right.
+- With no such file, or no ID in it, it prints one line, `seldon check: no project IDs`, and exits 0.
+- When the file is there but can't be read, it prints `<file>: cannot read (<code>)`, such as `REQUIREMENTS.md: cannot read (EISDIR)` for a folder by that name, and exits 1. It does the same when it can't tell which path the project is on, as `--cadence` would say. Unlike "Stale links", it doesn't read that as absent: an ID is never renumbered, so a design numbered without the file couldn't be put right.
 - It exits 2 when the directory argument is missing or isn't a directory.
 
 It's no format check, and `--prd` doesn't hold a PRD to the numbering rule: an ID already in `prd.md` is never renumbered, so a design numbered before the project gained that ID could never pass. A `REQUIREMENTS.md` that goes up to `CAT-4`, `LOAN-07` and `NFR-04` prints:
@@ -503,6 +503,21 @@ highest for CAT: 4
 highest for LOAN: 7
 highest for NFR: 4
 ```
+
+### The project's Cadence path
+
+```
+node lib/check.mjs --cadence <dir>
+```
+
+This is for a step that asks whether the project is under Cadence, with `<dir>` the project's `.planning/`: it says which of Cadence's two paths the project is on.
+
+- It prints `cadence: agile` when `<dir>/agile/project.md` is a file, the new path's project file, whether or not `<dir>/PROJECT.md` is there too.
+- Otherwise it prints `cadence: old` when `<dir>/PROJECT.md` is a file, the old path's.
+- Otherwise it prints `cadence: none`.
+- Each of those exits 0. It reads no file's contents and writes nothing.
+- When it can't look for one of those files, for a reason other than the file or its folder not being there, it prints `<file>: cannot read (<code>)`, such as `agile/project.md: cannot read (EACCES)`, and exits 1.
+- It exits 2 when the directory argument is missing or isn't a directory.
 
 ## Examples
 
