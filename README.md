@@ -29,12 +29,16 @@ A project's first design sits at the top of `.planning/seldon/` and stays there.
 
 ## Install
 
-This repository is its own marketplace, so the plugin id is `seldon@seldon`. In Claude Code:
+Seldon is one of the plugins in [Foundation](https://github.com/crenshawdev/foundation), the marketplace Cadence installs from. In Claude Code:
 
 ```
-/plugin marketplace add crenshawdev/seldon
-/plugin install seldon@seldon
+/plugin marketplace add https://github.com/crenshawdev/foundation.git
+/plugin install seldon@foundation
 ```
+
+Update with `/plugin update seldon@foundation`.
+
+This repository is also its own marketplace, and an install from it, `seldon@seldon`, keeps working and keeps getting updates. If you switch to Foundation, run `/plugin uninstall seldon@seldon` first, so only one of them is enabled.
 
 ## Using it
 
