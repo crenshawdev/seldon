@@ -83,7 +83,8 @@ test('every check command in the body starts with the Bash rule\'s command', () 
   assert.ok(body.split('\n').includes(`${prefix} --ids .planning`), `no body line is exactly: ${prefix} --ids .planning`);
   // Which Cadence path is the script's answer, so a step never decides it by looking for a file itself.
   assert.ok(body.split('\n').includes(`${prefix} --cadence .planning`), `no body line is exactly: ${prefix} --cadence .planning`);
-  assert.ok(!/Glob[^.]*`\.planning\/PROJECT\.md`/.test(body), 'a step still asks Glob for .planning/PROJECT.md');
+  // Any mention, however it's worded, is a step looking for the old path's file instead of asking the check.
+  assert.ok(!body.includes('PROJECT.md'), 'the skill still names PROJECT.md, so a step may decide the path by looking for it');
 });
 
 // Each answer of the path check gets its own command, so a new-path project is never sent to /cad-phase add.

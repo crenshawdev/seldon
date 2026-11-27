@@ -110,7 +110,7 @@ A requirement ID is a prefix, a dash and a number:
 
 Examples: `**CAT-01**`, `**SYNC-03**`, `**NFR-01**`, `**2FA-01**`.
 
-A new requirement ID takes the number one past its prefix's highest in the design, the `Retired:` line included. On a project under Cadence it also goes past the highest its prefix has in `.planning/REQUIREMENTS.md`, as "The project's IDs" reports.
+A new requirement ID takes the number one past its prefix's highest in the design, the `Retired:` line included. On a project under Cadence it also goes past the highest its prefix has in Cadence's requirements, as "The project's IDs" reports.
 
 - Gaps aren't filled: with `CAT-01` and `CAT-05` in use, the next is `CAT-06`.
 - A prefix in neither starts at `01`.
@@ -361,7 +361,7 @@ A spine quote comes from one of three sources, and nowhere else:
 
 - The brief's `> ` lines, word for word. A quote is a whole `> ` line or one unbroken run of that line's exact words. Where the brief's quote had a design-file source line under it, the spine's quote keeps that source line under it too, as the PRD's does.
 - The user's replies to the spine step's own questions.
-- On a project already under Cadence, one with `.planning/PROJECT.md`, the project's existing code outside `.planning/`, quoted word for word from the file. The line right after the quote names the file, relative to the project root, in parentheses and indented like the quote, as words from a design folder do.
+- On a project already under Cadence, on either of its paths as "The project's Cadence path" tells them apart, the project's existing code outside `.planning/`, quoted word for word from the file. The line right after the quote names the file, relative to the project root, in parentheses and indented like the quote, as words from a design folder do.
 
 A convention quoted from the code carries no `[ASSUMPTION]`, because what the code shows isn't a guess.
 
