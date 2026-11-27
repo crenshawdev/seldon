@@ -81,6 +81,9 @@ test('every check command in the body starts with the Bash rule\'s command', () 
   assert.ok(body.includes(`${prefix} --brief .planning/seldon`), `the body never runs: ${prefix} --brief .planning/seldon`);
   // The project's folder, not the design's: the IDs live in Cadence's file, whichever design is open.
   assert.ok(body.split('\n').includes(`${prefix} --ids .planning`), `no body line is exactly: ${prefix} --ids .planning`);
+  // Which Cadence path is the script's answer, so a step never decides it by looking for a file itself.
+  assert.ok(body.split('\n').includes(`${prefix} --cadence .planning`), `no body line is exactly: ${prefix} --cadence .planning`);
+  assert.ok(!/Glob[^.]*`\.planning\/PROJECT\.md`/.test(body), 'a step still asks Glob for .planning/PROJECT.md');
 });
 
 // The loader pastes this run's arguments over every token, so one in prose reads "look at ``" on a bare /seldon.
