@@ -1605,19 +1605,41 @@ top-level design's names its documents at the top of `.planning/seldon/`,
 never the folder itself, since every named design sits inside it. It's a
 statement with no question mark, and Seldon itself deletes and moves nothing.
 
-Say the lead-in on a line of its own, then the command on a line of its own:
+Say the lead-in on a line of its own, then each command on a line of its own:
 
 ```
 To hand this design to Cadence, run:
 ```
 
-- **No `.planning/PROJECT.md`:** the command is the last line of the turn:
+- **`cadence: none`:** both of Cadence's ways in, the new path's first. Its
+  command, then the old path's line, then the old path's command as the last
+  line of the turn:
+
+  ```
+  /cad-agile --brief .planning/seldon
+  ```
+
+  ```
+  Or, to start it on Cadence's old path instead:
+  ```
 
   ```
   /cad-new-project --brief .planning/seldon
   ```
 
-- **`.planning/PROJECT.md` there:** the command, then the already-built
+- **`cadence: agile`:** the new path's command, then the already-built
+  sentence on a line of its own as the last thing in the turn, for a named
+  design too:
+
+  ```
+  /cad-agile --brief .planning/seldon
+  ```
+
+  ```
+  If Cadence has already built this design, there's nothing to hand off.
+  ```
+
+- **`cadence: old`:** the old path's command, then the same already-built
   sentence on a line of its own as the last thing in the turn, for a named
   design too:
 
@@ -1629,7 +1651,7 @@ To hand this design to Cadence, run:
   If Cadence has already built this design, there's nothing to hand off.
   ```
 
-With a named design both commands name `.planning/seldon/<name>`, unquoted and
+With a named design every command names `.planning/seldon/<name>`, unquoted and
 with no trailing slash, as "Designs and the working folder" says.
 
 The handoff writes and edits nothing and leaves no record, so a later bare

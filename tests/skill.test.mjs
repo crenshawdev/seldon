@@ -86,6 +86,29 @@ test('every check command in the body starts with the Bash rule\'s command', () 
   assert.ok(!/Glob[^.]*`\.planning\/PROJECT\.md`/.test(body), 'a step still asks Glob for .planning/PROJECT.md');
 });
 
+// Each answer of the path check gets its own command, so a new-path project is never sent to /cad-phase add.
+test('the handoff gives each Cadence path its command, and a new project both, the new path first', () => {
+  const { body } = readSkill();
+  const start = body.indexOf('\n## 23. The handoff\n');
+  assert.ok(start !== -1, 'SKILL.md has no "## 23. The handoff" heading');
+  const end = body.indexOf('\n## ', start + 1);
+  const section = body.slice(start, end === -1 ? undefined : end);
+  const arm = (answer) => {
+    const at = section.indexOf(`- **\`${answer}\`:**`);
+    assert.ok(at !== -1, `the handoff has no arm for ${answer}`);
+    const next = section.indexOf('\n- **', at + 1);
+    return section.slice(at, next === -1 ? undefined : next);
+  };
+  const commands = (text) => [...text.matchAll(/^ {2}(\/cad-[a-z-]+(?: add)? --brief \.planning\/seldon)$/gm)].map((m) => m[1]);
+  const built = /^ {2}If Cadence has already built this design, there's nothing to hand off\.$/m;
+  assert.deepEqual(commands(arm('cadence: agile')), ['/cad-agile --brief .planning/seldon']);
+  assert.match(arm('cadence: agile'), built);
+  assert.deepEqual(commands(arm('cadence: old')), ['/cad-phase add --brief .planning/seldon']);
+  assert.match(arm('cadence: old'), built);
+  assert.deepEqual(commands(arm('cadence: none')), ['/cad-agile --brief .planning/seldon', '/cad-new-project --brief .planning/seldon']);
+  assert.doesNotMatch(arm('cadence: none'), built);
+});
+
 // The loader pastes this run's arguments over every token, so one in prose reads "look at ``" on a bare /seldon.
 test('$ARGUMENTS appears once, on its own line inside the seldon-arguments markers', () => {
   const text = readFileSync(skillPath, 'utf8').replace(/\r\n/g, '\n');
