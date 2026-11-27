@@ -504,6 +504,21 @@ highest for LOAN: 7
 highest for NFR: 4
 ```
 
+### The project's Cadence path
+
+```
+node lib/check.mjs --cadence <dir>
+```
+
+This is for a step that asks whether the project is under Cadence, with `<dir>` the project's `.planning/`: it says which of Cadence's two paths the project is on.
+
+- It prints `cadence: agile` when `<dir>/agile/project.md` is a file, the new path's project file, whether or not `<dir>/PROJECT.md` is there too.
+- Otherwise it prints `cadence: old` when `<dir>/PROJECT.md` is a file, the old path's.
+- Otherwise it prints `cadence: none`.
+- Each of those exits 0. It reads no file's contents and writes nothing.
+- When it can't look for one of those files, for a reason other than the file or its folder not being there, it prints `<file>: cannot read (<code>)`, such as `agile/project.md: cannot read (EACCES)`, and exits 1.
+- It exits 2 when the directory argument is missing or isn't a directory.
+
 ## Examples
 
 These are minimal. `samples/` has a complete set.
