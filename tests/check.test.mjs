@@ -650,6 +650,53 @@ test('--ids on the new path with no agile/REQUIREMENTS.md has no project IDs, an
   assert.equal(r.stdout.trim(), `${join('agile', 'REQUIREMENTS.md')}: cannot read (EISDIR)`);
 });
 
+test('--ids on the new path counts each closed release under agile/releases/, with or without an open release', (t) => {
+  // between releases, the state a design is handed off in: the close moved the file and nothing replaced it
+  const between = planning(t, 'agile/project.md');
+  mkdirSync(join(between, 'agile', 'releases', '4.4'), { recursive: true });
+  mkdirSync(join(between, 'agile', 'releases', '4.5'), { recursive: true });
+  writeFileSync(join(between, 'agile', 'releases', '4.4', 'REQUIREMENTS.md'), '- **OLD-07**: shipped in 4.4\n- **HAND-09**');
+  writeFileSync(join(between, 'agile', 'releases', '4.5', 'REQUIREMENTS.md'), AGILE_REQUIREMENTS);
+  // a stray file and a release folder with no requirements file are passed over, not refused
+  writeFileSync(join(between, 'agile', 'releases', 'notes.md'), '- **ZZZ-99**: not a release\n');
+  mkdirSync(join(between, 'agile', 'releases', '4.3'));
+  const before = snapshot(between);
+  const r = run('--ids', between);
+  assert.equal(r.status, 0);
+  assert.deepEqual(r.stdout.trim().split('\n'), [
+    'highest for CUT: 8',
+    'highest for HAND: 9',
+    'highest for MOD: 4',
+    'highest for NFR: 4',
+    'highest for OLD: 7',
+  ]);
+  assert.deepEqual(snapshot(between), before);
+  writeFileSync(join(between, 'agile', 'REQUIREMENTS.md'), '- **HAND-12**: the open release\n');
+  const open = run('--ids', between);
+  assert.equal(open.status, 0);
+  assert.ok(open.stdout.split('\n').includes('highest for HAND: 12'), open.stdout);
+  assert.ok(open.stdout.split('\n').includes('highest for OLD: 7'), open.stdout);
+});
+
+test('--ids exits 1 on a closed release file or a releases folder it cannot read, naming it', (t) => {
+  const file = planning(t, 'agile/project.md');
+  mkdirSync(join(file, 'agile', 'releases', '4.5', 'REQUIREMENTS.md'), { recursive: true });
+  const r = run('--ids', file);
+  assert.equal(r.status, 1);
+  assert.equal(r.stdout.trim(), `${join('agile', 'releases', '4.5', 'REQUIREMENTS.md')}: cannot read (EISDIR)`);
+  if (process.getuid?.() === 0) return;
+  const folder = planning(t, 'agile/project.md');
+  mkdirSync(join(folder, 'agile', 'releases'), { mode: 0o000 });
+  let locked;
+  try {
+    locked = run('--ids', folder);
+  } finally {
+    chmodSync(join(folder, 'agile', 'releases'), 0o700);
+  }
+  assert.equal(locked.status, 1);
+  assert.equal(locked.stdout.trim(), `${join('agile', 'releases')}: cannot read (EACCES)`);
+});
+
 test('--ids on a folder it cannot look inside for the path exits 1, naming the file', { skip: process.getuid?.() === 0 && 'root reads anything' }, (t) => {
   const dir = planning(t, 'REQUIREMENTS.md');
   mkdirSync(join(dir, 'agile'), { mode: 0o000 });
