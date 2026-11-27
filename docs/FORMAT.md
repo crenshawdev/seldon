@@ -488,12 +488,12 @@ node lib/check.mjs --ids <dir>
 
 This is for the PRD step on a project under Cadence, with `<dir>` the project's `.planning/`: it says how high each requirement ID prefix already goes there, so a new ID can go past it (see "Requirement IDs").
 
-- It reads only `<dir>/REQUIREMENTS.md`, Cadence's file, and writes nothing.
+- It reads one file, Cadence's requirements file, and writes nothing. On Cadence's new path, where `--cadence` prints `cadence: agile`, that's `<dir>/agile/REQUIREMENTS.md`, whose deferred rows and list of earlier releases' highest IDs count like any other. Otherwise it's `<dir>/REQUIREMENTS.md`. The other file is never read, even when it's there.
 - It counts every token in Cadence's admission shape anywhere in the file, in a table cell, a bullet, parentheses or prose: a prefix of 2 to 8 uppercase letters or digits with at least one letter, a dash, and one or more digits. A token is matched whole, so a longer run is never read as a shorter prefix. A date's `2026-03` has no letter and `S-05` has a one-letter prefix, so neither counts.
 - Numbers compare as integers, so `GH-12` is higher than `GH-9`.
 - It prints one line per prefix, `highest for <PREFIX>: <n>`, sorted by prefix in code-unit order, and exits 0. Nothing else from the file is printed.
-- With no `REQUIREMENTS.md`, or no ID in it, it prints one line, `seldon check: no project IDs`, and exits 0.
-- When the file is there but can't be read, it prints `REQUIREMENTS.md: cannot read (<code>)`, such as `(EISDIR)` for a folder by that name, and exits 1. Unlike "Stale links", it doesn't read that as absent: an ID is never renumbered, so a design numbered without the file couldn't be put right.
+- With no such file, or no ID in it, it prints one line, `seldon check: no project IDs`, and exits 0.
+- When the file is there but can't be read, it prints `<file>: cannot read (<code>)`, such as `REQUIREMENTS.md: cannot read (EISDIR)` for a folder by that name, and exits 1. It does the same when it can't tell which path the project is on, as `--cadence` would say. Unlike "Stale links", it doesn't read that as absent: an ID is never renumbered, so a design numbered without the file couldn't be put right.
 - It exits 2 when the directory argument is missing or isn't a directory.
 
 It's no format check, and `--prd` doesn't hold a PRD to the numbering rule: an ID already in `prd.md` is never renumbered, so a design numbered before the project gained that ID could never pass. A `REQUIREMENTS.md` that goes up to `CAT-4`, `LOAN-07` and `NFR-04` prints:
